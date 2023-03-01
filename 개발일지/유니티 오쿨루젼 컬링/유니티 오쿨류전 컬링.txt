@@ -1,0 +1,3 @@
+https://rito15.github.io/posts/unity-opt-occlusion-culling/
+
+## 기본으로 설정 되어있는데 오쿨류전 컬링 으로 세부적이게 설정 가능

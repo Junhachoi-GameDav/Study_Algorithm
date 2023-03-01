@@ -1,0 +1,12 @@
+https://youtu.be/63miHKtooo4 전략 패턴 (Strategy Pattern)
+http://www.devkorea.co.kr/bbs/board.php?bo_table=m03_lecture&wr_id=3783 // Resources.Load 의 최적화
+
+
+https://www.youtube.com/watch?v=cW_lXZzCU8s&t=1419s // 싱글톤을 이용한 게임 매니저(플레이어 위치 저장)
+https://www.youtube.com/watch?v=eZvl6LxIzc0&t=300s // 싱글톤을 이용한 플레이어 저장슬롯 만들기( 플레이어 데이터)
+//json 을 이용한 저장.. 및 string을 split로 나누는 팁
+
+
+// early_return_pattern //if/else 문에 대한 고찰
+https://woonys.tistory.com/m/entry/Design-PatternJavaEarly-return-pattern%EC%9D%B4%EB%9E%80
+https://jheloper.github.io/2019/06/write-early-return-code/

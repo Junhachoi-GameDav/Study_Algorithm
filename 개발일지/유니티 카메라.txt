@@ -1,0 +1,8 @@
+https://dooding.tistory.com/10 // 카메라 관련 글 블로그
+
+카메라에는 Projection 모드 가 있다.
+
+카메라 Projection 모드에는 Perspective와 Orthographic 2가지 종류가 있다.
+
+Perspective : 원근법이 적용되는 3D 화면에서 주로 사용됩니다
+Orthographic : 직각 투영으로 원근법이 없는 2D 화면에서 주로 사용됩니다.

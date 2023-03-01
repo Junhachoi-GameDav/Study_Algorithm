@@ -1,0 +1,16 @@
+https://blog.danggun.net/1815 // 참고 블로그
+https://yoon735.tistory.com/entry/UnityB005%EC%9C%A0%EB%8B%88%ED%8B%B0-%EA%B8%B0%EC%B4%88-%EC%BB%AC%EB%9D%BC%EC%9D%B4%EB%8D%94
+
+
+유니티 콜라이더는 읽기 전용이다.  그래서
+
+BoxCollider.bounds.size -> 오류 바운드는 수정할수 없다.
+
+BoxCollider.size = new Vector3( 1.5 , 1.5 , 1.5); 이건 된다.
+
+
+바운드를 바꾸고 싶을땐
+BoxCollider로 캐스팅한후 수정해야한다.
+
+((BoxCollider)[GameObject].collider).size = new Vector3( 1.5 , 1.5 , 1.5); 
+이런식으로 바꿔줘야한다.

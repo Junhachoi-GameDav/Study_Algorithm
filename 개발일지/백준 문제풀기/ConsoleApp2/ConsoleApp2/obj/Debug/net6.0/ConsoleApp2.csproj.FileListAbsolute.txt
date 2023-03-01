@@ -1,0 +1,15 @@
+E:\백준 문제풀기\ConsoleApp2\ConsoleApp2\bin\Debug\net6.0\ConsoleApp2.exe
+E:\백준 문제풀기\ConsoleApp2\ConsoleApp2\bin\Debug\net6.0\ConsoleApp2.deps.json
+E:\백준 문제풀기\ConsoleApp2\ConsoleApp2\bin\Debug\net6.0\ConsoleApp2.runtimeconfig.json
+E:\백준 문제풀기\ConsoleApp2\ConsoleApp2\bin\Debug\net6.0\ConsoleApp2.dll
+E:\백준 문제풀기\ConsoleApp2\ConsoleApp2\bin\Debug\net6.0\ConsoleApp2.pdb
+E:\백준 문제풀기\ConsoleApp2\ConsoleApp2\obj\Debug\net6.0\ConsoleApp2.csproj.AssemblyReference.cache
+E:\백준 문제풀기\ConsoleApp2\ConsoleApp2\obj\Debug\net6.0\ConsoleApp2.GeneratedMSBuildEditorConfig.editorconfig
+E:\백준 문제풀기\ConsoleApp2\ConsoleApp2\obj\Debug\net6.0\ConsoleApp2.AssemblyInfoInputs.cache
+E:\백준 문제풀기\ConsoleApp2\ConsoleApp2\obj\Debug\net6.0\ConsoleApp2.AssemblyInfo.cs
+E:\백준 문제풀기\ConsoleApp2\ConsoleApp2\obj\Debug\net6.0\ConsoleApp2.csproj.CoreCompileInputs.cache
+E:\백준 문제풀기\ConsoleApp2\ConsoleApp2\obj\Debug\net6.0\ConsoleApp2.dll
+E:\백준 문제풀기\ConsoleApp2\ConsoleApp2\obj\Debug\net6.0\refint\ConsoleApp2.dll
+E:\백준 문제풀기\ConsoleApp2\ConsoleApp2\obj\Debug\net6.0\ConsoleApp2.pdb
+E:\백준 문제풀기\ConsoleApp2\ConsoleApp2\obj\Debug\net6.0\ConsoleApp2.genruntimeconfig.cache
+E:\백준 문제풀기\ConsoleApp2\ConsoleApp2\obj\Debug\net6.0\ref\ConsoleApp2.dll

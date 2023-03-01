@@ -1,0 +1,4 @@
+https://www.youtube.com/watch?v=dLomdF5Z0DU // 애니메이션 기초 팁 // 같은 애니메이션에 조건을 두개 붙치고 싶을때
+
+// 블랜더 트리에서 float값이나 int값으로 조절가능
+// 레이어(mushine)에서도 복잡한 애니메이션을 관리할수 있다.
