@@ -2,3 +2,7 @@ https://www.youtube.com/watch?v=dLomdF5Z0DU // 애니메이션 기초 팁 // 같
 
 // 블랜더 트리에서 float값이나 int값으로 조절가능
 // 레이어(mushine)에서도 복잡한 애니메이션을 관리할수 있다.
+
+
+https://www.youtube.com/playlist?list=PLgS-05BGImUxNGHSoq86ya4vvtIs3n5X6
+유니티 믹사모 애니메이션 재생목록 ~~~~
