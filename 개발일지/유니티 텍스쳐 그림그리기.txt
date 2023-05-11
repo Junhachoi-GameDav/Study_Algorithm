@@ -1,1 +1,96 @@
 https://rito15.github.io/posts/unity-how-to-paint-texture/
+
+
+//chatgpt 결과
+using UnityEngine;
+
+public class DrawOnObject : MonoBehaviour
+{
+    public RenderTexture renderTexture;     // The RenderTexture to draw on
+    public Texture2D drawingTexture;        // The custom texture to draw
+    private Camera drawingCamera;           // Camera used for drawing
+
+    void Start()
+    {
+        drawingCamera = GetComponent<Camera>();
+        drawingCamera.targetTexture = renderTexture;
+    }
+
+    void Update()
+    {
+        if (Input.GetMouseButton(0))  // Check if the left mouse button is pressed
+        {
+            RaycastHit hit;
+            if (Physics.Raycast(drawingCamera.ScreenPointToRay(Input.mousePosition), out hit))
+            {
+                Renderer renderer = hit.collider.GetComponent<Renderer>();
+                if (renderer != null)
+                {
+                    Material material = renderer.material;
+                    Vector2 pixelUV = hit.textureCoord;
+                    pixelUV.x *= renderTexture.width;
+                    pixelUV.y *= renderTexture.height;
+
+                    // Draw on the RenderTexture
+                    RenderTexture.active = renderTexture;
+                    GL.PushMatrix();
+                    GL.LoadPixelMatrix(0, renderTexture.width, renderTexture.height, 0);
+                    Graphics.DrawTexture(new Rect(pixelUV.x - 5, pixelUV.y - 5, 10, 10), drawingTexture);
+                    GL.PopMatrix();
+                    RenderTexture.active = null;
+
+                    // Update the material with the modified RenderTexture
+                    material.SetTexture("_MainTex", renderTexture);
+                }
+            }
+        }
+    }
+}
+
+//vr
+
+using UnityEngine;
+using UnityEngine.XR;
+
+public class DrawOnObject : MonoBehaviour
+{
+    public RenderTexture renderTexture;     // The RenderTexture to draw on
+    public Texture2D drawingTexture;        // The custom texture to draw
+    private Camera drawingCamera;           // Camera used for drawing
+
+    void Start()
+    {
+        drawingCamera = GetComponent<Camera>();
+        drawingCamera.targetTexture = renderTexture;
+    }
+
+    void Update()
+    {
+        if (XRSettings.isDeviceActive && InputDevices.GetDeviceAtXRNode(XRNode.RightHand).TryGetFeatureValue(CommonUsages.triggerButton, out bool triggerPressed) && triggerPressed)
+        {
+            RaycastHit hit;
+            if (Physics.Raycast(drawingCamera.transform.position, drawingCamera.transform.forward, out hit))
+            {
+                Renderer renderer = hit.collider.GetComponent<Renderer>();
+                if (renderer != null)
+                {
+                    Material material = renderer.material;
+                    Vector2 pixelUV = hit.textureCoord;
+                    pixelUV.x *= renderTexture.width;
+                    pixelUV.y *= renderTexture.height;
+
+                    // Draw on the RenderTexture
+                    RenderTexture.active = renderTexture;
+                    GL.PushMatrix();
+                    GL.LoadPixelMatrix(0, renderTexture.width, renderTexture.height, 0);
+                    Graphics.DrawTexture(new Rect(pixelUV.x - 5, pixelUV.y - 5, 10, 10), drawingTexture);
+                    GL.PopMatrix();
+                    RenderTexture.active = null;
+
+                    // Update the material with the modified RenderTexture
+                    material.SetTexture("_MainTex", renderTexture);
+                }
+            }
+        }
+    }
+}
