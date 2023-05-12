@@ -1,0 +1,166 @@
+https://www.youtube.com/watch?v=-QOCX6SVFsk&list=PLcRSafycjWFenI87z7uZHFv6cUG2Tzu9v
+
+// gpt 결과
+using UnityEngine;
+
+public class TileMapGenerator : MonoBehaviour
+{
+    public int mapWidth = 10;       // Number of tiles in the horizontal direction
+    public int mapHeight = 10;      // Number of tiles in the vertical direction
+    public GameObject[] tilePrefabs; // Array of tile prefabs to choose from
+
+    private GameObject[,] tileMap;  // 2D array to store references to instantiated tiles
+
+    void Start()
+    {
+        InitializeTileMap();
+        GenerateMap();
+    }
+
+    void InitializeTileMap()
+    {
+        tileMap = new GameObject[mapWidth, mapHeight];
+
+        // Instantiate all the tile prefabs and disable them initially
+        foreach (GameObject tilePrefab in tilePrefabs)
+        {
+            for (int x = 0; x < mapWidth; x++)
+            {
+                for (int y = 0; y < mapHeight; y++)
+                {
+                    GameObject tile = Instantiate(tilePrefab, transform);
+                    tile.SetActive(false);
+                    tileMap[x, y] = tile;
+                }
+            }
+        }
+    }
+
+    void GenerateMap()
+    {
+        // Loop through each position in the map
+        for (int x = 0; x < mapWidth; x++)
+        {
+            for (int y = 0; y < mapHeight; y++)
+            {
+                // Choose a random tile prefab from the array
+                GameObject randomTilePrefab = tilePrefabs[Random.Range(0, tilePrefabs.Length)];
+
+                // Get the reference to the corresponding tile in the tileMap
+                GameObject tile = tileMap[x, y];
+
+                // Activate and position the tile
+                tile.SetActive(true);
+                tile.transform.position = new Vector3(x, y, 0);
+            }
+        }
+    }
+}
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public static class provedual_generation_algorithms
+{
+    public static HashSet<Vector2Int> simple_random_walk(Vector2Int start_pos, int walk_lengh)
+    {
+        HashSet<Vector2Int> path = new HashSet<Vector2Int> ();
+        
+        path.Add (start_pos);
+        var previous_pos = start_pos;
+
+        for (int i = 0; i < walk_lengh; i++)
+        {
+            var new_pos = previous_pos + direction_2d.get_random_cardinal_dir();
+            path.Add (new_pos);
+            previous_pos = new_pos;
+        }
+        return path;
+    }
+}
+
+//
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public static class provedual_generation_algorithms
+{
+    public static HashSet<Vector2Int> simple_random_walk(Vector2Int start_pos, int walk_lengh)
+    {
+        HashSet<Vector2Int> path = new HashSet<Vector2Int> ();
+        
+        path.Add (start_pos);
+        var previous_pos = start_pos;
+
+        for (int i = 0; i < walk_lengh; i++)
+        {
+            var new_pos = previous_pos + direction_2d.get_random_cardinal_dir();
+            path.Add (new_pos);
+            previous_pos = new_pos;
+        }
+        return path;
+    }
+}
+
+public static class direction_2d
+{
+    public static List<Vector2Int> cardinal_dir_list = new List<Vector2Int>
+    {
+        new Vector2Int(0,1), //up
+        new Vector2Int(1,0), // right
+        new Vector2Int(0, -1), //down
+        new Vector2Int(-1,0), //left
+    };
+
+    public static Vector2Int get_random_cardinal_dir()
+    {
+        return cardinal_dir_list[Random.Range(0, cardinal_dir_list.Count)];
+    }
+}
+
+//
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using System.Linq;
+using Random = UnityEngine.Random;
+
+public class simple_random_map_generator : MonoBehaviour
+{
+    [SerializeField]
+    protected Vector2Int start_pos = Vector2Int.zero;
+    [SerializeField]
+    private int iterations = 10;
+    [SerializeField]
+    public int walk_length = 10;
+    [SerializeField]
+    public bool start_randomly_each_interation = true;
+
+
+    public void run_procedural_generation()
+    {
+        HashSet<Vector2Int> floor_pos = run_random_walk();
+        foreach (var position in floor_pos)
+        {
+            Debug.Log(position);
+        }
+    }
+
+    protected HashSet<Vector2Int> run_random_walk()
+    {
+        var cur_pos = start_pos;
+        HashSet<Vector2Int> floor_pos = new HashSet<Vector2Int>();
+        for (int i = 0; i < iterations; i++)
+        {
+            var path = provedual_generation_algorithms.simple_random_walk(cur_pos, walk_length);
+            floor_pos.UnionWith(path);
+            if (start_randomly_each_interation)
+            {
+                cur_pos = floor_pos.ElementAt(Random.Range(0, floor_pos.Count));
+            }
+        }
+        return floor_pos;
+    }
+}
