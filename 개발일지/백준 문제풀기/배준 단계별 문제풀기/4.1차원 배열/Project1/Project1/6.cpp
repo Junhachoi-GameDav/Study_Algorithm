@@ -1,3 +1,4 @@
+/*
 #include <iostream>
 using namespace std;
 
@@ -29,5 +30,30 @@ int main() {
 		{
 			cout << box[c] << " ";
 		}
+	}
+}
+*/
+#include <iostream>
+using namespace std;
+
+int main() {
+	ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+
+	int n, m, i, j, k = 0;
+	int num[101] = {};
+	cin >> n >> m;
+
+	for (int a = 1; a < m+1; a++)
+	{
+		cin >> i >> j >> k;
+		
+		for (int b = i; b <= j; b++)
+		{
+			num[b] = k;
+		}
+	}
+	for (int d = 1; d <= n; d++)
+	{
+		cout << num[d] << " ";
 	}
 }
