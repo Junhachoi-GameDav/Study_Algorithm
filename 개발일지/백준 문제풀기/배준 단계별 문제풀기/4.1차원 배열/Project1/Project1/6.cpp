@@ -33,6 +33,7 @@ int main() {
 	}
 }
 */
+/*
 #include <iostream>
 using namespace std;
 
@@ -55,5 +56,30 @@ int main() {
 	for (int d = 1; d <= n; d++)
 	{
 		cout << num[d] << " ";
+	}
+}
+*/
+#include <iostream>
+using namespace std;
+
+int main() {
+	int n, m, i, j, box;
+	cin >> n >> m;
+	int num[101] = {};
+	
+	for (int v = 1; v < n+1; v++)
+	{
+		num[v] = v;
+	}
+	for (int a = 1; a <= m; a++)
+	{
+		cin >> i >> j;
+		box = num[i];
+		num[i] = num[j];
+		num[j] = box;
+	}
+	for (int c = 1; c <= n; c++)
+	{
+		cout << num[c] << " ";
 	}
 }
