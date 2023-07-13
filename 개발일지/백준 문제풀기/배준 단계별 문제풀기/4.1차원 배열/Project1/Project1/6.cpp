@@ -59,6 +59,7 @@ int main() {
 	}
 }
 */
+/*
 #include <iostream>
 using namespace std;
 
@@ -81,5 +82,27 @@ int main() {
 	for (int c = 1; c <= n; c++)
 	{
 		cout << num[c] << " ";
+	}
+}
+*/
+#include <iostream>
+using namespace std;
+
+int main() {
+	int n;
+	int num[31] = { 0 };
+
+	for (int i = 1; i <= 28; i++)
+	{
+		cin >> n;
+		num[n] = n;
+	}
+	for (int x = 1; x <= 30; x++)
+	{
+		if (num[x] == 0)
+		{
+			num[x] = x;
+			cout << num[x] << endl;
+		}
 	}
 }
