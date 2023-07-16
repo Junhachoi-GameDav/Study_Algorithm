@@ -108,6 +108,7 @@ int main() {
 	}
 }
 */
+/*
 #include <iostream>
 using namespace std;
 
@@ -130,7 +131,35 @@ int main() {
 	}
 	cout << result;
 }
+*/
+#include<iostream>
+using namespace std;
 
+int main() {
+	int n, m, i, j, temp;
+	cin >> n >> m;
+	int num[101];
+
+	for (int x = 1; x <=n; x++)
+	{
+		num[x] = x;
+	}
+	for (int a = 1; a <= m; a++)
+	{
+		cin >> i >> j;
+		for (int b = i; b <= j; b++)
+		{
+			temp =num[b];
+			num[b] = num[j];
+			num[j] = temp;
+			j--;
+		}
+	}
+	for (int c = 1; c <= n; c++)
+	{
+		cout << num[c] << " ";
+	}
+}
 
 
 
