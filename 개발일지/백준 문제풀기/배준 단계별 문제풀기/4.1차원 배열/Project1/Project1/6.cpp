@@ -132,6 +132,7 @@ int main() {
 	cout << result;
 }
 */
+/*
 #include<iostream>
 using namespace std;
 
@@ -160,6 +161,27 @@ int main() {
 		cout << num[c] << " ";
 	}
 }
+*/
 
+#include <iostream>
+using namespace std;
 
+int main() {
+	int subjects;
+	cin >> subjects;
+	
+	double add=0, max=0;
+	double num[1001];
 
+	for (int i = 1; i <= subjects; i++)
+	{
+		cin >> num[i];
+		if (max <= num[i]) { max = num[i]; }
+	}
+	for (int x = 1; x <= subjects; x++)
+	{
+		num[x] = num[x] / max * 100;
+		add += num[x];
+	}
+	cout << add / subjects;
+}
