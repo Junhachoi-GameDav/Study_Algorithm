@@ -25,6 +25,7 @@ int main() {
 	}
 }
 */
+/*
 #include <iostream>
 using namespace std;
 
@@ -33,3 +34,21 @@ int main() {
 	cin >> c;
 	cout << int(c);
 }
+*/
+/*
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main() {
+	int n, sum =0 ;
+	string s, num[101];
+	cin >> n >> s;
+	for (int i = 1; i <= n; i++)
+	{
+		num[i] = s[i-1];
+		sum += stoi(num[i]);
+	}
+	cout << sum;
+}
+*/
