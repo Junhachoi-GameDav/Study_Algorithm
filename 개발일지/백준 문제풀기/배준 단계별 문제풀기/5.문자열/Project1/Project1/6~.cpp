@@ -1,3 +1,4 @@
+/*
 #include <iostream>
 #include <string>
 using namespace std;
@@ -20,4 +21,11 @@ int main() {
 	{
 		cout << num[i] << " ";
 	}
+}
+*/
+#include <iostream>
+using namespace std;
+
+int main() {
+
 }
