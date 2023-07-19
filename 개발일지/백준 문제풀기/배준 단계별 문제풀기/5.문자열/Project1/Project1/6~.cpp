@@ -23,9 +23,31 @@ int main() {
 	}
 }
 */
+/*
 #include <iostream>
+#include <string>
 using namespace std;
 
 int main() {
+	int t, r_num[1001];
+	cin >> t;
+	string s;
 
+	for (int i = 1; i <= t; i++)
+	{
+		cin >> r_num[i] >> s;
+
+		if (s.length() <= 20 && r_num[i] <= 8)
+		{
+			for (int j = 0; j < s.length(); j++)
+			{
+				for (int x = 0; x < r_num[i]; x++)
+				{
+					cout << s[j];
+				}
+			}
+			cout << endl;
+		}
+	}
 }
+*/

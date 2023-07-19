@@ -1,0 +1,4 @@
+//3d 머터리얼에 ahlpa 값 바꾸는거임
+https://gall.dcinside.com/mgallery/board/view/?id=game_dev&no=20184
+//2d 스프라이트 = 컬러로 오파시티 값 바꾸는ㄱ임
+https://www.youtube.com/watch?v=0HBHiJRb0zU
