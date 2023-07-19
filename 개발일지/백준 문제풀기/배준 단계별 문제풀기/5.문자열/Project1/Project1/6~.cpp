@@ -51,3 +51,22 @@ int main() {
 	}
 }
 */
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main() {
+	int n=0;
+	string s;
+	getline(cin, s);
+	if (s.length() <= 1000000)
+	{
+		for (int i = 0; i < s.length(); i++)
+		{
+			if (s[i] == ' ') { n++; }
+		}
+		if (s[0] == ' ') { n--; }
+		if (s.back() == ' ') { n--; }
+	}
+	cout << n+1;
+}

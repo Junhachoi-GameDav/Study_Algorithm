@@ -1,6 +1,0 @@
-https://youtu.be/ESU2IkFj9VM
-
-## managed 언어 예) 자바, 파이썬, c#
-이것도 배워야하지만 한계가 있고 이것 역시 누군가 코드를 짜준것을 가져다 쓰는 것이다. 더높은 레벨로 가고 싶다면 unmanaged 언어를 익혀라.
-
-## unmanaged 언어 예) 어썸블리, c, c++, 러스트
