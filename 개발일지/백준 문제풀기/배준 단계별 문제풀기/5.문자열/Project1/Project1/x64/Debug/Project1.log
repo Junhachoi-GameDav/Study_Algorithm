@@ -1,2 +1,4 @@
 ﻿  6~.cpp
+E:\Study_Algorithm\개발일지\백준 문제풀기\배준 단계별 문제풀기\5.문자열\Project1\Project1\6~.cpp(152,10): warning C4477: 'printf' : 서식 문자열 '%c'에 'int' 형식의 인수가 필요하지만 variadic 인수 1의 형식이 'char *'입니다.
+E:\Study_Algorithm\개발일지\백준 문제풀기\배준 단계별 문제풀기\5.문자열\Project1\Project1\6~.cpp(152,10): warning C4313: 'printf': 서식 문자열의 '%c'이(가) char *' 형식의 인수 1과(와) 충돌합니다.
   Project1.vcxproj -> E:\Study_Algorithm\개발일지\백준 문제풀기\배준 단계별 문제풀기\5.문자열\Project1\x64\Debug\Project1.exe

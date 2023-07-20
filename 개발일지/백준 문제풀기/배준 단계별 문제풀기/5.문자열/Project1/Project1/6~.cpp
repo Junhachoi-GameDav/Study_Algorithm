@@ -95,6 +95,7 @@ int main() {
 	a > b ? cout << a : cout << b ;
 }
 */
+/*
 #include <iostream>
 #include <string>
 using namespace std;
@@ -138,4 +139,18 @@ int main() {
 		}
 	}
 	cout << n;
+}
+*/
+#define CRT_SECURE_NO_WARNINGS
+#pragma warning(disable:4996)
+#include <stdio.h>
+
+int main() {
+	char c;
+
+	while (scanf("%c", &c) != -1) {
+		printf("%c", &c);
+	}
+
+	return 0;
 }
