@@ -1,2 +1,4 @@
 ﻿  6~.cpp
+E:\Study_Algorithm\개발일지\백준 문제풀기\배준 단계별 문제풀기\5.문자열\Project1\Project1\6~.cpp(92,6): warning C4834: 'nodiscard' 특성이 포함된 함수의 반환 값을 버리는 중
+E:\Study_Algorithm\개발일지\백준 문제풀기\배준 단계별 문제풀기\5.문자열\Project1\Project1\6~.cpp(92,15): warning C4834: 'nodiscard' 특성이 포함된 함수의 반환 값을 버리는 중
   Project1.vcxproj -> E:\Study_Algorithm\개발일지\백준 문제풀기\배준 단계별 문제풀기\5.문자열\Project1\x64\Debug\Project1.exe

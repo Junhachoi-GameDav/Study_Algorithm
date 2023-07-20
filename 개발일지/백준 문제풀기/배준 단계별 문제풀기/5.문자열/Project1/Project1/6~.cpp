@@ -51,6 +51,7 @@ int main() {
 	}
 }
 */
+/*
 #include <iostream>
 #include <string>
 using namespace std;
@@ -69,4 +70,26 @@ int main() {
 		if (s.back() == ' ') { n--; }
 	}
 	cout << n+1;
+}
+*/
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main() {
+	string a, b;
+	char temp;
+	cin >> a >> b;
+
+	temp = a.front();
+	a.front() = a.back();
+	a.back() = temp;
+	
+	temp = b.front();
+	b.front() = b.back();
+	b.back() = temp;
+
+	stoi(a); stoi(b);
+
+	a > b ? cout << a : cout << b ;
 }
