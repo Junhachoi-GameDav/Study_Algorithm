@@ -141,16 +141,17 @@ int main() {
 	cout << n;
 }
 */
-#define CRT_SECURE_NO_WARNINGS
-#pragma warning(disable:4996)
-#include <stdio.h>
+#include <iostream>
+#include <string>
+using namespace std;
 
 int main() {
-	char c;
-
-	while (scanf("%c", &c) != -1) {
-		printf("%c", &c);
+	string s;
+	int n = 0;
+	while (n<=100) {
+		getline(cin, s);
+		if (cin.eof() == true) { break; }
+		cout << s<< endl;
+		n++;
 	}
-
-	return 0;
 }
