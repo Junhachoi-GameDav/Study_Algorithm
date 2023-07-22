@@ -30,6 +30,7 @@ int main() {
 	}
 }
 */
+/*
 #include <iostream>
 using namespace std;
 
@@ -68,4 +69,26 @@ int main() {
 			c++;
 		}
 	}
+}
+*/
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main() {
+	string s;
+	cin >> s;
+	int n = 0;
+	int size = s.length();
+
+	if (size == 1) { n = 1; }
+	else
+	{
+		for (int i = 0; i < size /2; i++)
+		{
+			if (s[i] == s[(size - 1) - i]) { n = 1; }
+			else { n = 0; break; }
+		}
+	}
+	cout << n;
 }
