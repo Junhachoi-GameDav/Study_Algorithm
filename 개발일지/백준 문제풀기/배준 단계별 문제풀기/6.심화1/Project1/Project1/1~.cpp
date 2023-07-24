@@ -188,7 +188,7 @@ int main()
 	return 0;
 }
 */
-
+/*
 #include <iostream>
 using namespace std;
 
@@ -223,6 +223,7 @@ int main() {
 	if (cnt > 1) { cout << "?"; }
 	else { cout << (char)(max_index + 65); }
 }
+/*
 /*
 #include <iostream>
 using namespace std;
