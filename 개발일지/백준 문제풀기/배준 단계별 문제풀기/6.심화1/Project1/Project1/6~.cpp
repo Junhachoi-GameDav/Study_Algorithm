@@ -1,34 +1,22 @@
 #include <iostream>
 using namespace std;
 
-int n = 0, a=0;
-string c[6] = {
-	"c=", "c-",
-	"d-", "lj",
-	"nj", "s=", 
-};
-string c2 = "dz=", c3 = "z=", s;
-
 int main() {
+	string s;
 	cin >> s;
-
-	for (int i = 0; i < 6; i++)
-	{
-		for (int j = 0; j < s.length(); j++)
-		{
-			if ((s.find(c[i],j) <= j)) {
-				n++;
-			}
-		}
-	}
+	int len = s.length();
 	for (int i = 0; i < s.length(); i++)
 	{
-		if (s[i] == 'd' && s[i + 1] == 'z' && s[i + 2] == '=') {
-			a++;
-		}
-		else if (s[i] == 'z' && s[i + 1] == '=') {
-			a++;
-		}
+		if (s[i] == '-')
+			len--;
+		else if (s[i] == '=')
+			len--;
+		else if (s[i] == 'd' && s[i + 1] == 'z' && s[i + 2] == '=')
+			len--;
+		else if (s[i] == 'l' && s[i + 1] == 'j')
+			len--;
+		else if (s[i] == 'n' && s[i + 1] == 'j')
+			len--;
 	}
-	cout << n << " " << a;
+	cout << len;
 }
