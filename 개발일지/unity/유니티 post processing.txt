@@ -1,0 +1,3 @@
+https://junbastick.tistory.com/6
+
+참고로 urp에서는 자동으로 있이때문에 volum 컴포넌트로 조정하면 된다.
