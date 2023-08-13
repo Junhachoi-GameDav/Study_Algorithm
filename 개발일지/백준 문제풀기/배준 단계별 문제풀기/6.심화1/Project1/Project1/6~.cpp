@@ -22,29 +22,71 @@ int main() {
 	cout << len;
 }
 */
+/*
 #include <iostream>
 using namespace std;
 
 int main() {
-	int n, cnt;
-	cin >> n;
-	cnt = n;
+	int n, count = 0;
+	string s;
 
+	cin >> n;
 	for (int i = 0; i < n; i++)
 	{
-		string s;
 		cin >> s;
-		for (int j = 0; j < s.length(); j++)
-		{
-			int num;
+		bool a[26] = { false, };
+		a[(int)(s[0]) - 97] = true;
 
-			for (num = j+1; num < s.length(); num++)
-			{
-				if (s[j] == s[num] && j == num - 1) { num++; }
-				else if (s[j] == s[num]) { cnt--; break; }
+		for (int j = 1; j < s.length(); j++)
+		{
+			
+			if (s[j] == s[j - 1]) {
+				continue;
 			}
-			if (num != s.length()) { break; }
+			else if (s[j] != s[j - 1] && a[(int)(s[j]) - 97] == true) {
+				count++ ;
+				break;
+			}
+			else {
+				a[(int)(s[j]) - 97] = true;
+			}
 		}
 	}
-	cout << cnt;
+	cout << n - count;
+	return 0;
+}
+*/
+
+#include <iostream>
+using namespace std;
+
+int main() {
+	int N;
+	string word;
+	int count = 0;
+
+	cin >> N;
+	for (int i = 0; i < N; i++) {
+		cin >> word;
+		bool a[26] = { false, };
+		a[(int)(word[0]) - 97] = true;
+
+		for (int i = 1; i < word.size(); i++) {
+			if (word[i] == word[i - 1]) {
+				continue;
+			}
+			else if (word[i] != word[i - 1]
+				&& a[(int)(word[i]) - 97] == true) {
+				count++;
+				break;
+			}
+			else {
+				a[(int)(word[i]) - 97] = true;
+			}
+		}
+	}
+
+	cout << N - count;
+
+	return 0;
 }
