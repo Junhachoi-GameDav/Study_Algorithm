@@ -1,0 +1,19 @@
+https://honglab.co.kr/courses/take/cppsummary/lessons/47306035
+홍랩 기초 c++ 강의
+
+포인터에 대해 자세히 설명해준다.
+
+int add(int a, int b)
+{
+    return a + b;
+}
+
+이 함수는 하나값 밖에 리턴하지 못하지만
+
+void add(int a, int b, int* c, int* d)
+{
+    *c = a + b;
+    *d = a - b;
+}
+
+이런식으로 매개변수를 늘려서 여러개를 리턴할 수도 있다. void 는 리턴값이 없는 함수를 의미한다.
