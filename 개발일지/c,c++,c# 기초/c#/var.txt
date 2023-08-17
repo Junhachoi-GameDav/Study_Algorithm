@@ -1,0 +1,13 @@
+var는 데이터 타입을 개발자가 아닌 컴파일러가 결정하게 만드는 키워드이다.
+
+var는 지역변수로 사용된다. 
+즉 지역변수에서 int, float 같은 자료형을 컴파일러가 자동으로 지정하라고 시키는 것이다.
+
+var 사용 제약사항
+
+- 지역변수에만 사용가능
+- 변수 선언과 동시에 초기화
+- null, method group, anonymous method로는 초기화 불가
+
+자세한 내용은 여기에
+https://huiyu.tistory.com/entry/effective-C-%EC%A7%80%EC%97%AD%EB%B3%80%EC%88%98-%EC%84%A0%EC%96%B8%EC%9D%80-var%EB%A5%BC-%EC%82%AC%EC%9A%A9var-%EA%B8%B0%EC%B4%88
