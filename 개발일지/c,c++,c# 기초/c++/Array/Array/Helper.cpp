@@ -1,6 +1,25 @@
 #include "Helper.h"
 #include <Windows.h>
 
+MoveDir Gmove_dir;
+
+void HandleKeyInput()
+{
+	//cin으로 입력은 받는것은 textrpg할때는 유용했어도 동적인
+	//행동은 불가하다. 그래서 breaking 없는 함수를 사용한다.
+	if (::GetAsyncKeyState(VK_LEFT) & 0x8000)
+		Gmove_dir = md_left;
+	else if (::GetAsyncKeyState(VK_RIGHT) & 0x8000)
+		Gmove_dir = md_right;
+	else if (::GetAsyncKeyState(VK_UP) & 0x8000)
+		Gmove_dir = md_up;
+	else if (::GetAsyncKeyState(VK_DOWN) & 0x8000)
+		Gmove_dir = md_down;
+	else
+		Gmove_dir = md_none;
+}
+
+
 void SetCursorPosition(int x, int y)
 {
 	//마.소 에서 만들어준 기능들이다.
