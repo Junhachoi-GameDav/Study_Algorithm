@@ -1,3 +1,4 @@
+/*
 #include <iostream>
 //#include "Player.h"
 using namespace std;
@@ -13,13 +14,13 @@ public:
 	// 안 만들시 컴파일러가 자동으로 만들어준다. 하지만 (기타든 모든)생성자를 만들시
 	// 컴파가 안 만들어 준다. 
 	//기본 생성자 (constuctor) //입장
-	/*Knight()
+	Knight()
 	{
 		m_hp = 0;
 		m_attack = 0;
 		m_defence = 0;
 		cout << "knight()" << endl;
-	}*/
+	}
 
 	//복사 생성자
 	Knight(const Knight& other)
@@ -36,9 +37,9 @@ public:
 		m_attack = attack;
 		m_defence = defence;
 		
-		/*this->m_hp = hp;
+		this->m_hp = hp;
 		this->m_attack = attack;
-		this->m_defence = defence;*/
+		this->m_defence = defence;
 
 		cout << "knight()" << endl;
 	}
@@ -78,10 +79,11 @@ int main() {
 
 	//Player k1; //생성자
 
-	/*k1.m_hp = 100;
+	k1.m_hp = 100;
 
 	k1.Attack();
 	k1.Die();
 
-	k1.HealMe(10);*/
+	k1.HealMe(10);
 }
+*/
