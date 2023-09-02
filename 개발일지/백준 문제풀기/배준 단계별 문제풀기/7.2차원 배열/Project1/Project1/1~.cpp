@@ -29,7 +29,7 @@ int main() {
 	}
 }
 */
-
+/*
 #include <iostream>
 using namespace std;
 
@@ -55,4 +55,27 @@ int main() {
 
 	cout << max << endl;
 	cout << num_x+1 << " " << num_y+1;
+}
+*/
+#include <iostream>
+using namespace std;
+
+int main() {
+	char ch[5][15] = { NULL };
+	int max = 0;
+
+	for (int i = 0; i < 5; i++)
+	{
+		cin >> ch[i];
+	}
+	
+	for (int i = 0; i < 15; i++)
+	{
+		for (int j = 0; j < 5; j++)
+		{
+			if (ch[j][i] == NULL) { continue; }
+			cout << ch[j][i];
+		}
+	}
+	return 0;
 }
