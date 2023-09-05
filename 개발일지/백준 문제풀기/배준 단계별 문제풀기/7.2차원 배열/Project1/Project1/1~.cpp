@@ -57,6 +57,7 @@ int main() {
 	cout << num_x+1 << " " << num_y+1;
 }
 */
+/*
 #include <iostream>
 using namespace std;
 
@@ -78,4 +79,76 @@ int main() {
 		}
 	}
 	return 0;
+}
+*/
+/*
+#include <iostream>
+using namespace std;
+
+int main() {
+	int n = 0;
+	int width[100] = { 0 };
+	int height[100] = { 0 };
+
+	cin >> n;
+	int area = 0;
+	for (int i = 0; i < n; i++)
+	{
+		cin >> width[i] >> height[i];
+	}
+	
+	int temp_x = 0;
+	int temp_y = 0;
+	int temp_area = 0;
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = i; j < n; j++)
+		{
+			if (abs(width[i] - width[j]) < 10 && abs(height[i] - height[j]) < 10)
+			{
+				temp_x = abs(width[i] - width[j]);
+				temp_y = abs(height[i] - height[j]);
+				if (temp_x > 0 && temp_y > 0)
+				{
+					temp_area += abs(temp_x - 10) * abs(temp_y - 10);
+				}
+			}
+		}
+	}
+	if (temp_area == 0)
+	{ 
+		area = 0;
+	}
+	else 
+	{
+		area = (n *100) - temp_area;
+	}
+	cout << area;
+}*/
+
+#include <iostream>
+using namespace std;
+
+int main() {
+	
+	int a[100][100] = { 0 };
+	int n, count = 0;
+
+	cin >> n;
+
+	while (n--)
+	{
+		int x, y;
+		cin >> x >> y;
+		for (int i = y; i < y+10; i++)
+		{
+			for (int j = x; j < x+10; j++)
+			{
+				if (a[i][j]) continue; //Áßº¹Àº ³Ñ±è
+				a[i][j] = 1;
+				count++;
+			}
+		}
+	}
+	cout << count;
 }
