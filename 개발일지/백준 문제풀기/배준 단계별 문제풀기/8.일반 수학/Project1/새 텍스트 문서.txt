@@ -1,0 +1,1 @@
+total = total * b + (alphabet[i] - 48);
