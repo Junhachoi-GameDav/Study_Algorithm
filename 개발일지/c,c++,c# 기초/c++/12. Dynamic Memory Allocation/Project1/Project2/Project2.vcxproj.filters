@@ -17,10 +17,17 @@
     <ClCompile Include="Item.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Inventory.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Item.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Enums.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Inventory.h" />
   </ItemGroup>
 </Project>

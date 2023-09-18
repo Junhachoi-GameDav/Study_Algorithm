@@ -6,7 +6,7 @@ using namespace std;
 //				item
 // ******************************
 
-Item::Item()
+Item::Item(ItemType itemType) : _itemType(itemType)
 {
 	int randValue = rand() % 100;
 
@@ -46,7 +46,8 @@ void Item::PrintInfo()
 //				weapon
 // ******************************
 
-Weapon::Weapon()
+//기본 생성자가 없으니 waepon도 따로 지정해줘야함
+Weapon::Weapon() :Item(IT_Weapon)
 {
 	switch (_rarity)
 	{
@@ -79,7 +80,7 @@ void Weapon::PrintInfo()
 //				armor
 // ******************************
 
-Armor::Armor()
+Armor::Armor() : Item(IT_Armor)
 {
 	switch (_rarity)
 	{

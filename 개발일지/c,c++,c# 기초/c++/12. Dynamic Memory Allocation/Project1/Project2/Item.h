@@ -1,18 +1,11 @@
 #pragma once
+#include "Enums.h"
 
 // item
 
 // Weapon
 // Armor
 // Consumable
-
-enum ItemRarity
-{
-	IR_Normal,
-	IR_Rare,
-	IR_Unique,
-	IR_None,
-};
 
 // ******************************
 //				item
@@ -21,21 +14,24 @@ enum ItemRarity
 //부모 클라스로 사용하겠다면 공식적으로 가상함수로 만들어야한다.
 class Item
 {
-public:
-	Item();
+protected:
+	//Item();
+	Item(ItemType itemType);
 	virtual ~Item();
 	//이거 면접 단골 질문이라고 한다.
 	// 부모클라스 소멸자에 virtual 안붙히면 어떤일이 일어나는지..
 
-
+public:
 	// 가상함수가 아니라면 포인터 변수에 따라 정적 함수라고 할수있다.
 	virtual void PrintInfo();
+	ItemType GetItemType() { return _itemType; }
 
 protected:
 	int _itemId = 0;
 	int _itemCound = 0;
 
 	ItemRarity _rarity = IR_Normal;
+	ItemType _itemType = IT_None;
 };
 
 // ******************************
@@ -71,8 +67,8 @@ public:
 
 	virtual void PrintInfo() override;
 
-	void SetDamage(int defence) { _defence = defence; }
-	int GetDamage() { return _defence; }
+	void SetDefence(int defence) { _defence = defence; }
+	int GetDefence() { return _defence; }
 
 private:
 	int _defence = 0;
