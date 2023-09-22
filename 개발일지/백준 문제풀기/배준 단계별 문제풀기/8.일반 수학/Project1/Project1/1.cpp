@@ -56,6 +56,7 @@ int main() {
 	return 0;
 }
 */
+/*
 #include<iostream>
 using namespace std;
 
@@ -88,4 +89,21 @@ int main() {
 			cout << temp << endl;
 		}
 	}
+	return 0;
+}*/
+#include <iostream>
+using namespace std;
+
+int main() {
+	int defalt = 3, n = 0;
+	int temp = 1;
+	cin >> n;
+
+	for (int i = 1; i < n; i++)
+	{
+		temp = temp * 2;
+		defalt += temp;
+	}
+	cout << defalt * defalt;
+	return 0;
 }
