@@ -17,6 +17,7 @@ class Item
 protected:
 	//Item();
 	Item(ItemType itemType);
+public:
 	virtual ~Item();
 	//이거 면접 단골 질문이라고 한다.
 	// 부모클라스 소멸자에 virtual 안붙히면 어떤일이 일어나는지..
