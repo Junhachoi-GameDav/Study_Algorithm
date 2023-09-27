@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Item.h"
+#include "Inventory.h"
 using namespace std;
 
 Item* DropItem() {
@@ -17,23 +18,31 @@ Item* DropItem() {
 int main() {
 	srand((unsigned)time(0));
 
+	//몬스터 처치로 아이템 드랍
 	for (int i = 0; i < 100; i++)
 	{
 		Item* item = DropItem();
 		item->PrintInfo();
 
-		ItemType itemType = item->GetItemType();
-		if (itemType == IT_Weapon)
+		if (Inventory::GetInventory()->AddItem(item))
 		{
-			//이렇게만 쓰면 뭔지 알수없어서 매우 위험한 함수였지만
-			// 조건문과 type을 지정해서 안전하게 바꿔 줬다.
-			Weapon* weapon = (Weapon*)item;
-			weapon->GetDamage();
+			cout << "Add item to inven" << endl;
 		}
-		else if (itemType == IT_Armor)
+		else
 		{
-			Armor* armor = (Armor*)item;
-			armor->GetDefence();
+			cout << "Failed to add item" << endl;
+			delete item;
+		}
+	}
+
+	//pk당해서 아이템 드랍
+	for (int i = 0; i < 20; i++)
+	{
+		int rand_index = rand() % MAX_SLOT;
+		Item* item = Inventory::GetInventory()->GetItemAtSlot(rand_index);
+		if (item && Inventory::GetInventory()->RemoveItem(item))
+		{
+			cout << "Remove the item" << endl;
 		}
 	}
 }

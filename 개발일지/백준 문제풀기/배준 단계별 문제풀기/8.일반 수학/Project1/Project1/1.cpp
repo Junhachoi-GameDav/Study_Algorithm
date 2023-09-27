@@ -24,6 +24,7 @@ int main() {
 	return 0;
 }
 */
+/*
 #include <iostream>
 #include <algorithm>
 using namespace std;
@@ -52,5 +53,76 @@ int main() {
 
 	reverse(c_sum.begin(), c_sum.end());
 	cout << c_sum << endl;
+	return 0;
+}
+*/
+/*
+#include<iostream>
+using namespace std;
+
+int main() {
+	int t = 0;
+	
+	cin >> t;
+	int* c = new int[t];
+
+	for (int i = 0; i < t; i++)
+	{
+		cin >> c[i];
+		int temp = 0, temp2= 0 ;
+		if (1 <= c[i] <= 500)
+		{
+			temp = c[i] / 25;
+			temp2 = c[i] % 25;
+			cout << temp << " ";
+
+			temp = temp2 / 10;
+			temp2 = temp2 % 10;
+			cout << temp << " ";
+
+			temp = temp2 / 5;
+			temp2 = temp2 % 5;
+			cout << temp << " ";
+
+			temp = temp2 / 1;
+			temp2 = temp2 % 1;
+			cout << temp << endl;
+		}
+	}
+	return 0;
+}*/
+/*
+#include <iostream>
+using namespace std;
+
+int main() {
+	int defalt = 3, n = 0;
+	int temp = 1;
+	cin >> n;
+
+	for (int i = 1; i < n; i++)
+	{
+		temp = temp * 2;
+		defalt += temp;
+	}
+	cout << defalt * defalt;
+	return 0;
+}
+*/
+#include <iostream>
+using namespace std;
+
+int main() {
+	int n;
+	cin >> n;
+
+	int i = 0;
+	for (int sum = 2; sum <= n ; i++)
+	{
+		sum += 6 * i;
+	}
+	if (n == 1) { i = 1; }
+	cout << i;
+
 	return 0;
 }

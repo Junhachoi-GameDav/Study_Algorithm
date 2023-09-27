@@ -1,0 +1,602 @@
+Welcome to Ubuntu 22.04.2 LTS (GNU/Linux 5.15.90.1-microsoft-standard-WSL2 x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+
+This message is shown once a day. To disable it please create the
+/home/june14/.hushlogin file.
+june14@junhachoi:~$ sudo apt-get update
+[sudo] password for june14:
+Sorry, try again.
+[sudo] password for june14:
+Hit:1 http://archive.ubuntu.com/ubuntu jammy InRelease
+Get:2 http://archive.ubuntu.com/ubuntu jammy-updates InRelease [119 kB]
+Get:3 http://security.ubuntu.com/ubuntu jammy-security InRelease [110 kB]
+Get:4 http://archive.ubuntu.com/ubuntu jammy-backports InRelease [109 kB]
+Get:5 http://archive.ubuntu.com/ubuntu jammy/universe amd64 Packages [14.1 MB]
+Get:6 http://security.ubuntu.com/ubuntu jammy-security/main amd64 Packages [802 kB]
+Get:7 http://security.ubuntu.com/ubuntu jammy-security/main Translation-en [169 kB]
+Get:8 http://security.ubuntu.com/ubuntu jammy-security/main amd64 c-n-f Metadata [11.3 kB]
+Get:9 http://security.ubuntu.com/ubuntu jammy-security/restricted amd64 Packages [882 kB]
+Get:10 http://archive.ubuntu.com/ubuntu jammy/universe Translation-en [5652 kB]
+Get:11 http://security.ubuntu.com/ubuntu jammy-security/restricted Translation-en [142 kB]
+Get:12 http://security.ubuntu.com/ubuntu jammy-security/restricted amd64 c-n-f Metadata [536 B]
+Get:13 http://security.ubuntu.com/ubuntu jammy-security/universe amd64 Packages [785 kB]
+Get:14 http://archive.ubuntu.com/ubuntu jammy/universe amd64 c-n-f Metadata [286 kB]
+Get:15 http://archive.ubuntu.com/ubuntu jammy/multiverse amd64 Packages [217 kB]
+Get:16 http://archive.ubuntu.com/ubuntu jammy/multiverse Translation-en [112 kB]
+Get:17 http://archive.ubuntu.com/ubuntu jammy/multiverse amd64 c-n-f Metadata [8372 B]
+Get:18 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 Packages [1012 kB]
+Get:19 http://archive.ubuntu.com/ubuntu jammy-updates/main Translation-en [227 kB]
+Get:20 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 c-n-f Metadata [15.6 kB]
+Get:21 http://archive.ubuntu.com/ubuntu jammy-updates/restricted amd64 Packages [898 kB]
+Get:22 http://archive.ubuntu.com/ubuntu jammy-updates/restricted Translation-en [145 kB]
+Get:23 http://security.ubuntu.com/ubuntu jammy-security/universe Translation-en [143 kB]
+Get:24 http://archive.ubuntu.com/ubuntu jammy-updates/restricted amd64 c-n-f Metadata [536 B]
+Get:25 http://security.ubuntu.com/ubuntu jammy-security/universe amd64 c-n-f Metadata [16.7 kB]
+Get:26 http://security.ubuntu.com/ubuntu jammy-security/multiverse amd64 Packages [36.5 kB]
+Get:27 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 Packages [984 kB]
+Get:28 http://archive.ubuntu.com/ubuntu jammy-updates/universe Translation-en [215 kB]
+Get:29 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 c-n-f Metadata [21.8 kB]
+Get:30 http://archive.ubuntu.com/ubuntu jammy-updates/multiverse amd64 Packages [41.6 kB]
+Get:31 http://archive.ubuntu.com/ubuntu jammy-updates/multiverse Translation-en [9768 B]
+Get:32 http://archive.ubuntu.com/ubuntu jammy-updates/multiverse amd64 c-n-f Metadata [476 B]
+Get:33 http://archive.ubuntu.com/ubuntu jammy-backports/main amd64 Packages [41.7 kB]
+Get:34 http://archive.ubuntu.com/ubuntu jammy-backports/main Translation-en [10.5 kB]
+Get:35 http://archive.ubuntu.com/ubuntu jammy-backports/main amd64 c-n-f Metadata [388 B]
+Get:36 http://archive.ubuntu.com/ubuntu jammy-backports/restricted amd64 c-n-f Metadata [116 B]
+Get:37 http://archive.ubuntu.com/ubuntu jammy-backports/universe amd64 Packages [24.3 kB]
+Get:38 http://archive.ubuntu.com/ubuntu jammy-backports/universe Translation-en [16.4 kB]
+Get:39 http://archive.ubuntu.com/ubuntu jammy-backports/universe amd64 c-n-f Metadata [640 B]
+Get:40 http://archive.ubuntu.com/ubuntu jammy-backports/multiverse amd64 c-n-f Metadata [116 B]
+Get:41 http://security.ubuntu.com/ubuntu jammy-security/multiverse Translation-en [7060 B]
+Get:42 http://security.ubuntu.com/ubuntu jammy-security/multiverse amd64 c-n-f Metadata [260 B]
+Fetched 27.4 MB in 10s (2849 kB/s)
+Reading package lists... Done
+june14@junhachoi:~$ sudo apt-get install git-core
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+Note, selecting 'git' instead of 'git-core'
+Suggested packages:
+  git-daemon-run | git-daemon-sysvinit git-doc git-email git-gui gitk gitweb git-cvs git-mediawiki git-svn
+The following packages will be upgraded:
+  git
+1 upgraded, 0 newly installed, 0 to remove and 101 not upgraded.
+Need to get 3166 kB of archives.
+After this operation, 0 B of additional disk space will be used.
+Get:1 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 git amd64 1:2.34.1-1ubuntu1.10 [3166 kB]
+Fetched 3166 kB in 3s (968 kB/s)
+(Reading database ... 24137 files and directories currently installed.)
+Preparing to unpack .../git_1%3a2.34.1-1ubuntu1.10_amd64.deb ...
+Unpacking git (1:2.34.1-1ubuntu1.10) over (1:2.34.1-1ubuntu1.9) ...
+Setting up git (1:2.34.1-1ubuntu1.10) ...
+june14@junhachoi:~$ git clone https://github.com/valentis/LinuxProgrammingWithRaspberryPi.git
+Cloning into 'LinuxProgrammingWithRaspberryPi'...
+remote: Enumerating objects: 629, done.
+remote: Total 629 (delta 0), reused 0 (delta 0), pack-reused 629
+Receiving objects: 100% (629/629), 1.92 MiB | 3.07 MiB/s, done.
+Resolving deltas: 100% (302/302), done.
+june14@junhachoi:~$ ls
+LinuxProgrammingWithRaspberryPi  snap
+june14@junhachoi:~$ cd LinuxProgrammingWithRaspberryPi/Chapter2
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ ls
+a.txt  common.h  helloworld.c  input.c     main.c    makefile1  makefile3  makefile5  makefile7
+c.txt  e.txt     helloworld.s  libmine.so  makefile  makefile2  makefile4  makefile6  print.c
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ cat helloworld.c
+#include <stdio.h>
+
+int main(int argc, char **argv)
+{
+    printf("Hello, World!\n");
+
+    return 0;
+}
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ sudo apt install gcc
+[sudo] password for june14:
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following additional packages will be installed:
+  cpp cpp-11 fontconfig-config fonts-dejavu-core gcc-11 gcc-11-base gcc-12-base libasan6 libatomic1 libc-dev-bin
+  libc-devtools libc6 libc6-dev libcc1-0 libcrypt-dev libdeflate0 libfontconfig1 libfreetype6 libgcc-11-dev libgcc-s1
+  libgd3 libgomp1 libisl23 libitm1 libjbig0 libjpeg-turbo8 libjpeg8 liblsan0 libmpc3 libnsl-dev libquadmath0
+  libstdc++6 libtiff5 libtirpc-dev libtsan0 libubsan1 libwebp7 libxpm4 linux-libc-dev manpages-dev rpcsvc-proto
+Suggested packages:
+  cpp-doc gcc-11-locales gcc-multilib make autoconf automake libtool flex bison gdb gcc-doc gcc-11-multilib gcc-11-doc
+  glibc-doc libgd-tools
+Recommended packages:
+  libnss-nis libnss-nisplus
+The following NEW packages will be installed:
+  cpp cpp-11 fontconfig-config fonts-dejavu-core gcc gcc-11 gcc-11-base libasan6 libatomic1 libc-dev-bin libc-devtools
+  libc6-dev libcc1-0 libcrypt-dev libdeflate0 libfontconfig1 libfreetype6 libgcc-11-dev libgd3 libgomp1 libisl23
+  libitm1 libjbig0 libjpeg-turbo8 libjpeg8 liblsan0 libmpc3 libnsl-dev libquadmath0 libtiff5 libtirpc-dev libtsan0
+  libubsan1 libwebp7 libxpm4 linux-libc-dev manpages-dev rpcsvc-proto
+The following packages will be upgraded:
+  gcc-12-base libc6 libgcc-s1 libstdc++6
+4 upgraded, 38 newly installed, 0 to remove and 97 not upgraded.
+Need to get 53.1 MB of archives.
+After this operation, 153 MB of additional disk space will be used.
+Do you want to continue? [Y/n] y
+Get:1 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libc6 amd64 2.35-0ubuntu3.3 [3235 kB]
+Get:2 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 gcc-12-base amd64 12.3.0-1ubuntu1~22.04 [20.1 kB]
+Get:3 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libstdc++6 amd64 12.3.0-1ubuntu1~22.04 [699 kB]
+Get:4 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libgcc-s1 amd64 12.3.0-1ubuntu1~22.04 [53.9 kB]
+Get:5 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 gcc-11-base amd64 11.4.0-1ubuntu1~22.04 [20.2 kB]
+Get:6 http://archive.ubuntu.com/ubuntu jammy/main amd64 libisl23 amd64 0.24-2build1 [727 kB]
+Get:7 http://archive.ubuntu.com/ubuntu jammy/main amd64 libmpc3 amd64 1.2.1-2build1 [46.9 kB]
+Get:8 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 cpp-11 amd64 11.4.0-1ubuntu1~22.04 [10.0 MB]
+Get:9 http://archive.ubuntu.com/ubuntu jammy/main amd64 cpp amd64 4:11.2.0-1ubuntu1 [27.7 kB]
+Get:10 http://archive.ubuntu.com/ubuntu jammy/main amd64 fonts-dejavu-core all 2.37-2build1 [1041 kB]
+Get:11 http://archive.ubuntu.com/ubuntu jammy/main amd64 fontconfig-config all 2.13.1-4.2ubuntu5 [29.1 kB]
+Get:12 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libcc1-0 amd64 12.3.0-1ubuntu1~22.04 [48.3 kB]
+Get:13 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libgomp1 amd64 12.3.0-1ubuntu1~22.04 [126 kB]
+Get:14 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libitm1 amd64 12.3.0-1ubuntu1~22.04 [30.2 kB]
+Get:15 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libatomic1 amd64 12.3.0-1ubuntu1~22.04 [10.4 kB]
+Get:16 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libasan6 amd64 11.4.0-1ubuntu1~22.04 [2282 kB]
+Get:17 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 liblsan0 amd64 12.3.0-1ubuntu1~22.04 [1069 kB]
+Get:18 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libtsan0 amd64 11.4.0-1ubuntu1~22.04 [2260 kB]
+Get:19 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libubsan1 amd64 12.3.0-1ubuntu1~22.04 [976 kB]
+Get:20 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libquadmath0 amd64 12.3.0-1ubuntu1~22.04 [154 kB]
+Get:21 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libgcc-11-dev amd64 11.4.0-1ubuntu1~22.04 [2517 kB]
+Get:22 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 gcc-11 amd64 11.4.0-1ubuntu1~22.04 [20.1 MB]
+Get:23 http://archive.ubuntu.com/ubuntu jammy/main amd64 gcc amd64 4:11.2.0-1ubuntu1 [5112 B]
+Get:24 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libc-dev-bin amd64 2.35-0ubuntu3.3 [20.3 kB]
+Get:25 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libfreetype6 amd64 2.11.1+dfsg-1ubuntu0.2 [389 kB]
+Get:26 http://archive.ubuntu.com/ubuntu jammy/main amd64 libfontconfig1 amd64 2.13.1-4.2ubuntu5 [131 kB]
+Get:27 http://archive.ubuntu.com/ubuntu jammy/main amd64 libjpeg-turbo8 amd64 2.1.2-0ubuntu1 [134 kB]
+Get:28 http://archive.ubuntu.com/ubuntu jammy/main amd64 libjpeg8 amd64 8c-2ubuntu10 [2264 B]
+Get:29 http://archive.ubuntu.com/ubuntu jammy/main amd64 libdeflate0 amd64 1.10-2 [70.9 kB]
+Get:30 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libjbig0 amd64 2.1-3.1ubuntu0.22.04.1 [29.2 kB]
+Get:31 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libwebp7 amd64 1.2.2-2ubuntu0.22.04.2 [206 kB]
+Get:32 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libtiff5 amd64 4.3.0-6ubuntu0.5 [184 kB]
+Get:33 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libxpm4 amd64 1:3.5.12-1ubuntu0.22.04.1 [36.4 kB]
+Get:34 http://archive.ubuntu.com/ubuntu jammy/main amd64 libgd3 amd64 2.3.0-2ubuntu2 [129 kB]
+Get:35 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libc-devtools amd64 2.35-0ubuntu3.3 [28.9 kB]
+Get:36 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 linux-libc-dev amd64 5.15.0-84.93 [1330 kB]
+Get:37 http://archive.ubuntu.com/ubuntu jammy/main amd64 libcrypt-dev amd64 1:4.4.27-1 [112 kB]
+Get:38 http://archive.ubuntu.com/ubuntu jammy/main amd64 rpcsvc-proto amd64 1.4.2-0ubuntu6 [68.5 kB]
+Get:39 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libtirpc-dev amd64 1.3.2-2ubuntu0.1 [192 kB]
+Get:40 http://archive.ubuntu.com/ubuntu jammy/main amd64 libnsl-dev amd64 1.3.0-2build2 [71.3 kB]
+Get:41 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libc6-dev amd64 2.35-0ubuntu3.3 [2100 kB]
+Get:42 http://archive.ubuntu.com/ubuntu jammy/main amd64 manpages-dev all 5.10-1ubuntu1 [2309 kB]
+Fetched 53.1 MB in 11s (4643 kB/s)
+Extracting templates from packages: 100%
+Preconfiguring packages ...
+(Reading database ... 24137 files and directories currently installed.)
+Preparing to unpack .../libc6_2.35-0ubuntu3.3_amd64.deb ...
+Unpacking libc6:amd64 (2.35-0ubuntu3.3) over (2.35-0ubuntu3.1) ...
+Setting up libc6:amd64 (2.35-0ubuntu3.3) ...
+(Reading database ... 24137 files and directories currently installed.)
+Preparing to unpack .../gcc-12-base_12.3.0-1ubuntu1~22.04_amd64.deb ...
+Unpacking gcc-12-base:amd64 (12.3.0-1ubuntu1~22.04) over (12.1.0-2ubuntu1~22.04) ...
+Setting up gcc-12-base:amd64 (12.3.0-1ubuntu1~22.04) ...
+(Reading database ... 24137 files and directories currently installed.)
+Preparing to unpack .../libstdc++6_12.3.0-1ubuntu1~22.04_amd64.deb ...
+Unpacking libstdc++6:amd64 (12.3.0-1ubuntu1~22.04) over (12.1.0-2ubuntu1~22.04) ...
+Setting up libstdc++6:amd64 (12.3.0-1ubuntu1~22.04) ...
+(Reading database ... 24137 files and directories currently installed.)
+Preparing to unpack .../libgcc-s1_12.3.0-1ubuntu1~22.04_amd64.deb ...
+Unpacking libgcc-s1:amd64 (12.3.0-1ubuntu1~22.04) over (12.1.0-2ubuntu1~22.04) ...
+Setting up libgcc-s1:amd64 (12.3.0-1ubuntu1~22.04) ...
+Selecting previously unselected package gcc-11-base:amd64.
+(Reading database ... 24137 files and directories currently installed.)
+Preparing to unpack .../00-gcc-11-base_11.4.0-1ubuntu1~22.04_amd64.deb ...
+Unpacking gcc-11-base:amd64 (11.4.0-1ubuntu1~22.04) ...
+Selecting previously unselected package libisl23:amd64.
+Preparing to unpack .../01-libisl23_0.24-2build1_amd64.deb ...
+Unpacking libisl23:amd64 (0.24-2build1) ...
+Selecting previously unselected package libmpc3:amd64.
+Preparing to unpack .../02-libmpc3_1.2.1-2build1_amd64.deb ...
+Unpacking libmpc3:amd64 (1.2.1-2build1) ...
+Selecting previously unselected package cpp-11.
+Preparing to unpack .../03-cpp-11_11.4.0-1ubuntu1~22.04_amd64.deb ...
+Unpacking cpp-11 (11.4.0-1ubuntu1~22.04) ...
+Selecting previously unselected package cpp.
+Preparing to unpack .../04-cpp_4%3a11.2.0-1ubuntu1_amd64.deb ...
+Unpacking cpp (4:11.2.0-1ubuntu1) ...
+Selecting previously unselected package fonts-dejavu-core.
+Preparing to unpack .../05-fonts-dejavu-core_2.37-2build1_all.deb ...
+Unpacking fonts-dejavu-core (2.37-2build1) ...
+Selecting previously unselected package fontconfig-config.
+Preparing to unpack .../06-fontconfig-config_2.13.1-4.2ubuntu5_all.deb ...
+Unpacking fontconfig-config (2.13.1-4.2ubuntu5) ...
+Selecting previously unselected package libcc1-0:amd64.
+Preparing to unpack .../07-libcc1-0_12.3.0-1ubuntu1~22.04_amd64.deb ...
+Unpacking libcc1-0:amd64 (12.3.0-1ubuntu1~22.04) ...
+Selecting previously unselected package libgomp1:amd64.
+Preparing to unpack .../08-libgomp1_12.3.0-1ubuntu1~22.04_amd64.deb ...
+Unpacking libgomp1:amd64 (12.3.0-1ubuntu1~22.04) ...
+Selecting previously unselected package libitm1:amd64.
+Preparing to unpack .../09-libitm1_12.3.0-1ubuntu1~22.04_amd64.deb ...
+Unpacking libitm1:amd64 (12.3.0-1ubuntu1~22.04) ...
+Selecting previously unselected package libatomic1:amd64.
+Preparing to unpack .../10-libatomic1_12.3.0-1ubuntu1~22.04_amd64.deb ...
+Unpacking libatomic1:amd64 (12.3.0-1ubuntu1~22.04) ...
+Selecting previously unselected package libasan6:amd64.
+Preparing to unpack .../11-libasan6_11.4.0-1ubuntu1~22.04_amd64.deb ...
+Unpacking libasan6:amd64 (11.4.0-1ubuntu1~22.04) ...
+Selecting previously unselected package liblsan0:amd64.
+Preparing to unpack .../12-liblsan0_12.3.0-1ubuntu1~22.04_amd64.deb ...
+Unpacking liblsan0:amd64 (12.3.0-1ubuntu1~22.04) ...
+Selecting previously unselected package libtsan0:amd64.
+Preparing to unpack .../13-libtsan0_11.4.0-1ubuntu1~22.04_amd64.deb ...
+Unpacking libtsan0:amd64 (11.4.0-1ubuntu1~22.04) ...
+Selecting previously unselected package libubsan1:amd64.
+Preparing to unpack .../14-libubsan1_12.3.0-1ubuntu1~22.04_amd64.deb ...
+Unpacking libubsan1:amd64 (12.3.0-1ubuntu1~22.04) ...
+Selecting previously unselected package libquadmath0:amd64.
+Preparing to unpack .../15-libquadmath0_12.3.0-1ubuntu1~22.04_amd64.deb ...
+Unpacking libquadmath0:amd64 (12.3.0-1ubuntu1~22.04) ...
+Selecting previously unselected package libgcc-11-dev:amd64.
+Preparing to unpack .../16-libgcc-11-dev_11.4.0-1ubuntu1~22.04_amd64.deb ...
+Unpacking libgcc-11-dev:amd64 (11.4.0-1ubuntu1~22.04) ...
+Selecting previously unselected package gcc-11.
+Preparing to unpack .../17-gcc-11_11.4.0-1ubuntu1~22.04_amd64.deb ...
+Unpacking gcc-11 (11.4.0-1ubuntu1~22.04) ...
+Selecting previously unselected package gcc.
+Preparing to unpack .../18-gcc_4%3a11.2.0-1ubuntu1_amd64.deb ...
+Unpacking gcc (4:11.2.0-1ubuntu1) ...
+Selecting previously unselected package libc-dev-bin.
+Preparing to unpack .../19-libc-dev-bin_2.35-0ubuntu3.3_amd64.deb ...
+Unpacking libc-dev-bin (2.35-0ubuntu3.3) ...
+Selecting previously unselected package libfreetype6:amd64.
+Preparing to unpack .../20-libfreetype6_2.11.1+dfsg-1ubuntu0.2_amd64.deb ...
+Unpacking libfreetype6:amd64 (2.11.1+dfsg-1ubuntu0.2) ...
+Selecting previously unselected package libfontconfig1:amd64.
+Preparing to unpack .../21-libfontconfig1_2.13.1-4.2ubuntu5_amd64.deb ...
+Unpacking libfontconfig1:amd64 (2.13.1-4.2ubuntu5) ...
+Selecting previously unselected package libjpeg-turbo8:amd64.
+Preparing to unpack .../22-libjpeg-turbo8_2.1.2-0ubuntu1_amd64.deb ...
+Unpacking libjpeg-turbo8:amd64 (2.1.2-0ubuntu1) ...
+Selecting previously unselected package libjpeg8:amd64.
+Preparing to unpack .../23-libjpeg8_8c-2ubuntu10_amd64.deb ...
+Unpacking libjpeg8:amd64 (8c-2ubuntu10) ...
+Selecting previously unselected package libdeflate0:amd64.
+Preparing to unpack .../24-libdeflate0_1.10-2_amd64.deb ...
+Unpacking libdeflate0:amd64 (1.10-2) ...
+Selecting previously unselected package libjbig0:amd64.
+Preparing to unpack .../25-libjbig0_2.1-3.1ubuntu0.22.04.1_amd64.deb ...
+Unpacking libjbig0:amd64 (2.1-3.1ubuntu0.22.04.1) ...
+Selecting previously unselected package libwebp7:amd64.
+Preparing to unpack .../26-libwebp7_1.2.2-2ubuntu0.22.04.2_amd64.deb ...
+Unpacking libwebp7:amd64 (1.2.2-2ubuntu0.22.04.2) ...
+Selecting previously unselected package libtiff5:amd64.
+Preparing to unpack .../27-libtiff5_4.3.0-6ubuntu0.5_amd64.deb ...
+Unpacking libtiff5:amd64 (4.3.0-6ubuntu0.5) ...
+Selecting previously unselected package libxpm4:amd64.
+Preparing to unpack .../28-libxpm4_1%3a3.5.12-1ubuntu0.22.04.1_amd64.deb ...
+Unpacking libxpm4:amd64 (1:3.5.12-1ubuntu0.22.04.1) ...
+Selecting previously unselected package libgd3:amd64.
+Preparing to unpack .../29-libgd3_2.3.0-2ubuntu2_amd64.deb ...
+Unpacking libgd3:amd64 (2.3.0-2ubuntu2) ...
+Selecting previously unselected package libc-devtools.
+Preparing to unpack .../30-libc-devtools_2.35-0ubuntu3.3_amd64.deb ...
+Unpacking libc-devtools (2.35-0ubuntu3.3) ...
+Selecting previously unselected package linux-libc-dev:amd64.
+Preparing to unpack .../31-linux-libc-dev_5.15.0-84.93_amd64.deb ...
+Unpacking linux-libc-dev:amd64 (5.15.0-84.93) ...
+Selecting previously unselected package libcrypt-dev:amd64.
+Preparing to unpack .../32-libcrypt-dev_1%3a4.4.27-1_amd64.deb ...
+Unpacking libcrypt-dev:amd64 (1:4.4.27-1) ...
+Selecting previously unselected package rpcsvc-proto.
+Preparing to unpack .../33-rpcsvc-proto_1.4.2-0ubuntu6_amd64.deb ...
+Unpacking rpcsvc-proto (1.4.2-0ubuntu6) ...
+Selecting previously unselected package libtirpc-dev:amd64.
+Preparing to unpack .../34-libtirpc-dev_1.3.2-2ubuntu0.1_amd64.deb ...
+Unpacking libtirpc-dev:amd64 (1.3.2-2ubuntu0.1) ...
+Selecting previously unselected package libnsl-dev:amd64.
+Preparing to unpack .../35-libnsl-dev_1.3.0-2build2_amd64.deb ...
+Unpacking libnsl-dev:amd64 (1.3.0-2build2) ...
+Selecting previously unselected package libc6-dev:amd64.
+Preparing to unpack .../36-libc6-dev_2.35-0ubuntu3.3_amd64.deb ...
+Unpacking libc6-dev:amd64 (2.35-0ubuntu3.3) ...
+Selecting previously unselected package manpages-dev.
+Preparing to unpack .../37-manpages-dev_5.10-1ubuntu1_all.deb ...
+Unpacking manpages-dev (5.10-1ubuntu1) ...
+Setting up gcc-11-base:amd64 (11.4.0-1ubuntu1~22.04) ...
+Setting up manpages-dev (5.10-1ubuntu1) ...
+Setting up libxpm4:amd64 (1:3.5.12-1ubuntu0.22.04.1) ...
+Setting up libdeflate0:amd64 (1.10-2) ...
+Setting up linux-libc-dev:amd64 (5.15.0-84.93) ...
+Setting up libgomp1:amd64 (12.3.0-1ubuntu1~22.04) ...
+Setting up libjbig0:amd64 (2.1-3.1ubuntu0.22.04.1) ...
+Setting up libasan6:amd64 (11.4.0-1ubuntu1~22.04) ...
+Setting up libtirpc-dev:amd64 (1.3.2-2ubuntu0.1) ...
+Setting up rpcsvc-proto (1.4.2-0ubuntu6) ...
+Setting up libfreetype6:amd64 (2.11.1+dfsg-1ubuntu0.2) ...
+Setting up libquadmath0:amd64 (12.3.0-1ubuntu1~22.04) ...
+Setting up libmpc3:amd64 (1.2.1-2build1) ...
+Setting up libatomic1:amd64 (12.3.0-1ubuntu1~22.04) ...
+Setting up fonts-dejavu-core (2.37-2build1) ...
+Setting up libjpeg-turbo8:amd64 (2.1.2-0ubuntu1) ...
+Setting up libwebp7:amd64 (1.2.2-2ubuntu0.22.04.2) ...
+Setting up libubsan1:amd64 (12.3.0-1ubuntu1~22.04) ...
+Setting up libnsl-dev:amd64 (1.3.0-2build2) ...
+Setting up libcrypt-dev:amd64 (1:4.4.27-1) ...
+Setting up libisl23:amd64 (0.24-2build1) ...
+Setting up libc-dev-bin (2.35-0ubuntu3.3) ...
+Setting up libcc1-0:amd64 (12.3.0-1ubuntu1~22.04) ...
+Setting up liblsan0:amd64 (12.3.0-1ubuntu1~22.04) ...
+Setting up libitm1:amd64 (12.3.0-1ubuntu1~22.04) ...
+Setting up libtsan0:amd64 (11.4.0-1ubuntu1~22.04) ...
+Setting up libjpeg8:amd64 (8c-2ubuntu10) ...
+Setting up cpp-11 (11.4.0-1ubuntu1~22.04) ...
+Setting up fontconfig-config (2.13.1-4.2ubuntu5) ...
+Setting up libgcc-11-dev:amd64 (11.4.0-1ubuntu1~22.04) ...
+Setting up gcc-11 (11.4.0-1ubuntu1~22.04) ...
+Setting up cpp (4:11.2.0-1ubuntu1) ...
+Setting up libc6-dev:amd64 (2.35-0ubuntu3.3) ...
+Setting up libtiff5:amd64 (4.3.0-6ubuntu0.5) ...
+Setting up libfontconfig1:amd64 (2.13.1-4.2ubuntu5) ...
+Setting up gcc (4:11.2.0-1ubuntu1) ...
+Setting up libgd3:amd64 (2.3.0-2ubuntu2) ...
+Setting up libc-devtools (2.35-0ubuntu3.3) ...
+Processing triggers for man-db (2.10.2-1) ...
+Processing triggers for libc-bin (2.35-0ubuntu3.1) ...
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ gcc -o helloworld helloworld.c
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ gcc -S helloworld.c
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ ls hello*
+helloworld  helloworld.c  helloworld.s
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ as -o helloworld.o helloworld.s
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ gcc -o helloworld helloworld.o
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ file helloworld
+helloworld: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=13757e111d9f54fac64f83a1ee86bd80bedddcbc, for GNU/Linux 3.2.0, not stripped
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ ./helloworld
+Hello, World!
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ cat main.c
+#include "common.h"
+
+int main( )
+{
+    char* str = input( );
+    print(str);
+    print("\n");
+
+    return 0;
+}
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ cat main.h
+cat: main.h: No such file or directory
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ cat common.h
+#ifndef __COMMON_H__
+#define __COMMON_H__
+
+extern void print(char* str);
+extern char* input( );
+
+#endif /* __COMMON_H__ */
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ gcc -o test main.c print.c input.c
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ hello
+Command 'hello' not found, but can be installed with:
+sudo snap install hello              # version 2.10, or
+sudo apt  install hello              # version 2.10-2ubuntu4
+sudo apt  install hello-traditional  # version 2.10-5
+See 'snap info hello' for additional versions.
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ gcc -o test main.c print.c input.c
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ ls
+a.txt  common.h  helloworld    helloworld.o  input.c     main.c    makefile1  makefile3  makefile5  makefile7  test
+c.txt  e.txt     helloworld.c  helloworld.s  libmine.so  makefile  makefile2  makefile4  makefile6  print.c
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ cat input.c
+#include <stdio.h>
+#include <stdlib.h>
+#include "common.h"
+
+char* input( )
+{
+    char *str;
+    str = (char*)malloc(BUFSIZ);
+    scanf("%s", str);
+
+    return str;
+}
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ cat makefile1
+test :
+        gcc -o test main.c print.c input.c
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ ./test
+hello
+hello
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ make -f makefile1 clean
+Command 'make' not found, but can be installed with:
+sudo apt install make        # version 4.3-4.1build1, or
+sudo apt install make-guile  # version 4.3-4.1build1
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ usdo apt install make
+Command 'usdo' not found, did you mean:
+  command 'udo' from deb udo (6.4.1-6)
+  command 'sudo' from deb sudo (1.9.9-1ubuntu2.4)
+  command 'sudo' from deb sudo-ldap (1.9.9-1ubuntu2.4)
+Try: sudo apt install <deb name>
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ sudo apt install make
+[sudo] password for june14:
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+Suggested packages:
+  make-doc
+The following NEW packages will be installed:
+  make
+0 upgraded, 1 newly installed, 0 to remove and 97 not upgraded.
+Need to get 180 kB of archives.
+After this operation, 426 kB of additional disk space will be used.
+Get:1 http://archive.ubuntu.com/ubuntu jammy/main amd64 make amd64 4.3-4.1build1 [180 kB]
+Fetched 180 kB in 2s (109 kB/s)
+Selecting previously unselected package make.
+(Reading database ... 28453 files and directories currently installed.)
+Preparing to unpack .../make_4.3-4.1build1_amd64.deb ...
+Unpacking make (4.3-4.1build1) ...
+Setting up make (4.3-4.1build1) ...
+Processing triggers for man-db (2.10.2-1) ...
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ make -f makefile1 clean
+make: *** No rule to make target 'clean'.  Stop.
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ make -f makefile1
+make: 'test' is up to date.
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ ./test
+hellow
+hellow
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ make -f makefile2
+gcc -c main.c
+gcc -c print.c
+gcc -c input.c
+gcc -o test main.o print.o input.o
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ make
+make: Nothing to be done for 'all'.
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ cat makefile3
+OBJECTS = main.o print.o input.o
+
+test : $(OBJECTS)
+        gcc -o test $(OBJECTS)
+
+main.o : main.c common.h
+        gcc -c main.c
+
+print.o : print.c common.h
+        gcc -c print.c
+
+input.o : input.c common.h
+        gcc -c input.c
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ make -f makefile3
+make: 'test' is up to date.
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ make -f makefile1
+make: 'test' is up to date.
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ cat makefile1
+test :
+        gcc -o test main.c print.c input.c
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ make -f makefile3
+make: 'test' is up to date.
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ cat makefile4
+OBJECTS = main.o print.o input.o
+SRCS = main.c print.c input.c
+CFLAGS = -g
+TARGET = test
+
+$(TARGET) : $(OBJECTS)
+        $(CC) -o $(TARGET) $(OBJECTS)
+
+clean :
+        rm -f $(OBJECTS) $(TARGET) core
+
+main.o : main.c common.h
+print.o : print.c common.h
+input.o : input.c common.h
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ make -f makefile4 clean
+rm -f main.o print.o input.o test core
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ make -f makefile4
+cc -g   -c -o main.o main.c
+cc -g   -c -o print.o print.c
+cc -g   -c -o input.o input.c
+cc -o test main.o print.o input.o
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ cat makefile5
+# makefile
+.SUFFIXES : .c .o
+
+OBJECTS = main.o print.o input.o
+SRCS = main.c print.c input.c
+
+CC = gcc
+CFLAGS = -g
+TARGET = test
+
+$(TARGET) : $(OBJECTS)
+        $(CC) -o $@ $(OBJECTS)
+
+.c.o :
+        $(CC) $(CFLAGS) -c $< -o $@
+
+clean :
+        $(RM) $(OBJECTS) $(TARGET) core
+
+main.o : main.c common.h
+print.o : print.c common.h
+input.o : input.c common.h
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ make -f makefile5 clean
+rm -f main.o print.o input.o test core
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ make -f makefile5
+gcc -g -c main.c -o main.o
+gcc -g -c print.c -o print.o
+gcc -g -c input.c -o input.o
+gcc -o test main.o print.o input.o
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ cat makefile6
+# makefile
+.SUFFIXES : .c .o
+
+OBJECTS = main.o \
+          print.o \
+          input.o
+SRCS = $(OBJECTS:.o=.c)
+
+CC = gcc
+CFLAGS = -g
+TARGET = test
+
+$(TARGET) : $(OBJECTS)
+        $(CC) -o $@ $(OBJECTS)
+
+.c.o :
+        $(CC) $(CFLAGS) -c $< -o $@
+
+clean :
+        $(RM) $(OBJECTS) $(TARGET) core
+
+main.o : main.c common.h
+print.o : print.c common.h
+input.o : input.c common.h
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ make -f makefile6 clean
+rm -f main.o print.o input.o test core
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ make -f makefile6
+gcc -g -c main.c -o main.o
+gcc -g -c print.c -o print.o
+gcc -g -c input.c -o input.o
+gcc -o test main.o print.o input.o
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ cat makefile7
+# makefile
+.SUFFIXES : .c .o
+
+OBJECTS = main.o \
+          print.o \
+          input.o
+SRCS = $(OBJECTS:.o=.c)
+
+CC = gcc
+CFLAGS = -g
+TARGET = test helloworld
+
+all : $(TARGET)
+helloworld : helloworld.c
+        $(CC) -o $@ $<
+
+test : $(OBJECTS)
+        $(CC) -o $@ $(OBJECTS)
+
+clean :
+        $(RM) $(OBJECTS) $(TARGET) helloworld.o core
+
+main.o : main.c common.h
+print.o : print.c common.h
+input.o : input.c common.h
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ make -f makefile7 clean
+rm -f main.o print.o input.o test helloworld helloworld.o core
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ make -f makefile7
+gcc -g   -c -o main.o main.c
+gcc -g   -c -o print.o print.c
+gcc -g   -c -o input.o input.c
+gcc -o test main.o print.o input.o
+gcc -o helloworld helloworld.c
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

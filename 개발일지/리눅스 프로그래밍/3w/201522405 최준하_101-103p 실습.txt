@@ -1,0 +1,204 @@
+Welcome to Ubuntu 22.04.2 LTS (GNU/Linux 5.15.90.1-microsoft-standard-WSL2 x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+
+This message is shown once a day. To disable it please create the
+/home/june14/.hushlogin file.
+june14@junhachoi:~$ size test
+size: 'test': No such file
+june14@junhachoi:~$ cd LinuxProgrammingWithRaspberryPi/Chapter2
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ size test
+   text    data     bss     dec     hex filename
+   1799     616       8    2423     977 test
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ nm test
+0000000000003db8 d _DYNAMIC
+0000000000003fa8 d _GLOBAL_OFFSET_TABLE_
+0000000000002000 R _IO_stdin_used
+                 w _ITM_deregisterTMCloneTable
+                 w _ITM_registerTMCloneTable
+0000000000002138 r __FRAME_END__
+000000000000200c r __GNU_EH_FRAME_HDR
+0000000000004010 D __TMC_END__
+000000000000038c r __abi_tag
+0000000000004010 B __bss_start
+                 w __cxa_finalize@GLIBC_2.2.5
+0000000000004000 D __data_start
+0000000000001140 t __do_global_dtors_aux
+0000000000003db0 d __do_global_dtors_aux_fini_array_entry
+0000000000004008 D __dso_handle
+0000000000003da8 d __frame_dummy_init_array_entry
+                 w __gmon_start__
+                 U __isoc99_scanf@GLIBC_2.7
+                 U __libc_start_main@GLIBC_2.34
+0000000000004010 D _edata
+0000000000004018 B _end
+0000000000001230 T _fini
+0000000000001000 T _init
+00000000000010a0 T _start
+0000000000004010 b completed.0
+0000000000004000 W data_start
+00000000000010d0 t deregister_tm_clones
+0000000000001180 t frame_dummy
+00000000000011f3 T input
+0000000000001189 T main
+                 U malloc@GLIBC_2.2.5
+00000000000011c5 T print
+                 U printf@GLIBC_2.2.5
+0000000000001100 t register_tm_clones
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ gcc -c input.c print.c
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ ar rs libmine.a input.o print.o
+ar: creating libmine.a
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ ar tv libmine.a
+rw-r--r-- 0/0   1584 Jan  1 09:00 1970 input.o
+rw-r--r-- 0/0   1504 Jan  1 09:00 1970 print.o
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ ar d libmine.a input.o
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ file libmine.a
+libmine.a: current ar archive
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ ar tv libmine.a
+rw-r--r-- 0/0   1504 Jan  1 09:00 1970 print.o
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ ar rs libmine.a input.o
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ ar tv libmine.a
+rw-r--r-- 0/0   1504 Jan  1 09:00 1970 print.o
+rw-r--r-- 0/0   1584 Jan  1 09:00 1970 input.o
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ nm libmine.a
+
+print.o:
+0000000000000000 T print
+                 U printf
+
+input.o:
+                 U __isoc99_scanf
+0000000000000000 T input
+                 U malloc
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ gcc -o test main.c -lmine -L.
+/usr/bin/ld: skipping incompatible ./libmine.so when searching for -lmine
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ gcc -o test main.c -libmine.a -L.
+/usr/bin/ld: cannot find -libmine.a: No such file or directory
+collect2: error: ld returned 1 exit status
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ libmine.a
+libmine.a: command not found
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ gcc -o test main.c libmine.a -L.
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ gcc -fPIC -c print.c input.c
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ gcc -shared -o libmine.so print.o input.o
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ rm libmine.a
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ fime libmine.a
+Command 'fime' not found, did you mean:
+  command 'fiwe' from snap fiwe (latest)
+  command 'filme' from snap filme (0.1)
+  command 'file' from deb file (1:5.41-3ubuntu0.1)
+  command 'hime' from deb hime (0.9.11+dfsg-2build1)
+  command 'fim' from deb fim (0.5.3-9)
+  command 'time' from deb time (1.9-0.1build2)
+See 'snap info <snapname>' for additional versions.
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ file libmine.a
+libmine.a: cannot open `libmine.a' (No such file or directory)
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ gcc -o test main.c -lmine -L.
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ ./test
+./test: error while loading shared libraries: libmine.so: cannot open shared object file: No such file or directory
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ export LD_LIBRARY_PATH=$PWD:$LD_LIBRARY_PATH
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ ./test
+hello
+hello
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ ls -al test
+-rwxr-xr-x 1 june14 june14 15976 Sep 24 00:24 test
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ strip test
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ ls -al test
+-rwxr-xr-x 1 june14 june14 14472 Sep 24 00:29 test
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ gdb test
+Command 'gdb' not found, but can be installed with:
+sudo apt install gdb
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ sudo apt install gdb
+[sudo] password for june14:
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following additional packages will be installed:
+  libbabeltrace1 libboost-regex1.74.0 libc6-dbg libdebuginfod-common libdebuginfod1 libipt2 libsource-highlight-common
+  libsource-highlight4v5
+Suggested packages:
+  gdb-doc gdbserver
+The following NEW packages will be installed:
+  gdb libbabeltrace1 libboost-regex1.74.0 libc6-dbg libdebuginfod-common libdebuginfod1 libipt2
+  libsource-highlight-common libsource-highlight4v5
+0 upgraded, 9 newly installed, 0 to remove and 97 not upgraded.
+Need to get 18.9 MB of archives.
+After this operation, 35.0 MB of additional disk space will be used.
+Do you want to continue? [Y/n] y
+Get:1 http://archive.ubuntu.com/ubuntu jammy/main amd64 libdebuginfod-common all 0.186-1build1 [7878 B]
+Get:2 http://archive.ubuntu.com/ubuntu jammy/main amd64 libbabeltrace1 amd64 1.5.8-2build1 [160 kB]
+Get:3 http://archive.ubuntu.com/ubuntu jammy/main amd64 libdebuginfod1 amd64 0.186-1build1 [12.7 kB]
+Get:4 http://archive.ubuntu.com/ubuntu jammy/main amd64 libipt2 amd64 2.0.5-1 [46.4 kB]
+Get:5 http://archive.ubuntu.com/ubuntu jammy/main amd64 libsource-highlight-common all 3.1.9-4.1build2 [64.5 kB]
+Get:6 http://archive.ubuntu.com/ubuntu jammy/main amd64 libboost-regex1.74.0 amd64 1.74.0-14ubuntu3 [511 kB]
+Get:7 http://archive.ubuntu.com/ubuntu jammy/main amd64 libsource-highlight4v5 amd64 3.1.9-4.1build2 [207 kB]
+Get:8 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 gdb amd64 12.1-0ubuntu1~22.04 [3919 kB]
+Get:9 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libc6-dbg amd64 2.35-0ubuntu3.3 [13.9 MB]
+Fetched 18.9 MB in 5s (3830 kB/s)
+Preconfiguring packages ...
+Selecting previously unselected package libdebuginfod-common.
+(Reading database ... 28471 files and directories currently installed.)
+Preparing to unpack .../0-libdebuginfod-common_0.186-1build1_all.deb ...
+Unpacking libdebuginfod-common (0.186-1build1) ...
+Selecting previously unselected package libbabeltrace1:amd64.
+Preparing to unpack .../1-libbabeltrace1_1.5.8-2build1_amd64.deb ...
+Unpacking libbabeltrace1:amd64 (1.5.8-2build1) ...
+Selecting previously unselected package libdebuginfod1:amd64.
+Preparing to unpack .../2-libdebuginfod1_0.186-1build1_amd64.deb ...
+Unpacking libdebuginfod1:amd64 (0.186-1build1) ...
+Selecting previously unselected package libipt2.
+Preparing to unpack .../3-libipt2_2.0.5-1_amd64.deb ...
+Unpacking libipt2 (2.0.5-1) ...
+Selecting previously unselected package libsource-highlight-common.
+Preparing to unpack .../4-libsource-highlight-common_3.1.9-4.1build2_all.deb ...
+Unpacking libsource-highlight-common (3.1.9-4.1build2) ...
+Selecting previously unselected package libboost-regex1.74.0:amd64.
+Preparing to unpack .../5-libboost-regex1.74.0_1.74.0-14ubuntu3_amd64.deb ...
+Unpacking libboost-regex1.74.0:amd64 (1.74.0-14ubuntu3) ...
+Selecting previously unselected package libsource-highlight4v5.
+Preparing to unpack .../6-libsource-highlight4v5_3.1.9-4.1build2_amd64.deb ...
+Unpacking libsource-highlight4v5 (3.1.9-4.1build2) ...
+Selecting previously unselected package gdb.
+Preparing to unpack .../7-gdb_12.1-0ubuntu1~22.04_amd64.deb ...
+Unpacking gdb (12.1-0ubuntu1~22.04) ...
+Selecting previously unselected package libc6-dbg:amd64.
+Preparing to unpack .../8-libc6-dbg_2.35-0ubuntu3.3_amd64.deb ...
+Unpacking libc6-dbg:amd64 (2.35-0ubuntu3.3) ...
+Setting up libdebuginfod-common (0.186-1build1) ...
+
+Creating config file /etc/profile.d/debuginfod.sh with new version
+
+Creating config file /etc/profile.d/debuginfod.csh with new version
+Setting up libdebuginfod1:amd64 (0.186-1build1) ...
+Setting up libsource-highlight-common (3.1.9-4.1build2) ...
+Setting up libc6-dbg:amd64 (2.35-0ubuntu3.3) ...
+Setting up libboost-regex1.74.0:amd64 (1.74.0-14ubuntu3) ...
+Setting up libipt2 (2.0.5-1) ...
+Setting up libbabeltrace1:amd64 (1.5.8-2build1) ...
+Setting up libsource-highlight4v5 (3.1.9-4.1build2) ...
+Setting up gdb (12.1-0ubuntu1~22.04) ...
+Processing triggers for man-db (2.10.2-1) ...
+Processing triggers for libc-bin (2.35-0ubuntu3.1) ...
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$ gdb test
+GNU gdb (Ubuntu 12.1-0ubuntu1~22.04) 12.1
+Copyright (C) 2022 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<https://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from test...
+(No debugging symbols found in test)
+(gdb)
+(gdb) exit
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter2$
