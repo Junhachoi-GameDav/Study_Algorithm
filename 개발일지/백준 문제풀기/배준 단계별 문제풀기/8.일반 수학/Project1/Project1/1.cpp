@@ -109,6 +109,7 @@ int main() {
 	return 0;
 }
 */
+/*
 #include <iostream>
 using namespace std;
 
@@ -126,3 +127,30 @@ int main() {
 
 	return 0;
 }
+*/
+#include <iostream>
+using namespace std;
+
+int main() {
+
+	int X = 0, i = 1;
+	cin >> X;
+
+	//i는 대각선으로 순차적으로 커짐
+	while (X > i)
+	{
+		X -= i;
+		i++;
+	}
+
+	if (i % 2 == 1)
+	{
+		cout << i + 1 - X << '/' << X << endl;
+	}
+	else
+	{
+		cout << X << '/' << i + 1 - X << endl;
+	}
+	return 0;
+}
+
