@@ -1,3 +1,4 @@
+
 #include <iostream>
 using namespace std;
 
@@ -111,73 +112,130 @@ using namespace std;
 //}
 #pragma endregion
 
+#pragma region 동적할당
+//class Player
+//{
+//public:
+//};
+//class Knight : public Player
+//{
+//public:
+//	int hp;
+//	int defence;
+//};
+//
+//class Dog
+//{
+//public:
+//	int age;
+//	int size;
+//};
+//
+//int main() {
+//	// c 스타일 캐스팅
+//
+//#pragma region basic casting
+//	//값 타입 변환
+//	// 특징) 의미를 유지하기 위해서 원본 객체와 다른 비트열 재구성
+//	{
+//		int a = 12345;
+//		float b = (float)a;
+//		//이것이 c 스타일 캐스팅이다. 근데 안쓰는것이 좋다.
+//		// 케바케로 의미가 달라질 수가 있기 때문이다.
+//		// 특히 소수점 float 를 정수로 바꿀때 근사값을 정하느것이지 사실은 다른 값이다.
+//	}
+//
+//	//참조 타입 변환 - 위에랑 의미가 완전히 달라짐
+//	{
+//		int a = 12345;
+//		float b = (float&)a;
+//	}
+//
+//	//안전한 변환(casting) (변환시 100% 동일 한것)
+//	{
+//		int a = 12345;
+//		__int64 b = (__int64)a; // 더큰 바구니일 뿐
+//	}
+//	//불안전한 변환(casting)
+//	{
+//		int a = 12345;
+//		short c = (short)a; //작은 바구니에 담으면 당연히 데이터가 잘릴수있다.
+//	}
+//
+//	// 암시적 (써놓으면 당연히 명시적)
+//	{
+//		int a = 12345;
+//		float b = a; //이런식으로 안써넣는것 (생략) 컴파일러가 자동으로 casting
+//	}
+//#pragma endregion
+//
+//	//중요한 것은 포인터의 캐스팅~!
+//
+//	Knight* k = new Knight();
+//	//Dog* dog = (Dog*)k;
+//
+//	//만약 
+//	Dog* dog = (Dog*)k; //나이트를 도그로 변환?
+//	dog->age = 10; //이러면 오류도 안나서 진짜 찾기 어렵다...
+//	//엉뚱한 곳에 메모리를 적는 현상이 일어난다. 
+//	//만약 나이트보다 개가 더 용량이 크면 초과한 부분은 이상한곳에 메모리를 적고 있을 가능성이 크다.
+//
+//	//포인터의 캐스팅은 메모리가 바뀌진 않고 주소를 타고갔을때 무엇이 있는지를 간주하는게 바뀌는 것이다.
+//}
+#pragma endregion
+
+
+#pragma region vartual 소멸자
 
 class Player
 {
 public:
+	Player()
+	{
+		cout << "Player()" << endl;
+
+	}
+
+	virtual ~Player()
+	{
+		cout << "~Player()" << endl;
+
+	}
+
 };
-class Knight : public Player
+
+class Pet
+{
+
+};
+
+class Archer : public Player
 {
 public:
-	int hp;
-	int defence;
+	Archer()//생성자에서 펫 생성
+	{
+		_pet = new Pet();
+		cout << "Archer()" << endl;
+	}
+
+	virtual ~Archer()
+	{
+		cout << "~Archer()" << endl;
+		delete _pet;
+	}
+private:
+	Pet* _pet;
+
 };
 
-class Dog
+int main()
 {
-public:
-	int age;
-	int size;
-};
+	//Archer* archer = new Archer();
+	Player* player = new Archer(); //이러면 아쳐의 소멸자가 누락됨 //메모리가 결국 고갈될것임
+	//부모&자식 소멸자에 virtual을 붙히면 예방가능 
 
-int main() {
-	// c 스타일 캐스팅
 
-#pragma region basic casting
-	//값 타입 변환
-	// 특징) 의미를 유지하기 위해서 원본 객체와 다른 비트열 재구성
-	{
-		int a = 12345;
-		float b = (float)a;
-		//이것이 c 스타일 캐스팅이다. 근데 안쓰는것이 좋다.
-		// 케바케로 의미가 달라질 수가 있기 때문이다.
-		// 특히 소수점 float 를 정수로 바꿀때 근사값을 정하느것이지 사실은 다른 값이다.
-	}
-
-	//참조 타입 변환 - 위에랑 의미가 완전히 달라짐
-	{
-		int a = 12345;
-		float b = (float&)a;
-	}
-
-	//안전한 변환(casting) (변환시 100% 동일 한것)
-	{
-		int a = 12345;
-		__int64 b = (__int64)a; // 더큰 바구니일 뿐
-	}
-	//불안전한 변환(casting)
-	{
-		int a = 12345;
-		short c = (short)a; //작은 바구니에 담으면 당연히 데이터가 잘릴수있다.
-	}
-
-	// 암시적 (써놓으면 당연히 명시적)
-	{
-		int a = 12345;
-		float b = a; //이런식으로 안써넣는것 (생략) 컴파일러가 자동으로 casting
-	}
-#pragma endregion
-
-	//중요한 것은 포인터의 캐스팅~!
-
-	Knight* k = new Knight();
-	//Dog* dog = (Dog*)k;
-
-	//만약 
-	Dog* dog = (Dog*)k; //나이트를 도그로 변환?
-	dog->age = 10; //이러면 오류도 안나서 진짜 찾기 어렵다...
-	//엉뚱한 곳에 메모리를 적는 현상이 일어난다. 
-	//만약 나이트보다 개가 더 용량이 크면 초과한 부분은 이상한곳에 메모리를 적고 있을 가능성이 크다.
-
-	//포인터의 캐스팅은 메모리가 바뀌진 않고 주소를 타고갔을때 무엇이 있는지를 간주하는게 바뀌는 것이다.
+	delete player;
 }
+
+#pragma endregion
