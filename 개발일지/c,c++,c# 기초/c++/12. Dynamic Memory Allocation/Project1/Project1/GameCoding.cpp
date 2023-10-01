@@ -186,56 +186,120 @@ using namespace std;
 
 
 #pragma region vartual 소멸자
+//
+//class Player
+//{
+//public:
+//	Player()
+//	{
+//		cout << "Player()" << endl;
+//
+//	}
+//
+//	virtual ~Player()
+//	{
+//		cout << "~Player()" << endl;
+//
+//	}
+//
+//};
+//
+//class Pet
+//{
+//
+//};
+//
+//class Archer : public Player
+//{
+//public:
+//	Archer()//생성자에서 펫 생성
+//	{
+//		_pet = new Pet();
+//		cout << "Archer()" << endl;
+//	}
+//
+//	virtual ~Archer()
+//	{
+//		cout << "~Archer()" << endl;
+//		delete _pet;
+//	}
+//private:
+//	Pet* _pet;
+//
+//};
+//
+//int main()
+//{
+//	//Archer* archer = new Archer();
+//	Player* player = new Archer(); //이러면 아쳐의 소멸자가 누락됨 //메모리가 결국 고갈될것임
+//	//부모&자식 소멸자에 virtual을 붙히면 예방가능 
+//	// 가상함수이면 재정의가 되어 모든 자식클라스를 거쳐가기때문에 소멸자도 실행된다.
+//
+//	delete player;
+//}
 
-class Player
-{
-public:
-	Player()
-	{
-		cout << "Player()" << endl;
-
-	}
-
-	virtual ~Player()
-	{
-		cout << "~Player()" << endl;
-
-	}
-
-};
-
-class Pet
-{
-
-};
-
-class Archer : public Player
-{
-public:
-	Archer()//생성자에서 펫 생성
-	{
-		_pet = new Pet();
-		cout << "Archer()" << endl;
-	}
-
-	virtual ~Archer()
-	{
-		cout << "~Archer()" << endl;
-		delete _pet;
-	}
-private:
-	Pet* _pet;
-
-};
-
-int main()
-{
-	//Archer* archer = new Archer();
-	Player* player = new Archer(); //이러면 아쳐의 소멸자가 누락됨 //메모리가 결국 고갈될것임
-	//부모&자식 소멸자에 virtual을 붙히면 예방가능 
+#pragma endregion
 
 
-	delete player;
-}
+#pragma region 얕은 복사 & 깊은 복사
+//
+//class Pet
+//{
+//public:
+//	Pet()
+//	{
+//		cout << "Pet()" << endl;
+//	}
+//	~Pet()
+//	{
+//		cout << "~Pet()" << endl;
+//	}
+//
+//	Pet(const Pet& pet) { cout << "Pet(const Pet&)" << endl; }
+//};
+//
+//class Knight
+//{
+//public:
+//	Knight()
+//	{
+//		_pet = new Pet();
+//	}
+//	~Knight()
+//	{
+//		delete _pet;
+//	}
+//	Knight(const Knight& k)
+//	{
+//		_hp = k._hp;
+//		//_pet = k._pet; //얕은 복사
+//		_pet = new Pet(*(k._pet)); //새로 동적할당 한후 위에 Pet(const Pet&)참조값을 받으니까
+//		//포인터로 형변환
+//	}
+//
+//public:
+//	int _hp = 100;
+//	Pet* _pet;
+//};
+//
+//
+//int main()
+//{
+//	Knight k1;
+//	k1._hp = 200;
+//
+//
+//	Knight k2 = k1; //값이 복사됨 200 컴파일러가 생성자로 개입해서 넣은거임
+//	// 이러면 k1의 값 hp와 pet* 이 복사되어 k2도 같은 pet포인터를 가리킴
+//	//이건 얕은 복사 방식임
+//
+//
+//	return 0;
+//}
+#pragma endregion
+
+#pragma region 캐스팅 4총사
+
+
 
 #pragma endregion
