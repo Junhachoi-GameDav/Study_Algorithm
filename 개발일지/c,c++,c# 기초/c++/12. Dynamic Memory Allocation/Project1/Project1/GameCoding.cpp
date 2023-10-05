@@ -299,7 +299,73 @@ using namespace std;
 #pragma endregion
 
 #pragma region 캐스팅 4총사
+//면접에 자주나옴
+//static_cast (중요도)****
+//dynamic_cast *****
+//const_cast
+//reinterpret_cast
 
 
+class Player {
+public:
+	virtual ~Player() {};
+};
+class Knight : public Player {
+
+};
+
+class Dog
+{
+
+};
+int main() {
+	//static_cast  : 타입 원칙에 비춰볼때 상식적인 캐스팅만 허용해준다.
+	// 1) int <-> float
+	// 2) Player* -> Knight*
+
+	int hp = 100;
+	int maxHp = 200;
+
+	//둘다 같음
+	float ratio = (float)hp / static_cast<float>(maxHp); //0~1
+
+	Knight* k = new Knight();
+	Player* p = k; // 나이트는 플레이어다. 자동
+
+	//Knight* k2 = (Knight*)p;
+
+	//단점 : 안전하진 않다.
+
+
+	//dynamic_cast : 상속 관계에서의 안전한 변환
+	// 다향성 코드가 있어야 함 - 하나라도(virtual)이 있어야함
+	// 가상함수에 내용을 불러오는 것이기 때문임
+	// RTTI (Runtime Type Information)
+	// 캐스팅이 안되면 null =0 으로 밀어서 오류를 방지한다.
+	Knight* k2 = dynamic_cast<Knight*>(p); // C# as 문법이 이거랑 같다.
+	if (k2 != nullptr)
+	{
+		//기사였네?
+	}
+
+	//단점 : 조금 느리다. 매프레임마다 쓰진 말아야 한다.
+
+
+	//const_cast : const된 변수를 const안하고 싶을때 사용... 아예 안쓴다.
+	const char* name = "junha";
+	char* name2 = const_cast<char*>(name); //그냥 const를 지우면 되는데 굳이...
+
+
+	//reinterpret_cast : 포인터 -> 전혀 관계없는 다른 타입으로 변환
+	//위험하고, 강력한 형태, 거의 안씀
+	// re-interpret 다시 생각하다
+
+	//Dog* dog = (Dog*)k; 
+	Dog* dog = reinterpret_cast<Dog*>(k); //위랑 같다. 
+
+	__int64 address = reinterpret_cast<__int64>(k);
+
+	return 0;
+}
 
 #pragma endregion
