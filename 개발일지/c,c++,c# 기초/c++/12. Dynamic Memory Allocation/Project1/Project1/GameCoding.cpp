@@ -1,3 +1,4 @@
+
 #include <iostream>
 using namespace std;
 
@@ -111,73 +112,260 @@ using namespace std;
 //}
 #pragma endregion
 
+#pragma region 동적할당
+//class Player
+//{
+//public:
+//};
+//class Knight : public Player
+//{
+//public:
+//	int hp;
+//	int defence;
+//};
+//
+//class Dog
+//{
+//public:
+//	int age;
+//	int size;
+//};
+//
+//int main() {
+//	// c 스타일 캐스팅
+//
+//#pragma region basic casting
+//	//값 타입 변환
+//	// 특징) 의미를 유지하기 위해서 원본 객체와 다른 비트열 재구성
+//	{
+//		int a = 12345;
+//		float b = (float)a;
+//		//이것이 c 스타일 캐스팅이다. 근데 안쓰는것이 좋다.
+//		// 케바케로 의미가 달라질 수가 있기 때문이다.
+//		// 특히 소수점 float 를 정수로 바꿀때 근사값을 정하느것이지 사실은 다른 값이다.
+//	}
+//
+//	//참조 타입 변환 - 위에랑 의미가 완전히 달라짐
+//	{
+//		int a = 12345;
+//		float b = (float&)a;
+//	}
+//
+//	//안전한 변환(casting) (변환시 100% 동일 한것)
+//	{
+//		int a = 12345;
+//		__int64 b = (__int64)a; // 더큰 바구니일 뿐
+//	}
+//	//불안전한 변환(casting)
+//	{
+//		int a = 12345;
+//		short c = (short)a; //작은 바구니에 담으면 당연히 데이터가 잘릴수있다.
+//	}
+//
+//	// 암시적 (써놓으면 당연히 명시적)
+//	{
+//		int a = 12345;
+//		float b = a; //이런식으로 안써넣는것 (생략) 컴파일러가 자동으로 casting
+//	}
+//#pragma endregion
+//
+//	//중요한 것은 포인터의 캐스팅~!
+//
+//	Knight* k = new Knight();
+//	//Dog* dog = (Dog*)k;
+//
+//	//만약 
+//	Dog* dog = (Dog*)k; //나이트를 도그로 변환?
+//	dog->age = 10; //이러면 오류도 안나서 진짜 찾기 어렵다...
+//	//엉뚱한 곳에 메모리를 적는 현상이 일어난다. 
+//	//만약 나이트보다 개가 더 용량이 크면 초과한 부분은 이상한곳에 메모리를 적고 있을 가능성이 크다.
+//
+//	//포인터의 캐스팅은 메모리가 바뀌진 않고 주소를 타고갔을때 무엇이 있는지를 간주하는게 바뀌는 것이다.
+//}
+#pragma endregion
 
-class Player
-{
+
+#pragma region vartual 소멸자
+//
+//class Player
+//{
+//public:
+//	Player()
+//	{
+//		cout << "Player()" << endl;
+//
+//	}
+//
+//	virtual ~Player()
+//	{
+//		cout << "~Player()" << endl;
+//
+//	}
+//
+//};
+//
+//class Pet
+//{
+//
+//};
+//
+//class Archer : public Player
+//{
+//public:
+//	Archer()//생성자에서 펫 생성
+//	{
+//		_pet = new Pet();
+//		cout << "Archer()" << endl;
+//	}
+//
+//	virtual ~Archer()
+//	{
+//		cout << "~Archer()" << endl;
+//		delete _pet;
+//	}
+//private:
+//	Pet* _pet;
+//
+//};
+//
+//int main()
+//{
+//	//Archer* archer = new Archer();
+//	Player* player = new Archer(); //이러면 아쳐의 소멸자가 누락됨 //메모리가 결국 고갈될것임
+//	//부모&자식 소멸자에 virtual을 붙히면 예방가능 
+//	// 가상함수이면 재정의가 되어 모든 자식클라스를 거쳐가기때문에 소멸자도 실행된다.
+//
+//	delete player;
+//}
+
+#pragma endregion
+
+
+#pragma region 얕은 복사 & 깊은 복사
+//
+//class Pet
+//{
+//public:
+//	Pet()
+//	{
+//		cout << "Pet()" << endl;
+//	}
+//	~Pet()
+//	{
+//		cout << "~Pet()" << endl;
+//	}
+//
+//	Pet(const Pet& pet) { cout << "Pet(const Pet&)" << endl; }
+//};
+//
+//class Knight
+//{
+//public:
+//	Knight()
+//	{
+//		_pet = new Pet();
+//	}
+//	~Knight()
+//	{
+//		delete _pet;
+//	}
+//	Knight(const Knight& k)
+//	{
+//		_hp = k._hp;
+//		//_pet = k._pet; //얕은 복사
+//		_pet = new Pet(*(k._pet)); //새로 동적할당 한후 위에 Pet(const Pet&)참조값을 받으니까
+//		//포인터로 형변환
+//	}
+//
+//public:
+//	int _hp = 100;
+//	Pet* _pet;
+//};
+//
+//
+//int main()
+//{
+//	Knight k1;
+//	k1._hp = 200;
+//
+//
+//	Knight k2 = k1; //값이 복사됨 200 컴파일러가 생성자로 개입해서 넣은거임
+//	// 이러면 k1의 값 hp와 pet* 이 복사되어 k2도 같은 pet포인터를 가리킴
+//	//이건 얕은 복사 방식임
+//
+//
+//	return 0;
+//}
+#pragma endregion
+
+#pragma region 캐스팅 4총사
+//면접에 자주나옴
+//static_cast (중요도)****
+//dynamic_cast *****
+//const_cast
+//reinterpret_cast
+
+
+class Player {
 public:
+	virtual ~Player() {};
 };
-class Knight : public Player
-{
-public:
-	int hp;
-	int defence;
+class Knight : public Player {
+
 };
 
 class Dog
 {
-public:
-	int age;
-	int size;
+
 };
-
 int main() {
-	// c 스타일 캐스팅
+	//static_cast  : 타입 원칙에 비춰볼때 상식적인 캐스팅만 허용해준다.
+	// 1) int <-> float
+	// 2) Player* -> Knight*
 
-#pragma region basic casting
-	//값 타입 변환
-	// 특징) 의미를 유지하기 위해서 원본 객체와 다른 비트열 재구성
-	{
-		int a = 12345;
-		float b = (float)a;
-		//이것이 c 스타일 캐스팅이다. 근데 안쓰는것이 좋다.
-		// 케바케로 의미가 달라질 수가 있기 때문이다.
-		// 특히 소수점 float 를 정수로 바꿀때 근사값을 정하느것이지 사실은 다른 값이다.
-	}
+	int hp = 100;
+	int maxHp = 200;
 
-	//참조 타입 변환 - 위에랑 의미가 완전히 달라짐
-	{
-		int a = 12345;
-		float b = (float&)a;
-	}
-
-	//안전한 변환(casting) (변환시 100% 동일 한것)
-	{
-		int a = 12345;
-		__int64 b = (__int64)a; // 더큰 바구니일 뿐
-	}
-	//불안전한 변환(casting)
-	{
-		int a = 12345;
-		short c = (short)a; //작은 바구니에 담으면 당연히 데이터가 잘릴수있다.
-	}
-
-	// 암시적 (써놓으면 당연히 명시적)
-	{
-		int a = 12345;
-		float b = a; //이런식으로 안써넣는것 (생략) 컴파일러가 자동으로 casting
-	}
-#pragma endregion
-
-	//중요한 것은 포인터의 캐스팅~!
+	//둘다 같음
+	float ratio = (float)hp / static_cast<float>(maxHp); //0~1
 
 	Knight* k = new Knight();
-	//Dog* dog = (Dog*)k;
+	Player* p = k; // 나이트는 플레이어다. 자동
 
-	//만약 
-	Dog* dog = (Dog*)k; //나이트를 도그로 변환?
-	dog->age = 10; //이러면 오류도 안나서 진짜 찾기 어렵다...
-	//엉뚱한 곳에 메모리를 적는 현상이 일어난다. 
-	//만약 나이트보다 개가 더 용량이 크면 초과한 부분은 이상한곳에 메모리를 적고 있을 가능성이 크다.
+	//Knight* k2 = (Knight*)p;
 
-	//포인터의 캐스팅은 메모리가 바뀌진 않고 주소를 타고갔을때 무엇이 있는지를 간주하는게 바뀌는 것이다.
+	//단점 : 안전하진 않다.
+
+
+	//dynamic_cast : 상속 관계에서의 안전한 변환
+	// 다향성 코드가 있어야 함 - 하나라도(virtual)이 있어야함
+	// 가상함수에 내용을 불러오는 것이기 때문임
+	// RTTI (Runtime Type Information)
+	// 캐스팅이 안되면 null =0 으로 밀어서 오류를 방지한다.
+	Knight* k2 = dynamic_cast<Knight*>(p); // C# as 문법이 이거랑 같다.
+	if (k2 != nullptr)
+	{
+		//기사였네?
+	}
+
+	//단점 : 조금 느리다. 매프레임마다 쓰진 말아야 한다.
+
+
+	//const_cast : const된 변수를 const안하고 싶을때 사용... 아예 안쓴다.
+	const char* name = "junha";
+	char* name2 = const_cast<char*>(name); //그냥 const를 지우면 되는데 굳이...
+
+
+	//reinterpret_cast : 포인터 -> 전혀 관계없는 다른 타입으로 변환
+	//위험하고, 강력한 형태, 거의 안씀
+	// re-interpret 다시 생각하다
+
+	//Dog* dog = (Dog*)k; 
+	Dog* dog = reinterpret_cast<Dog*>(k); //위랑 같다. 
+
+	__int64 address = reinterpret_cast<__int64>(k);
+
+	return 0;
 }
+
+#pragma endregion
