@@ -1,0 +1,4 @@
+https://xpectation.tistory.com/209
+
+$ explorer.exe .
+를 치면 된다.
