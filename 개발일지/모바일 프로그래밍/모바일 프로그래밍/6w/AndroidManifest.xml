@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.chapter06">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Chapter06">
+        <activity android:name="com.example.chapter06.MainActivity" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com.example.chapter06.Self0601" android:exported="true"/>
+        <activity android:name="com.example.chapter06.Self0602" android:exported="true"/>
+        <activity android:name="com.example.chapter06.Self0603" android:exported="true"/>
+        <activity android:name="com.example.chapter06.Exer0606" android:exported="true"/>
+        <activity android:name="com.example.chapter06.Exer0607" android:exported="true"/>
+        <activity android:name="com.example.chapter06.Self0601_org" android:exported="true"/>
+        <activity android:name="com.example.chapter06.Self0602_org" android:exported="true"/>
+        <activity android:name="com.example.chapter06.Self0603_org" android:exported="true"/>
+        <activity android:name="com.example.chapter06.Exer0606_org" android:exported="true"/>
+        <activity android:name="com.example.chapter06.Exer0607_org" android:exported="true"/>
+    </application>
+
+</manifest>

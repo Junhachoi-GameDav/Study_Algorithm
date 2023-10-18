@@ -1,0 +1,78 @@
+package com.example.chapter05;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+public class Self0503 extends AppCompatActivity {
+
+    EditText edt;
+    EditText edt2;
+    Button btn;
+    Button btn2;
+    TextView tview;
+
+    long mNow;
+    Date mDate;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        LinearLayout baseLayout = new LinearLayout(this);
+        baseLayout.setOrientation(LinearLayout.VERTICAL);
+        setContentView(baseLayout, params);
+
+        edt = new EditText(this);
+        edt.setHint("여기에 입력하세요");
+        ㅇ
+        baseLayout.addView(edt);
+
+        btn = new Button(this);
+        btn.setText("버튼입니다");
+        btn.setBackgroundColor(Color.YELLOW);
+        baseLayout.addView(btn);
+
+        tview = new TextView(this);
+        tview.setText("텍스트뷰입니다.");
+        tview.setTextSize(20);
+        tview.setTextColor(Color.MAGENTA);
+        baseLayout.addView(tview);
+
+        btn2 = new Button(this);
+        btn2.setText("날짜 시간");
+        btn2.setBackgroundColor(Color.YELLOW);
+        baseLayout.addView(btn2);
+
+        edt2= new EditText(this);
+        edt2.setHint("");
+        baseLayout.addView(edt2);
+
+        btn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View arg0) {
+                tview.setText(edt.getText().toString());
+            }
+        });
+
+        btn2.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View arg0) {
+                SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                mDate = new Date(mNow);
+                String time1 = mFormat.format(mDate);
+                edt2.setText(time1);
+            }
+        });
+    }
+
+}
