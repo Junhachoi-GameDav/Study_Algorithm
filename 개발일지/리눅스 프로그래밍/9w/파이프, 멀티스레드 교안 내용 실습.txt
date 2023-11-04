@@ -1,0 +1,86 @@
+**** 강원대학교 삼턱캠퍼스 멀티디자인학과 201522405 최준하 ****
+**** 과제: 파이프, 멀티스레드 교안 내용 실습 제출	     ****
+**********************************************************************
+
+Welcome to Ubuntu 22.04.2 LTS (GNU/Linux 5.15.90.1-microsoft-standard-WSL2 x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+
+This message is shown once a day. To disable it please create the
+/home/june14/.hushlogin file.
+
+ **** 디렉토리 변경 ****
+june14@junhachoi:~$ cd
+june14@junhachoi:~$ cd LinuxProgrammingWithRaspberryPi/
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi$ cd Chapter5/
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter5$ ls
+fifo_client.c  handleSignal.c  loop.c        msg_server.c        posix_msg_server.c  shm.c     system.c        vfork.c
+fifo_server.c  joystick.c      makefile      pipe.c              posix_sem.c         spawn.c   thread.c
+fork.c         limit.c         msg_client.c  posix_msg_client.c  sem.c               spawn2.c  thread_mutex.c
+
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter5$ sudo apt update
+[sudo] password for june14:
+
+**** 설치 생략 ****
+
+
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter5$ find -name pipe.c
+./pipe.c
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter5$ gcc -o pipe pipe.c
+pipe.c: In function ‘main’:
+pipe.c:23:9: warning: missing sentinel in function call [-Wformat=]
+   23 |         execl("/bin/date", "date", 0);          /* date 명령어 수행 */
+      |         ^~~~~
+
+**** 뒤에 0을 NULL로 바꾸어 오류 해결 ****
+
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter5$ gcc -o pipe pipe.c
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter5$ ./pipe
+Sat Nov  4 21:46:46 KST 2023
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter5$ sudo apt install make
+
+**** 설치 생략 ****
+
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter5$ make -f makefile
+gcc -o loop loop.c -pthread -lrt
+gcc -o handleSignal handleSignal.c -pthread -lrt
+gcc -o limit limit.c -pthread -lrt
+gcc -o fork fork.c -pthread -lrt
+gcc -o vfork vfork.c -pthread -lrt
+gcc -o system system.c -pthread -lrt
+gcc -o spawn spawn.c -pthread -lrt
+gcc -o spawn2 spawn2.c -pthread -lrt
+gcc -o fifo_server fifo_server.c -pthread -lrt
+gcc -o fifo_client fifo_client.c -pthread -lrt
+gcc -o msg_server msg_server.c -pthread -lrt
+gcc -o msg_client msg_client.c -pthread -lrt
+gcc -o sem sem.c -pthread -lrt
+gcc -o shm shm.c -pthread -lrt
+gcc -o posix_msg_server posix_msg_server.c -pthread -lrt
+gcc -o posix_msg_client posix_msg_client.c -pthread -lrt
+gcc -o posix_sem posix_sem.c -pthread -lrt
+gcc -o thread thread.c -pthread -lrt
+gcc -o thread_mutex thread_mutex.c -pthread -lrt
+gcc -o joystick joystick.c -pthread -lrt
+
+june14@junhachoi:~$ Calling from fifo_client
+Calling: command not found
+june14@junhachoi:~$ cd LinuxProgrammingWithRaspberryPi/Chapter5
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter5$ Calling from fifo_client
+Calling: command not found
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter5$ gcc -o fifo_server fifo_server.c
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter5$ gcc -o fifo_client fifo_client.c
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter5$
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter5$ ./fifo_server$
+-bash: ./fifo_server$: No such file or directory
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter5$ ./fifo_server&
+[2] 4896
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter5$ ./fifo_client
+^C
+[2]-  Done                    ./fifo_server
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter5$ ls -al fifo
+prw-r--r-- 1 june14 june14 0 Nov  4 22:29 fifo
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter5$
