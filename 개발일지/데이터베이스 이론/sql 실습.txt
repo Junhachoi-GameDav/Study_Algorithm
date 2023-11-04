@@ -1,0 +1,440 @@
+Microsoft Windows [Version 10.0.22621.2428]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\user>sqlplus scott/tiger@iedb.kangwon.ac.kr
+
+SQL*Plus: Release 19.0.0.0.0 - Production on 월 10월 23 14:15:58 2023
+Version 19.3.0.0.0
+
+Copyright (c) 1982, 2019, Oracle.  All rights reserved.
+
+
+다음에 접속됨:
+Oracle Database 11g Enterprise Edition Release 11.2.0.1.0 - 64bit Production
+With the Partitioning, OLAP, Data Mining and Real Application Testing options
+
+SQL> create user juna14 identified by 76547629;
+
+사용자가 생성되었습니다.
+
+SQL> grant connect, resource, create view to juna14;
+
+권한이 부여되었습니다.
+
+SQL> exit
+Oracle Database 11g Enterprise Edition Release 11.2.0.1.0 - 64bit Production
+With the Partitioning, OLAP, Data Mining and Real Application Testing options에서 분리되었습니다.
+
+C:\Users\user>sqlplus juna14@iedb.kangwon.ac.kr
+
+SQL*Plus: Release 19.0.0.0.0 - Production on 월 10월 23 14:17:29 2023
+Version 19.3.0.0.0
+
+Copyright (c) 1982, 2019, Oracle.  All rights reserved.
+
+비밀번호 입력:
+
+다음에 접속됨:
+Oracle Database 11g Enterprise Edition Release 11.2.0.1.0 - 64bit Production
+With the Partitioning, OLAP, Data Mining and Real Application Testing options
+
+SQL> show user
+USER은 "JUNA14"입니다
+SQL>
+
+SQL> select * from tab;
+
+선택된 레코드가 없습니다.
+
+SQL> create table emp as select * from juna14.emp;
+create table emp as select * from juna14.emp
+                                         *
+1행에 오류:
+ORA-00942: 테이블 또는 뷰가 존재하지 않습니다
+
+
+SQL> create table emp as select * from jang.emp;
+
+테이블이 생성되었습니다.
+
+SQL> create table dept as select * from scott.dept;
+
+테이블이 생성되었습니다.
+
+SQL> desc emp;
+ 이름                                      널?      유형
+ ----------------------------------------- -------- ----------------------------
+ EMPNO                                              NUMBER(4)
+ ENAME                                              VARCHAR2(10)
+ JOB                                                VARCHAR2(9)
+ MGR                                                NUMBER(4)
+ HIREDATE                                           DATE
+ SAL                                                NUMBER(7,2)
+ COMM                                               NUMBER(7,2)
+ DEPTNO                                             NUMBER(2)
+
+SQL> create table dept as select * from jang.dept;
+create table dept as select * from jang.dept
+             *
+1행에 오류:
+ORA-00955: 기존의 객체가 이름을 사용하고 있습니다.
+
+
+SQL> select * from dept;
+
+    DEPTNO DNAME                        LOC
+---------- ---------------------------- --------------------------
+        10 ACCOUNTING                   NEW YORK
+        20 RESEARCH                     DALLAS
+        30 SALES                        CHICAGO
+        40 OPERATIONS                   BOSTON
+
+SQL> desc dept;
+ 이름                                      널?      유형
+ ----------------------------------------- -------- ----------------------------
+ DEPTNO                                             NUMBER(2)
+ DNAME                                              VARCHAR2(14)
+ LOC                                                VARCHAR2(13)
+
+SQL> alter table dept add constraint pk_dept primary key (deptno);
+
+테이블이 변경되었습니다.
+
+SQL> drop table dept purge;
+
+테이블이 삭제되었습니다.
+
+SQL> create table dept as select * from jang.dept;
+
+테이블이 생성되었습니다.
+
+SQL> alter table dept add constraint pk_dept primary key (deptno);
+
+테이블이 변경되었습니다.
+
+SQL> desc dept;
+ 이름                                      널?      유형
+ ----------------------------------------- -------- ----------------------------
+ DEPTNO                                    NOT NULL NUMBER(2)
+ DNAME                                              VARCHAR2(14)
+ LOC                                                VARCHAR2(13)
+
+SQL> select *from dept;
+
+    DEPTNO DNAME                        LOC
+---------- ---------------------------- --------------------------
+        10 ACCOUNTING                   NEW YORK
+        20 RESEARCH                     DALLAS
+        30 SALES                        CHICAGO
+        40 OPERATIONS                   BOSTON
+
+SQL> update dept set deptno=null where deptno=10;
+update dept set deptno=null where deptno=10
+                *
+1행에 오류:
+ORA-01407: NULL로 ("JUNA14"."DEPT"."DEPTNO")을 갱신할 수 없습니다
+
+
+SQL> update dept set deptno=20 where deptno=10;
+update dept set deptno=20 where deptno=10
+*
+1행에 오류:
+ORA-00001: 무결성 제약 조건(JUNA14.PK_DEPT)에 위배됩니다
+
+SQL> alter table dept disable constraint pk_dept;
+
+테이블이 변경되었습니다.
+
+SQL> update dept set update dept set deptno=20 where deptno=10;
+update dept set update dept set deptno=20 where deptno=10
+                *
+1행에 오류:
+ORA-01747: 열명을 올바르게 지정해 주십시오
+
+
+SQL> update dept set deptno=20 where deptno=10;
+
+1 행이 업데이트되었습니다.
+
+SQL> commit;
+
+커밋이 완료되었습니다.
+
+SQL> select * from dept;
+
+    DEPTNO DNAME                        LOC
+---------- ---------------------------- --------------------------
+        20 ACCOUNTING                   NEW YORK
+        20 RESEARCH                     DALLAS
+        30 SALES                        CHICAGO
+        40 OPERATIONS                   BOSTON
+
+SQL> alter table dept enable constraint pk_dept;
+alter table dept enable constraint pk_dept
+*
+1행에 오류:
+ORA-02437: (JUNA14.PK_DEPT)을 검증할 수 없습니다 - 잘못된 기본 키입니다
+
+
+SQL> update dept set deptno=10 where dname='ACCOUNTING';
+
+1 행이 업데이트되었습니다.
+
+SQL> select
+  2  8
+  3  ^Z
+
+
+
+/********* 프라이머리 키 값은 유일성을 가져야한다. 그래서 안된것 **********
+
+SQL> select * from dept;
+
+    DEPTNO DNAME                        LOC
+---------- ---------------------------- --------------------------
+        10 ACCOUNTING                   NEW YORK
+        20 RESEARCH                     DALLAS
+        30 SALES                        CHICAGO
+        40 OPERATIONS                   BOSTON
+
+
+
+
+SQL>  select empno, ename, deptno from emp;
+
+     EMPNO ENAME                    DEPTNO
+---------- -------------------- ----------
+      7369 SMITH                        20
+      7499 ALLEN                        30
+      7521 WARD                         30
+      7566 JONES                        20
+      7654 MARTIN                       30
+      7698 BLAKE                        30
+      7782 CLARK                        10
+      7788 SCOTT                        20
+      7839 KING                         10
+      7844 TURNER                       30
+      7876 ADAMS                        20
+
+     EMPNO ENAME                    DEPTNO
+---------- -------------------- ----------
+      7900 JAMES                        30
+      7902 FORD                         20
+      7934 MILLER                       10
+
+14 행이 선택되었습니다.
+
+SQL> update emp set empno=7000 where deptno=10;
+update emp set empno=7000 where deptno=10
+*
+1행에 오류:
+ORA-00001: 무결성 제약 조건(JUNA14.PK_EMP)에 위배됩니다
+
+
+SQL> rollback;
+
+롤백이 완료되었습니다.
+
+SQL> alter table emp drop constraint pk_emp;
+
+테이블이 변경되었습니다.
+
+
+
+
+/**************
+
+
+SQL> alter table emp add constraint pk_emp primary key (empno);
+
+테이블이 변경되었습니다.
+
+SQL> desc emp;
+ 이름                                      널?      유형
+ ----------------------------------------- -------- ----------------------------
+ EMPNO                                     NOT NULL NUMBER(4)
+ ENAME                                              VARCHAR2(10)
+ JOB                                                VARCHAR2(9)
+ MGR                                                NUMBER(4)
+ HIREDATE                                           DATE
+ SAL                                                NUMBER(7,2)
+ COMM                                               NUMBER(7,2)
+ DEPTNO                                             NUMBER(2)
+
+SQL> alter table emp add constraint fk_emp_mgr foreign key (mgr) regerences emp (empno);
+alter table emp add constraint fk_emp_mgr foreign key (mgr) regerences emp (empno)
+                                                            *
+1행에 오류:
+ORA-00905: 누락된 키워드
+
+
+SQL> alter table emp add constraint fk_emp_mgr foreign key (mgr) references emp (empno);
+
+테이블이 변경되었습니다.
+
+SQL> select empno, ename, deptno from emp;
+
+     EMPNO ENAME                    DEPTNO
+---------- -------------------- ----------
+      7369 SMITH                        20
+      7499 ALLEN                        30
+      7521 WARD                         30
+      7566 JONES                        20
+      7654 MARTIN                       30
+      7698 BLAKE                        30
+      7782 CLARK                        10
+      7788 SCOTT                        20
+      7839 KING                         10
+      7844 TURNER                       30
+      7876 ADAMS                        20
+
+     EMPNO ENAME                    DEPTNO
+---------- -------------------- ----------
+      7900 JAMES                        30
+      7902 FORD                         20
+      7934 MILLER                       10
+
+14 행이 선택되었습니다.
+
+SQL> select empno, ename, mgr from emp;
+
+     EMPNO ENAME                       MGR
+---------- -------------------- ----------
+      7369 SMITH                      7902
+      7499 ALLEN                      7698
+      7521 WARD                       7698
+      7566 JONES                      7839
+      7654 MARTIN                     7698
+      7698 BLAKE                      7839
+      7782 CLARK                      7839
+      7788 SCOTT                      7566
+      7839 KING
+      7844 TURNER                     7698
+      7876 ADAMS                      7788
+
+     EMPNO ENAME                       MGR
+---------- -------------------- ----------
+      7900 JAMES                      7698
+      7902 FORD                       7566
+      7934 MILLER                     7782
+
+14 행이 선택되었습니다.
+
+SQL> update emp set mgr=8888 where ename='ADAMS';
+update emp set mgr=8888 where ename='ADAMS'
+*
+1행에 오류:
+ORA-02291: 무결성 제약조건(JUNA14.FK_EMP_MGR)이 위배되었습니다- 부모 키가
+없습니다
+
+
+SQL> delete from emp where ename='SCOTT';
+delete from emp where ename='SCOTT'
+*
+1행에 오류:
+ORA-02292: 무결성 제약조건(JUNA14.FK_EMP_MGR)이 위배되었습니다- 자식 레코드가
+발견되었습니다
+
+
+
+
+
+SQL> insert into dept(deptno, dname) values (50, 'MARKETTING');
+
+1 개의 행이 만들어졌습니다.
+
+SQL> insert into emp (empno, ename, deptno)
+  2  values (8888, 'juna',50);
+
+1 개의 행이 만들어졌습니다.
+
+SQL> commit;
+
+커밋이 완료되었습니다.
+
+SQL> select empno, ename, mgr from deptno;
+select empno, ename, mgr from deptno
+                              *
+1행에 오류:
+ORA-00942: 테이블 또는 뷰가 존재하지 않습니다
+
+
+SQL> select empno, ename, mgr from emp;
+
+     EMPNO ENAME                       MGR
+---------- -------------------- ----------
+      7369 SMITH                      7902
+      7499 ALLEN                      7698
+      7521 WARD                       7698
+      7566 JONES                      7839
+      7654 MARTIN                     7698
+      7698 BLAKE                      7839
+      7782 CLARK                      7839
+      7788 SCOTT                      7566
+      7839 KING
+      7844 TURNER                     7698
+      7876 ADAMS                      7788
+
+     EMPNO ENAME                       MGR
+---------- -------------------- ----------
+      7900 JAMES                      7698
+      7902 FORD                       7566
+      7934 MILLER                     7782
+      8888 juna
+
+15 행이 선택되었습니다.
+
+SQL> update emp set empno=8000 where empno=7788;
+update emp set empno=8000 where empno=7788
+*
+1행에 오류:
+ORA-02292: 무결성 제약조건(JUNA14.FK_EMP_MGR)이 위배되었습니다- 자식 레코드가
+발견되었습니다
+
+
+SQL> alter table emp disable constraint fk_emp_mgr;
+
+테이블이 변경되었습니다.
+
+SQL> update emp set mgr=8000 where empno=7788;
+
+1 행이 업데이트되었습니다.
+
+SQL> commit
+  2  ;
+
+커밋이 완료되었습니다.
+
+SQL> alter table emp enable constraint fk_emp_mgr;
+alter table emp enable constraint fk_emp_mgr
+                                  *
+1행에 오류:
+ORA-02298: 제약 (JUNA14.FK_EMP_MGR)을 사용 가능하게 할 수 없음 - 부모 키가
+없습니다
+
+
+SQL> alter table emp enable constraint fk_emp_mgr;
+alter table emp enable constraint fk_emp_mgr
+                                  *
+1행에 오류:
+ORA-02298: 제약 (JUNA14.FK_EMP_MGR)을 사용 가능하게 할 수 없음 - 부모 키가
+없습니다
+
+
+SQL> alter table emp disable constraint fk_emp_mgr;
+
+테이블이 변경되었습니다.
+
+SQL> update emp set mgr=8000 where empno=7788;
+
+1 행이 업데이트되었습니다.
+
+SQL> alter table emp enable constraint fk_emp_mgr;
+alter table emp enable constraint fk_emp_mgr
+                                  *
+1행에 오류:
+ORA-02298: 제약 (JUNA14.FK_EMP_MGR)을 사용 가능하게 할 수 없음 - 부모 키가
+없습니다
+
+
+SQL>

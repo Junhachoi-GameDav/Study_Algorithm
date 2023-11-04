@@ -1,0 +1,607 @@
+Microsoft Windows [Version 10.0.22621.2428]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\user>sqlplus juna14@iedb.kangwon.ac.kr
+
+SQL*Plus: Release 19.0.0.0.0 - Production on 월 10월 30 14:09:13 2023
+Version 19.3.0.0.0
+
+Copyright (c) 1982, 2019, Oracle.  All rights reserved.
+
+비밀번호 입력:
+
+다음에 접속됨:
+Oracle Database 11g Enterprise Edition Release 11.2.0.1.0 - 64bit Production
+With the Partitioning, OLAP, Data Mining and Real Application Testing options
+
+SQL> dsec emp
+SP2-0042: 알 수 없는 명령어 "dsec emp" - 나머지 줄 무시.
+SQL> desc emp
+ 이름                                      널?      유형
+ ----------------------------------------- -------- ----------------------------
+ EMPNO                                     NOT NULL NUMBER(4)
+ ENAME                                              VARCHAR2(10)
+ JOB                                                VARCHAR2(9)
+ MGR                                                NUMBER(4)
+ HIREDATE                                           DATE
+ SAL                                                NUMBER(7,2)
+ COMM                                               NUMBER(7,2)
+ DEPTNO                                             NUMBER(2)
+
+SQL> select ename. deptno form emp
+  2  ;
+select ename. deptno form emp
+                          *
+1행에 오류:
+ORA-00923: FROM 키워드가 필요한 위치에 없습니다.
+
+
+SQL> select ename. deptno form emp;
+select ename. deptno form emp
+                          *
+1행에 오류:
+ORA-00923: FROM 키워드가 필요한 위치에 없습니다.
+
+
+SQL> select ename. deptno from emp;
+select ename. deptno from emp
+       *
+1행에 오류:
+ORA-00904: "ENAME"."DEPTNO": 부적합한 식별자
+
+
+SQL> select ename, deptno from emp;
+
+ENAME                    DEPTNO
+-------------------- ----------
+SMITH                        20
+ALLEN                        30
+WARD                         30
+JONES                        20
+MARTIN                       30
+BLAKE                        30
+CLARK                        10
+SCOTT                        20
+KING                         10
+TURNER                       30
+ADAMS                        20
+
+ENAME                    DEPTNO
+-------------------- ----------
+JAMES                        30
+FORD                         20
+MILLER                       10
+juna                         50
+
+15 행이 선택되었습니다.
+
+SQL> select * from dept;
+
+    DEPTNO DNAME                        LOC
+---------- ---------------------------- --------------------------
+        10 ACCOUNTING                   NEW YORK
+        20 RESEARCH                     DALLAS
+        30 SALES                        CHICAGO
+        40 OPERATIONS                   BOSTON
+        50 MARKETTING
+
+SQL> insert into emp(empno, ename, deptno) values (5555, "홍길동", 70);
+insert into emp(empno, ename, deptno) values (5555, "홍길동", 70)
+                                                    *
+1행에 오류:
+ORA-00984: 열을 사용할 수 없습니다
+
+
+SQL> insert into emp(empno, ename, deptno) values (5555, '홍길동', 40);
+
+1 개의 행이 만들어졌습니다.
+
+SQL> rollback;
+
+롤백이 완료되었습니다.
+
+SQL> desc emp
+ 이름                                      널?      유형
+ ----------------------------------------- -------- ----------------------------
+ EMPNO                                     NOT NULL NUMBER(4)
+ ENAME                                              VARCHAR2(10)
+ JOB                                                VARCHAR2(9)
+ MGR                                                NUMBER(4)
+ HIREDATE                                           DATE
+ SAL                                                NUMBER(7,2)
+ COMM                                               NUMBER(7,2)
+ DEPTNO                                             NUMBER(2)
+
+SQL> alter table emp add constraint chk_emp_deptno check (deptno in (10,20,30));
+alter table emp add constraint chk_emp_deptno check (deptno in (10,20,30))
+                               *
+1행에 오류:
+ORA-02293: (JUNA14.CHK_EMP_DEPTNO)을 검증할 수 없습니다 - 잘못된 제약을
+확인합니다
+
+
+SQL> alter table emp add constraint chk_emp_deptno
+  2  check (deptno in (10, 20, 30));
+alter table emp add constraint chk_emp_deptno
+                               *
+1행에 오류:
+ORA-02293: (JUNA14.CHK_EMP_DEPTNO)을 검증할 수 없습니다 - 잘못된 제약을
+확인합니다
+
+
+SQL> alter table emp  add constraint chk_emp_deptno check (deptno in (10,20,30));
+alter table emp  add constraint chk_emp_deptno check (deptno in (10,20,30))
+                                *
+1행에 오류:
+ORA-02293: (JUNA14.CHK_EMP_DEPTNO)을 검증할 수 없습니다 - 잘못된 제약을
+확인합니다
+
+
+SQL> alter table emp  add constraint chk_emp_deptno check (deptno in (10,20,30));
+alter table emp  add constraint chk_emp_deptno check (deptno in (10,20,30))
+                                *
+1행에 오류:
+ORA-02293: (JUNA14.CHK_EMP_DEPTNO)을 검증할 수 없습니다 - 잘못된 제약을
+확인합니다
+
+
+SQL> alter table emp  add constraint chk_emp_deptno check (deptno in (10,20,30));
+alter table emp  add constraint chk_emp_deptno check (deptno in (10,20,30))
+                                *
+1행에 오류:
+ORA-02293: (JUNA14.CHK_EMP_DEPTNO)을 검증할 수 없습니다 - 잘못된 제약을
+확인합니다
+
+
+SQL> insert into emp(empno, ename, deptno)
+  2  valuew (5555, '이순신', 40);
+valuew (5555, '이순신', 40)
+*
+2행에 오류:
+ORA-00926: 누락된 VALUES 키워드
+
+
+SQL> insert into emp(empno, ename, deptno)
+  2    2  values (5555, '이순신', 40);
+  2  values (5555, '이순신', 40)
+  *
+2행에 오류:
+ORA-00926: 누락된 VALUES 키워드
+
+
+SQL> insert into emp(empno, ename, deptno)
+  2  values (5555, '이순신', 40);
+
+1 개의 행이 만들어졌습니다.
+
+SQL> alter table emp add constraint chk_emp_deptno check(deptno in (10,20,30));
+alter table emp add constraint chk_emp_deptno check(deptno in (10,20,30))
+                               *
+1행에 오류:
+ORA-02293: (JUNA14.CHK_EMP_DEPTNO)을 검증할 수 없습니다 - 잘못된 제약을
+확인합니다
+
+
+SQL> rollback;
+
+롤백이 완료되었습니다.
+
+SQL> alter table emp disable constraint chk_emp_deptno;
+alter table emp disable constraint chk_emp_deptno
+*
+1행에 오류:
+ORA-02431: 제약 조건(CHK_EMP_DEPTNO)을 사용 안함으로 설정 불가 - 해당 제약
+조건이 없습니다.
+
+
+SQL> select ename , deptno from emp
+  2  ;
+
+ENAME                    DEPTNO
+-------------------- ----------
+SMITH                        20
+ALLEN                        30
+WARD                         30
+JONES                        20
+MARTIN                       30
+BLAKE                        30
+CLARK                        10
+SCOTT                        20
+KING                         10
+TURNER                       30
+ADAMS                        20
+
+ENAME                    DEPTNO
+-------------------- ----------
+JAMES                        30
+FORD                         20
+MILLER                       10
+이순신                       40
+juna                         50
+
+16 행이 선택되었습니다.
+
+SQL> delete juna from emp;
+delete juna from emp
+            *
+1행에 오류:
+ORA-00933: SQL 명령어가 올바르게 종료되지 않았습니다
+
+
+SQL> commit;
+
+커밋이 완료되었습니다.
+
+SQL> update emp set deprno=30 where deptno >30;
+update emp set deprno=30 where deptno >30
+               *
+1행에 오류:
+ORA-00904: "DEPRNO": 부적합한 식별자
+
+
+SQL>  update emp set deptno=30 where deptno >30;
+
+2 행이 업데이트되었습니다.
+
+SQL> alter table emp enable constraint chk_emp_deptno;
+alter table emp enable constraint chk_emp_deptno
+*
+1행에 오류:
+ORA-02430: 제약 조건(CHK_EMP_DEPTNO)을 사용으로 설정 불가 - 해당 제약 조건이
+없습니다.
+
+
+SQL> alter table emp add constraint chk_emp_deptno check(deptno in (10,20,30));
+
+테이블이 변경되었습니다.
+
+SQL> select ename, sal from emp;
+
+ENAME                       SAL
+-------------------- ----------
+SMITH                       800
+ALLEN                      1600
+WARD                       1250
+JONES                      2975
+MARTIN                     1250
+BLAKE                      2850
+CLARK                      2450
+SCOTT                      3000
+KING                       5000
+TURNER                     1500
+ADAMS                      1100
+
+ENAME                       SAL
+-------------------- ----------
+JAMES                       950
+FORD                       3300
+MILLER                     1300
+이순신
+juna
+
+16 행이 선택되었습니다.
+
+SQL> alter table emp add constraint chk_emp_sal check(sal >=900);
+alter table emp add constraint chk_emp_sal check(sal >=900)
+                               *
+1행에 오류:
+ORA-02293: (JUNA14.CHK_EMP_SAL)을 검증할 수 없습니다 - 잘못된 제약을 확인합니다
+
+
+SQL> update emp set sal =900 where sal <900;
+
+1 행이 업데이트되었습니다.
+
+SQL> commit;
+
+커밋이 완료되었습니다.
+
+SQL> alter table emp add constraint chk_emp_sal check(sal >=900);
+
+테이블이 변경되었습니다.
+
+SQL> drop user dd
+  2  drp[ diser ddd;
+drp[ diser ddd
+*
+2행에 오류:
+ORA-00921: SQL 명령어가 불완전합니다
+
+
+SQL> drop user ddd;
+drop user ddd
+          *
+1행에 오류:
+ORA-01918: 사용자 'DDD'(이)가 존재하지 않습니다
+
+
+SQL> desc cuser_consratins;
+ERROR:
+ORA-04043: cuser_consratins 객체는 존재하지 않습니다.
+
+
+SQL> desc user_costraints;
+ERROR:
+ORA-04043: user_costraints 객체는 존재하지 않습니다.
+
+
+SQL> selec constarint_name, tabel_table, name,constraint_type
+SP2-0734: "selec cons..."(으)로 시작되는 알 수 없는 명령 - 나머지 줄은 무시되었습니다.
+SQL> selec constarint_name, tabel_table, name,constraint_type
+SP2-0734: "selec cons..."(으)로 시작되는 알 수 없는 명령 - 나머지 줄은 무시되었습니다.
+SQL> select constarint_name, tabel_table, name,constraint_type
+  2  search_condition from user_constraints;
+select constarint_name, tabel_table, name,constraint_type
+                                     *
+1행에 오류:
+ORA-00904: "NAME": 부적합한 식별자
+
+
+SQL> select constarint_name, tabel_table, name,constraint_type
+  2  select constarint_name, tabel_table, name,constraint_type^Z^Z
+
+  3
+SQL>
+SQL> select constarint_name, tabel_table, name_constraint_type, search_condition from user_constraints;
+
+  2
+SQL> select constarint_name, tabel_table, name,constraint_type, search_condition from user_constraints;
+select constarint_name, tabel_table, name,constraint_type, search_condition from user_constraints
+                                     *
+1행에 오류:
+ORA-00904: "NAME": 부적합한 식별자
+
+
+SQL> select constarint_name, tabel_table, name_constraint_type, search_condition from user_constraints;
+select constarint_name, tabel_table, name_constraint_type, search_condition from user_constraints
+                                     *
+1행에 오류:
+ORA-00904: "NAME_CONSTRAINT_TYPE": 부적합한 식별자
+
+
+SQL> select constarint_name, tabel_table, ename, constraint_type, search_condition from user_constraints;
+select constarint_name, tabel_table, ename, constraint_type, search_condition from user_constraints
+                                     *
+1행에 오류:
+ORA-00904: "ENAME": 부적합한 식별자
+
+
+SQL> select constarint_name, tabel_name, constraint_type, search_condition from user_constraints;
+select constarint_name, tabel_name, constraint_type, search_condition from user_constraints
+                        *
+1행에 오류:
+ORA-00904: "TABEL_NAME": 부적합한 식별자
+
+
+SQL> desc user_constraints
+ 이름                                      널?      유형
+ ----------------------------------------- -------- ----------------------------
+ OWNER                                              VARCHAR2(30)
+ CONSTRAINT_NAME                           NOT NULL VARCHAR2(30)
+ CONSTRAINT_TYPE                                    VARCHAR2(1)
+ TABLE_NAME                                NOT NULL VARCHAR2(30)
+ SEARCH_CONDITION                                   LONG
+ R_OWNER                                            VARCHAR2(30)
+ R_CONSTRAINT_NAME                                  VARCHAR2(30)
+ DELETE_RULE                                        VARCHAR2(9)
+ STATUS                                             VARCHAR2(8)
+ DEFERRABLE                                         VARCHAR2(14)
+ DEFERRED                                           VARCHAR2(9)
+ VALIDATED                                          VARCHAR2(13)
+ GENERATED                                          VARCHAR2(14)
+ BAD                                                VARCHAR2(3)
+ RELY                                               VARCHAR2(4)
+ LAST_CHANGE                                        DATE
+ INDEX_OWNER                                        VARCHAR2(30)
+ INDEX_NAME                                         VARCHAR2(30)
+ INVALID                                            VARCHAR2(7)
+ VIEW_RELATED                                       VARCHAR2(14)
+
+SQL> select ename , mgr from emp;
+
+ENAME                       MGR
+-------------------- ----------
+SMITH                      7902
+ALLEN                      7698
+WARD                       7698
+JONES                      7839
+MARTIN                     7698
+BLAKE                      7839
+CLARK                      7839
+SCOTT                      8000
+KING
+TURNER                     7698
+ADAMS                      7788
+
+ENAME                       MGR
+-------------------- ----------
+JAMES                      7698
+FORD                       7566
+MILLER                     7782
+이순신
+juna
+
+16 행이 선택되었습니다.
+
+SQL> select ename, mgr from emp where mgr = null;
+
+선택된 레코드가 없습니다.
+
+SQL> select ename, mgr from emp where mgr is null;
+
+ENAME                       MGR
+-------------------- ----------
+KING
+이순신
+juna
+
+SQL>
+
+*************
+널 = 아직 모르는 값이다. 적합한 값이 없다.
+**************
+
+
+
+*
+2행에 오류:
+ORA-00904: : 부적합한 식별자
+
+
+SQL> alter table mentoring add constraint PK_mentoring primary key( mentor, mentee);
+
+테이블이 변경되었습니다.
+
+SQL> desc mentoring
+ 이름                                      널?      유형
+ ----------------------------------------- -------- ----------------------------
+ MENTOR                                    NOT NULL NUMBER(4)
+ MENTEE                                    NOT NULL NUMBER(4)
+ CONTENTS                                           VARCHAR2(100)
+
+SQL> select empno, ename from emp;
+
+     EMPNO ENAME
+---------- --------------------------------------------------
+      7369 qweqweqwe
+      7499 qweqweqwe
+      7521 qweqweqwe
+      7566 qweqweqwe
+      7654 qweqweqwe
+      7698 qweqweqwe
+      7782 qweqweqwe
+      7788 qweqweqwe
+      7839 qweqweqwe
+      7844 qweqweqwe
+      7876 qweqweqwe
+
+     EMPNO ENAME
+---------- --------------------------------------------------
+      7900 qweqweqwe
+      7902 qweqweqwe
+      7934 qweqweqwe
+      5555 qweqweqwe
+      8888 qweqweqwe
+
+16 행이 선택되었습니다.
+
+SQL> rollback;
+
+롤백이 완료되었습니다.
+
+SQL> select empno, ename from emp;
+
+     EMPNO ENAME
+---------- --------------------------------------------------
+      7369 qweqweqwe
+      7499 qweqweqwe
+      7521 qweqweqwe
+      7566 qweqweqwe
+      7654 qweqweqwe
+      7698 qweqweqwe
+      7782 qweqweqwe
+      7788 qweqweqwe
+      7839 qweqweqwe
+      7844 qweqweqwe
+      7876 qweqweqwe
+
+     EMPNO ENAME
+---------- --------------------------------------------------
+      7900 qweqweqwe
+      7902 qweqweqwe
+      7934 qweqweqwe
+      5555 qweqweqwe
+      8888 qweqweqwe
+
+16 행이 선택되었습니다.
+
+SQL> alter table mentoring add constraint PK_mentee primary key(mentee, mentor);
+alter table mentoring add constraint PK_mentee primary key(mentee, mentor)
+                                               *
+1행에 오류:
+ORA-02260: 테이블에는 하나의 기본 키만 가질 수 있습니다.
+
+
+SQL> alter table mentoring add constraint fk_mentoring forine key (mentor, mentee);
+alter table mentoring add constraint fk_mentoring forine key (mentor, mentee)
+                                                              *
+1행에 오류:
+ORA-01735: 부적합한 ALTER TABLE 옵션입니다
+
+
+SQL> alter table mentoring add constraint fk_mentoring forine key (mentee);
+alter table mentoring add constraint fk_mentoring forine key (mentee)
+                                                              *
+1행에 오류:
+ORA-01735: 부적합한 ALTER TABLE 옵션입니다
+
+
+SQL> alter table mentoring add constraint fk_mentoring foreign key references emp (mentee);
+alter table mentoring add constraint fk_mentoring foreign key references emp (mentee)
+                                                              *
+1행에 오류:
+ORA-00906: 누락된 좌괄호
+
+
+SQL> alter table mentoring add constraint fk_mentoring foreign key(mentor) references emp (mentee);
+alter table mentoring add constraint fk_mentoring foreign key(mentor) references emp (mentee)
+                                                                                      *
+1행에 오류:
+ORA-00904: "MENTEE": 부적합한 식별자
+
+
+SQL> alter table mentoring add constraint fk_mentoring foreign key(mentor) references emp (7900);
+alter table mentoring add constraint fk_mentoring foreign key(mentor) references emp (7900)
+                                                                                      *
+1행에 오류:
+ORA-00904: : 부적합한 식별자
+
+
+SQL> alter table mentoring add constraint fk_mentoring foreign key(mentor) references emp (qweqweqwe);
+alter table mentoring add constraint fk_mentoring foreign key(mentor) references emp (qweqweqwe)
+                                                                                      *
+1행에 오류:
+ORA-00904: "QWEQWEQWE": 부적합한 식별자
+
+
+SQL> alter table mentoring add constraint fk_mentoring foreign key(mentor) references emp (mentee);
+alter table mentoring add constraint fk_mentoring foreign key(mentor) references emp (mentee)
+                                                                                      *
+1행에 오류:
+ORA-00904: "MENTEE": 부적합한 식별자
+
+
+SQL> desc mentoring
+ 이름                                      널?      유형
+ ----------------------------------------- -------- ----------------------------
+ MENTOR                                    NOT NULL NUMBER(4)
+ MENTEE                                    NOT NULL NUMBER(4)
+ CONTENTS                                           VARCHAR2(100)
+
+SQL> alter table mentroing add constraint fk_mentoring_mentor foreign key (mentor) references emp(empno);
+alter table mentroing add constraint fk_mentoring_mentor foreign key (mentor) references emp(empno)
+*
+1행에 오류:
+ORA-00942: 테이블 또는 뷰가 존재하지 않습니다
+
+
+SQL> alter table mentoring add constraint fk_mentoring_mentor foreign key (mentor) references emp(empno);
+
+테이블이 변경되었습니다.
+
+SQL> alter table mentoring add constraint fk_mentoring_mentee foreign key (mentee) references emp(empno);
+
+테이블이 변경되었습니다.
+
+SQL> insert into mentoring (mentor, mentee) values (7900, 7902);
+
+1 개의 행이 만들어졌습니다.
+
+SQL> desc mentoring
+ 이름                                      널?      유형
+ ----------------------------------------- -------- ----------------------------
+ MENTOR                                    NOT NULL NUMBER(4)
+ MENTEE                                    NOT NULL NUMBER(4)
+ CONTENTS                                           VARCHAR2(100)
+
+SQL>
