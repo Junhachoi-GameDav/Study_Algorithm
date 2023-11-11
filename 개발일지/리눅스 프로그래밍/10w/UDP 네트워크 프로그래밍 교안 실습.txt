@@ -1,0 +1,103 @@
+**** 강원대학교 삼턱캠퍼스 멀티디자인학과 201522405 최준하	****
+**** 과제: 네트워크 프로그래밍, UDP 네트워크 프로그래밍 교안 내용 실습	****
+**********************************************************************
+
+Welcome to Ubuntu 22.04.3 LTS (GNU/Linux 5.15.90.1-microsoft-standard-WSL2 x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+ * Strictly confined Kubernetes makes edge and IoT secure. Learn how MicroK8s
+   just raised the bar for easy, resilient and secure K8s cluster deployment.
+
+   https://ubuntu.com/engage/secure-kubernetes-at-the-edge
+
+This message is shown once a day. To disable it please create the
+/home/june14/.hushlogin file.
+june14@junhachoi:~$ nslookup google.com
+Server:         172.28.48.1
+Address:        172.28.48.1#53
+
+Non-authoritative answer:
+Name:   google.com
+Address: 142.250.206.206
+Name:   google.com
+Address: 2404:6800:400a:80a::200e
+
+june14@junhachoi:~$ dig google.com
+
+; <<>> DiG 9.18.18-0ubuntu0.22.04.1-Ubuntu <<>> google.com
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 22700
+;; flags: qr rd ad; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+;; WARNING: recursion requested but not available
+
+;; QUESTION SECTION:
+;google.com.                    IN      A
+
+;; ANSWER SECTION:
+google.com.             0       IN      A       142.250.206.206
+
+;; Query time: 10 msec
+;; SERVER: 172.28.48.1#53(172.28.48.1) (UDP)
+;; WHEN: Sat Nov 11 14:57:34 KST 2023
+;; MSG SIZE  rcvd: 54
+
+june14@junhachoi:~$ sed -n '28,32p' /etc/services
+time            37/udp          timserver
+whois           43/tcp          nicname
+tacacs          49/tcp                          # Login Host Protocol (TACACS)
+tacacs          49/udp
+domain          53/tcp                          # Domain Name Server
+june14@junhachoi:~$ sudo apt install net-tools
+[sudo] password for june14:
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following NEW packages will be installed:
+  net-tools
+0 upgraded, 1 newly installed, 0 to remove and 0 not upgraded.
+Need to get 204 kB of archives.
+After this operation, 819 kB of additional disk space will be used.
+Get:1 http://archive.ubuntu.com/ubuntu jammy/main amd64 net-tools amd64 1.60+git20181103.0eebece-1ubuntu5 [204 kB]
+Fetched 204 kB in 4s (57.2 kB/s)
+Selecting previously unselected package net-tools.
+(Reading database ... 29325 files and directories currently installed.)
+Preparing to unpack .../net-tools_1.60+git20181103.0eebece-1ubuntu5_amd64.deb ...
+Unpacking net-tools (1.60+git20181103.0eebece-1ubuntu5) ...
+Setting up net-tools (1.60+git20181103.0eebece-1ubuntu5) ...
+Processing triggers for man-db (2.10.2-1) ...
+june14@junhachoi:~$ arp
+Address                  HWtype  HWaddress           Flags Mask            Iface
+junhachoi.mshome.net     ether   00:15:5d:ec:d9:d6   C                     eth0
+june14@junhachoi:~$ gcc -o socketpair socketpair.c
+cc1: fatal error: socketpair.c: No such file or directory
+compilation terminated.
+june14@junhachoi:~$ cd LinuxProgrammingWithRaspberryPi
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi$ cd Chapter06
+-bash: cd: Chapter06: No such file or directory
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi$ cd Chapter6
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter6$ gcc -o socketpair socketpair.c
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter6$ ./socketpair
+sorket 1 : 3
+sorket 2 : 4
+Data send : Hello World
+Received data : Hello World
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter6$
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter6$ gcc -o udp_server udp_server.c
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter6$ gcc -o udp_client udp_client.c
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter6$ ./udp_server
+Hello World
+;
+^C
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter6$
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter6$ ./udp_client
+usage : ./udp_client <IP address>
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter6$
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter6$ ./udp_client localhost
+hello world
+hello new world
+^C
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter6$
