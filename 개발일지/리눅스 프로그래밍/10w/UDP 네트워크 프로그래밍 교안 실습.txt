@@ -15,7 +15,12 @@ Welcome to Ubuntu 22.04.3 LTS (GNU/Linux 5.15.90.1-microsoft-standard-WSL2 x86_6
 
 This message is shown once a day. To disable it please create the
 /home/june14/.hushlogin file.
+
+
+**** 정보보기 *****
+****
 june14@junhachoi:~$ nslookup google.com
+
 Server:         172.28.48.1
 Address:        172.28.48.1#53
 
@@ -25,6 +30,9 @@ Address: 142.250.206.206
 Name:   google.com
 Address: 2404:6800:400a:80a::200e
 
+
+**** ip 관련된 정보 보기 ****
+****
 june14@junhachoi:~$ dig google.com
 
 ; <<>> DiG 9.18.18-0ubuntu0.22.04.1-Ubuntu <<>> google.com
@@ -45,12 +53,19 @@ google.com.             0       IN      A       142.250.206.206
 ;; WHEN: Sat Nov 11 14:57:34 KST 2023
 ;; MSG SIZE  rcvd: 54
 
+
+**** etc 밑 service 파일들 확인 ****
+****
 june14@junhachoi:~$ sed -n '28,32p' /etc/services
 time            37/udp          timserver
 whois           43/tcp          nicname
 tacacs          49/tcp                          # Login Host Protocol (TACACS)
 tacacs          49/udp
 domain          53/tcp                          # Domain Name Server
+
+
+**** net-tools 설치 ****
+****
 june14@junhachoi:~$ sudo apt install net-tools
 [sudo] password for june14:
 Reading package lists... Done
@@ -69,9 +84,17 @@ Preparing to unpack .../net-tools_1.60+git20181103.0eebece-1ubuntu5_amd64.deb ..
 Unpacking net-tools (1.60+git20181103.0eebece-1ubuntu5) ...
 Setting up net-tools (1.60+git20181103.0eebece-1ubuntu5) ...
 Processing triggers for man-db (2.10.2-1) ...
+
+
+**** 정보보기 ****
+****
 june14@junhachoi:~$ arp
 Address                  HWtype  HWaddress           Flags Mask            Iface
 junhachoi.mshome.net     ether   00:15:5d:ec:d9:d6   C                     eth0
+
+
+**** 디렉토리 바꾼뒤, 소켓 찾기 ****
+****
 june14@junhachoi:~$ gcc -o socketpair socketpair.c
 cc1: fatal error: socketpair.c: No such file or directory
 compilation terminated.
@@ -85,6 +108,9 @@ sorket 1 : 3
 sorket 2 : 4
 Data send : Hello World
 Received data : Hello World
+
+**** 데이터 보내기 ****
+****
 june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter6$
 june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter6$ gcc -o udp_server udp_server.c
 june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter6$ gcc -o udp_client udp_client.c
