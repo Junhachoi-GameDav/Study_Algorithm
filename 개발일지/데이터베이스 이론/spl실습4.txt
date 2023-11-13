@@ -1,0 +1,416 @@
+Microsoft Windows [Version 10.0.22621.2428]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\user>sqlplus juna14@iedb.kangwon.ac.kr
+
+SQL*Plus: Release 19.0.0.0.0 - Production on 월 11월 13 14:21:07 2023
+Version 19.3.0.0.0
+
+Copyright (c) 1982, 2019, Oracle.  All rights reserved.
+
+비밀번호 입력:
+
+다음에 접속됨:
+Oracle Database 11g Enterprise Edition Release 11.2.0.1.0 - 64bit Production
+With the Partitioning, OLAP, Data Mining and Real Application Testing options
+
+SQL> select empno, ename, hiredate
+  2  from emp
+  3  where empno != 7900 and(job ='SALESMAN' OR JOB = 'CLERK')
+  4  /
+
+     EMPNO ENAME                                              HIREDATE
+---------- -------------------------------------------------- --------
+      7369 qweqweqwe                                          80/12/17
+      7499 qweqweqwe                                          81/02/20
+      7521 qweqweqwe                                          81/02/22
+      7654 qweqweqwe                                          81/09/28
+      7844 qweqweqwe                                          81/09/08
+      7876 qweqweqwe                                          87/05/23
+      7934 qweqweqwe                                          82/01/23
+
+7 행이 선택되었습니다.
+
+SQL> select ename qweqweqwe from emp where ename = 'SMITH';
+
+선택된 레코드가 없습니다.
+
+SQL> select ename from empno;
+select ename from empno
+                  *
+1행에 오류:
+ORA-00942: 테이블 또는 뷰가 존재하지 않습니다
+
+
+SQL> select empno;
+select empno
+           *
+1행에 오류:
+ORA-00923: FROM 키워드가 필요한 위치에 없습니다.
+
+
+SQL> select empno from table;
+select empno from table
+                      *
+1행에 오류:
+ORA-00906: 누락된 좌괄호
+
+
+SQL> select ename from emp;
+
+ENAME
+--------------------------------------------------
+qweqweqwe
+qweqweqwe
+qweqweqwe
+qweqweqwe
+qweqweqwe
+qweqweqwe
+qweqweqwe
+qweqweqwe
+qweqweqwe
+qweqweqwe
+qweqweqwe
+
+ENAME
+--------------------------------------------------
+qweqweqwe
+qweqweqwe
+qweqweqwe
+qweqweqwe
+qweqweqwe
+
+16 행이 선택되었습니다.
+
+SQL> select ename from emp where ename = 'SMITH';
+
+선택된 레코드가 없습니다.
+
+SQL> select ename 'SMITH' from emp where ename = 'qweqweqwe';
+select ename 'SMITH' from emp where ename = 'qweqweqwe'
+             *
+1행에 오류:
+ORA-00923: FROM 키워드가 필요한 위치에 없습니다.
+
+
+SQL> select ename from emp where ename = 'qweqweqwe';
+
+ENAME
+--------------------------------------------------
+qweqweqwe
+qweqweqwe
+qweqweqwe
+qweqweqwe
+qweqweqwe
+qweqweqwe
+qweqweqwe
+qweqweqwe
+qweqweqwe
+qweqweqwe
+qweqweqwe
+
+ENAME
+--------------------------------------------------
+qweqweqwe
+qweqweqwe
+qweqweqwe
+qweqweqwe
+qweqweqwe
+
+16 행이 선택되었습니다.
+
+SQL> ed[it]
+
+SQL>
+SQL> ^Z
+Oracle Database 11g Enterprise Edition Release 11.2.0.1.0 - 64bit Production
+With the Partitioning, OLAP, Data Mining and Real Application Testing options에서 분리되었습니다.
+
+C:\Users\user>sqlplus juna14@iedb.kangwon.ac.kr
+
+SQL*Plus: Release 19.0.0.0.0 - Production on 월 11월 13 14:37:01 2023
+Version 19.3.0.0.0
+
+Copyright (c) 1982, 2019, Oracle.  All rights reserved.
+
+비밀번호 입력:
+
+다음에 접속됨:
+Oracle Database 11g Enterprise Edition Release 11.2.0.1.0 - 64bit Production
+With the Partitioning, OLAP, Data Mining and Real Application Testing options
+
+SQL> select empno, ename, deptno
+  2  from emp
+  3  where ename deptno in(10,20);
+where ename deptno in(10,20)
+            *
+3행에 오류:
+ORA-00920: 관계 연산자가 부적합합니다
+
+****************
+%을 붙히면 어떤 수가 와도 like연산자를 true로 만들어줌
+****************
+SQL> select empno, ename, deptno
+  2  from emp
+  3  where ename like 'A%';
+
+
+SQL> select empno, ename, deptno
+  2  from emp
+  3  where ename like '%A%';
+
+// A가 하나라도 안에있다면.
+
+SQL> select empno, ename, deptno
+  2  from emp
+  3  where ename like 'A_EN';
+
+// A_EN  = _안에 뭐든 상관없다.
+
+SQL> select empno, ename, deptno
+  2  from emp
+  3  where ename like '%q%'
+  4  order by ename;
+
+// order by ~~ 로 검색
+
+
+*******************
+컬럼 갯수 세기 _count(*)
+*******************
+
+SQL> select sum(sal), avg(sal), max(sal), min(sal), count(*) from emp;
+
+  SUM(SAL)   AVG(SAL)   MAX(SAL)   MIN(SAL)   COUNT(*)
+---------- ---------- ---------- ---------- ----------
+     29425 2101.78571       5000        900         16
+
+// sum(comm) 에 camm의 갯수를 나누어서 평균 구함
+SQL> select sum(sal), avg(comm), sum(comm)/count(comm), max(sal), min(sal) from emp;
+
+  SUM(SAL)  AVG(COMM) SUM(COMM)/COUNT(COMM)   MAX(SAL)   MIN(SAL)
+---------- ---------- --------------------- ---------- ----------
+     29425        550                   550       5000        900
+
+
+//그룹별로도 가능함 _group by ~~
+SQL> select deptno, sum(sal), max(sal), min(sal) from emp group by deptno;
+
+    DEPTNO   SUM(SAL)   MAX(SAL)   MIN(SAL)
+---------- ---------- ---------- ----------
+        30       9400       2850        950
+        20      11275       3300        900
+        10       8750       5000       1300
+
+**************
+여러개를 쓸수있음
+**************
+SQL> select deptno, sum(sal), max(sal), min(sal) from emp
+  2  group by deptno, job
+  3  order by deptno, job;
+
+    DEPTNO   SUM(SAL)   MAX(SAL)   MIN(SAL)
+---------- ---------- ---------- ----------
+        10       1300       1300       1300
+        10       2450       2450       2450
+        10       5000       5000       5000
+        20       6300       3300       3000
+        20       2000       1100        900
+        20       2975       2975       2975
+        30        950        950        950
+        30       2850       2850       2850
+        30       5600       1600       1250
+        30
+
+10 행이 선택되었습니다.
+
+// ** 순서가 맞아야함 from 뒤에 where -> group -> order 
+SQL> select deptno, job, sum(sal), max(sal), min(sal) from emp
+  2  where sal >= 1500
+  3  group by deptno, job
+  4  order by deptno, job;
+
+    DEPTNO JOB                  SUM(SAL)   MAX(SAL)   MIN(SAL)
+---------- ------------------ ---------- ---------- ----------
+        10 MANAGER                  2450       2450       2450
+        10 PRESIDENT                5000       5000       5000
+        20 ANALYST                  6300       3300       3000
+        20 MANAGER                  2975       2975       2975
+        30 MANAGER                  2850       2850       2850
+        30 SALESMAN                 3100       1600       1500
+
+6 행이 선택되었습니다.
+
+
+SQL> select ename, sal from emp
+  2  where sal =(select max(sal) from emp);
+
+ENAME                                                     SAL
+-------------------------------------------------- ----------
+qweqweqwe
+
+SQL> select ename, sal, deptno from emp
+  2  where sal =(select max(sal) from emp);
+
+ENAME                                                     SAL     DEPTNO
+-------------------------------------------------- ---------- ----------
+qweqweqwe                                                5000         10
+
+SQL> column ename format a10
+SQL> /
+
+ENAME             SAL     DEPTNO
+---------- ---------- ----------
+qweqweqwe        5000         10
+
+// 리턴값이 여러개있는것은 IN 을 쓰면 된다.
+
+SQL> select ename, sal, deptno from emp
+  2  where deptno IN (select deptno from emp where job='SALESMAN');
+
+ENAME             SAL     DEPTNO
+---------- ---------- ----------
+qweqweqwe                     30
+qweqweqwe                     30
+qweqweqwe         950         30
+qweqweqwe        1500         30
+qweqweqwe        2850         30
+qweqweqwe        1250         30
+qweqweqwe        1250         30
+qweqweqwe        1600         30
+
+8 행이 선택되었습니다.
+
+*************
+eai join =이퀴 조인
+emp.depot = 포인트가 잉으면 하위에 있는것들을 선택
+*************
+SQL> select ename, sal, emp.deptno, dname, loc from emp, dept
+  2  where emp.deptno = dept.deptno;
+ENAME             SAL     DEPTNO DNAME
+---------- ---------- ---------- ----------------------------
+LOC
+--------------------------
+qweqweqwe         900         20 RESEARCH
+DALLAS
+
+qweqweqwe        1600         30 SALES
+CHICAGO
+
+qweqweqwe        1250         30 SALES
+CHICAGO
+
+
+ENAME             SAL     DEPTNO DNAME
+---------- ---------- ---------- ----------------------------
+LOC
+--------------------------
+qweqweqwe        2975         20 RESEARCH
+DALLAS
+
+qweqweqwe        1250         30 SALES
+CHICAGO
+
+qweqweqwe        2850         30 SALES
+CHICAGO
+
+
+ENAME             SAL     DEPTNO DNAME
+---------- ---------- ---------- ----------------------------
+LOC
+--------------------------
+qweqweqwe        2450         10 ACCOUNTING
+NEW YORK
+
+qweqweqwe        3000         20 RESEARCH
+DALLAS
+
+qweqweqwe        5000         10 ACCOUNTING
+NEW YORK
+
+
+ENAME             SAL     DEPTNO DNAME
+---------- ---------- ---------- ----------------------------
+LOC
+--------------------------
+qweqweqwe        1500         30 SALES
+CHICAGO
+
+qweqweqwe        1100         20 RESEARCH
+DALLAS
+
+qweqweqwe         950         30 SALES
+CHICAGO
+
+
+ENAME             SAL     DEPTNO DNAME
+---------- ---------- ---------- ----------------------------
+LOC
+--------------------------
+qweqweqwe        3300         20 RESEARCH
+DALLAS
+
+qweqweqwe        1300         10 ACCOUNTING
+NEW YORK
+
+qweqweqwe                     30 SALES
+CHICAGO
+
+
+ENAME             SAL     DEPTNO DNAME
+---------- ---------- ---------- ----------------------------
+LOC
+--------------------------
+qweqweqwe                     30 SALES
+CHICAGO
+
+
+16 행이 선택되었습니다.
+
+********************
+view 에대하여
+********************
+
+SQL> select deptno, sum(sal), avg(sal) from emp group by deptno;
+
+    DEPTNO   SUM(SAL)   AVG(SAL)
+---------- ---------- ----------
+        30       9400 1566.66667
+        20      11275       2255
+        10       8750 2916.66667
+
+SQL> create view sal_report as select deptno, sum(sal), avg(sal) from emp group by deptno;
+create view sal_report as select deptno, sum(sal), avg(sal) from emp group by deptno
+                                         *
+1행에 오류:
+ORA-00998: 이 식은 열의 별명과 함께 지정해야 합니다
+
+
+SQL>
+
+
+SQL> create view sal_report as select deptno, sum(sal) as sum_sal, avg(sal) avg_sal from emp group by deptno;
+
+뷰가 생성되었습니다.
+
+SQL> select *from sal_report
+  2
+SQL> create or replace view sal_report as
+  2  select deptno, sum(sal) sum_sal, ave(sal avg_sal
+  3  from emp group by deptno order by deptno;
+select deptno, sum(sal) sum_sal, ave(sal avg_sal
+                                         *
+2행에 오류:
+ORA-00907: 누락된 우괄호
+
+
+SQL> select *from sal_report
+  2  select deptno, sum(sal) sum_sal, ave(sal avg_sal)
+  3  from emp group by deptno order by deptno;
+select deptno, sum(sal) sum_sal, ave(sal avg_sal)
+*
+2행에 오류:
+ORA-00933: SQL 명령어가 올바르게 종료되지 않았습니다
+
+
+SQL>
