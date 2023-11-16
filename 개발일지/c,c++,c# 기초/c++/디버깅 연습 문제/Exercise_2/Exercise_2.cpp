@@ -19,7 +19,8 @@ int main()
 		knights[i] = new Knight();
 	}
 
-	for (int i = 0; i <= KNIGHT_COUNT; i++)
+	// <= 오타 , 인덱스 오류였던것
+	for (int i = 0; i < KNIGHT_COUNT; i++)
 	{
 		knights[i]->PrintInfo();
 		delete knights[i];
