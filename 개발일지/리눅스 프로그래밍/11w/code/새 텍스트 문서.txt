@@ -1,0 +1,41 @@
+Welcome to Ubuntu 22.04.3 LTS (GNU/Linux 5.15.133.1-microsoft-standard-WSL2 x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+ * Strictly confined Kubernetes makes edge and IoT secure. Learn how MicroK8s
+   just raised the bar for easy, resilient and secure K8s cluster deployment.
+
+   https://ubuntu.com/engage/secure-kubernetes-at-the-edge
+
+This message is shown once a day. To disable it please create the
+/home/june14/.hushlogin file.
+june14@junhachoi:~$ gcc -o tcp_server tcp_server.c
+cc1: fatal error: tcp_server.c: No such file or directory
+compilation terminated.
+june14@junhachoi:~$ cd LinuxProgrammingWithRaspberryPi
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi$ cd Chapter6
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter6$ gcc -o tcp_server tcp_server.c
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter6$ gcc -o tcp_client tcp_client.c
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter6$ ./tcp_server
+127.0.0.1
+;
+^C
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter6$ ./tcp_server
+Client is connected : 127.0.0.1
+^Z
+[1]+  Stopped                 ./tcp_server
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter6$ ./tcp_server
+bind(): Address already in use
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter6$ ./tcp_server
+bind(): Address already in use
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter6$ ./tcp_server
+bind(): Address already in use
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter6$
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter6$ ./tcp_server Client is connected : 127.0.0.1
+bind(): Address already in use
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter6$ SHUT_RDWR
+SHUT_RDWR: command not found
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter6$
+
