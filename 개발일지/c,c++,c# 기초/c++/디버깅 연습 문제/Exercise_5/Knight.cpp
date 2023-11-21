@@ -37,9 +37,22 @@ int Knight::GetAttackDamage()
 	// hp 50% 이하 => maxHp / hp가 2 이상
 	int damage = _attack;
 
-	int ratio = _maxHp / _hp;
-	if (ratio > 2)
+	if (_maxHp == 0) //예외 처리
+	{
+		return damage;
+	}
+
+	//0으로 나누는건 안되고 0을 나누는건 된다.
+	int percentage = (_hp * 100) / _maxHp;
+
+	if (percentage <= 50)
+	{
 		damage *= 2;
+	}
+
+	/*int ratio = _maxHp / _hp;
+	if (ratio > 2)
+		damage *= 2;*/
 
 	return damage;
 }
