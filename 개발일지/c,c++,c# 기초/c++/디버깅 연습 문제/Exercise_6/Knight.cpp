@@ -52,6 +52,8 @@ void Knight::PrintInfo()
 	cout << "ATT: " << _attack << endl;
 }
 
+//재귀함수는 스택 프레임을 사용하여 call로 호출하기 때문에 무한루프에 빠지면 stack over flow가 난다.
+
 void Knight::OnDamaged(Knight* attacker)
 {
 	if (attacker == nullptr)
@@ -60,6 +62,9 @@ void Knight::OnDamaged(Knight* attacker)
 	// 내 체력 깎는다
 	int damage = attacker->GetAttackDamage();
 	AddHp(-damage);
+
+	if (IsDead() || damage==0)
+		return;
 
 	// 반격!
 	attacker->OnDamaged(this);	
