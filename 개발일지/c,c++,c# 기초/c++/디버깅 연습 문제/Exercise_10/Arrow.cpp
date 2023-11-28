@@ -16,6 +16,8 @@ Arrow::~Arrow()
 
 void Arrow::AttackTarget()
 {
+	/*if (_target->_hp < 0) 내방식
+		return;*/
 	cout << "화살이 적을 피격합니다!" << endl;
 
 	// 공격 대상이 있다면

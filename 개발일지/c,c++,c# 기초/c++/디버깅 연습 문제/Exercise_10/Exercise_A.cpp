@@ -41,16 +41,23 @@ int main()
 		arrows[i]->AttackTarget();
 
 		// 기사가 죽었으면 소멸시켜준다
-		if (knight != nullptr)
+		// 나이트가 소멸되버린 상태에서 또 실행되니까 오류가 났던것이다.
+
+		// 메모리가 어떻게 활용되는지 아는것이 매우 중요하다.
+		// 버그만 어찌저찌 막는것은 하수다 원인을 찾아서 고치는게 고수~~!!
+		/*if (knight != nullptr)
 		{
 			if (knight->IsDead())
 			{
 				delete knight;
 				knight = nullptr;
 			}
-		}	
+		}*/	
 
 		delete arrows[i];
 		arrows[i] = nullptr;
 	}
+
+	delete knight;
+	knight = nullptr;
 }

@@ -25,5 +25,6 @@ void Archer::AddHp(int value)
 	if (IsDead())
 	{
 		delete _pet;
+		_pet = nullptr;
 	}
 }
