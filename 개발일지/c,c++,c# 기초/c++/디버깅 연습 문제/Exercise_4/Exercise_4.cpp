@@ -24,7 +24,7 @@ int main()
 
 	for (int i = 0; i < TEST_COUNT; i++)
 	{
-		k1->AddHp(TEST_VALUE);
+		k1->AddHp(TEST_VALUE); // 오버플로우 (int의 범위를 넘어서 음수가 되버림)
 	}
 
 	if (k1->IsDead())

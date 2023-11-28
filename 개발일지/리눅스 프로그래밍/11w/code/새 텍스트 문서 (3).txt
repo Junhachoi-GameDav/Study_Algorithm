@@ -1,0 +1,31 @@
+june14@junhachoi:~$ cd LinuxProgrammingWithRaspberryPi
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi$ cd Chapter6
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter6$ gcc -o tcp_server2 tcp_server2.c
+tcp_server2.c: In function ‘main’:
+tcp_server2.c:59:10: error: ‘client_socket’ undeclared (first use in this function)
+   59 |     recv(client_socket, &n, sizeof(n), 0);
+      |          ^~~~~~~~~~~~~
+tcp_server2.c:59:10: note: each undeclared identifier is reported only once for each function it appears in
+tcp_server2.c:63:18: error: ‘buffer’ undeclared (first use in this function); did you mean ‘setbuffer’?
+   63 |         snprintf(buffer, BUFFER_SIZE, "Reply %d from server.", i + 1);
+      |                  ^~~~~~
+      |                  setbuffer
+tcp_server2.c:63:26: error: ‘BUFFER_SIZE’ undeclared (first use in this function)
+   63 |         snprintf(buffer, BUFFER_SIZE, "Reply %d from server.", i + 1);
+      |                          ^~~~~~~~~~~
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter6$ gcc -o tcp_server2 tcp_server2.c
+tcp_server2.c: In function ‘main’:
+tcp_server2.c:59:10: error: ‘client_socket’ undeclared (first use in this function)
+   59 |     recv(client_socket, &n, sizeof(n), 0);
+      |          ^~~~~~~~~~~~~
+tcp_server2.c:59:10: note: each undeclared identifier is reported only once for each function it appears in
+tcp_server2.c:63:18: error: ‘buffer’ undeclared (first use in this function); did you mean ‘setbuffer’?
+   63 |         snprintf(buffer, BUFFER_SIZE, "Reply %d from server.", i + 1);
+      |                  ^~~~~~
+      |                  setbuffer
+tcp_server2.c:63:26: error: ‘BUFFER_SIZE’ undeclared (first use in this function)
+   63 |         snprintf(buffer, BUFFER_SIZE, "Reply %d from server.", i + 1);
+      |                          ^~~~~~~~~~~
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter6$
+
+**** 어떻게 해야할지 모르겠어요... ㅠㅠ ****

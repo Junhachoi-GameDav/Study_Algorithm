@@ -1,0 +1,12 @@
+june14@junhachoi:~$  cd LinuxProgrammingWithRaspberryPi
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi$ cd Chapter6
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter6$ ./tcp_client
+Usage : ./tcp_client IP_ADRESS
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter6$ ./tcp_client 127.0.0.1
+hellow world
+;
+^C
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter6$ ./tcp_client 127.0.0.1
+^C
+june14@junhachoi:~/LinuxProgrammingWithRaspberryPi/Chapter6$
+

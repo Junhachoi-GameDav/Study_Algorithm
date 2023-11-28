@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.chapter11">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Chapter11">
+        <activity android:name="com.example.chapter11.MainActivity" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com.example.chapter11.Self1101" android:exported="true"/>
+        <activity android:name="com.example.chapter11.Self1101_new" android:exported="true"/>
+        <activity android:name="com.example.chapter11.Self1102" android:exported="true"/>
+        <activity android:name="com.example.chapter11.Self1103" android:exported="true"/>
+        <activity android:name="com.example.chapter11.Exer1105" android:exported="true"/>
+        <activity android:name="com.example.chapter11.Exer1106" android:exported="true"/>
+        <activity android:name =".ResultActivity1105" android:label ="투표 결과" android:exported="true"/>
+
+        <activity android:name="com.example.chapter11.Self1101_org" android:exported="true"/>
+
+        <activity android:name="com.example.chapter11.Self1102_org" android:exported="true"/>
+        <activity android:name="com.example.chapter11.Self1103_org" android:exported="true"/>
+        <activity android:name="com.example.chapter11.Exer1105_org" android:exported="true"/>
+        <activity android:name="com.example.chapter11.Exer1106_org" android:exported="true"/>
+        <activity android:name =".ResultActivity1105_org" android:label ="투표 결과" android:exported="true"/>
+    </application>
+
+</manifest>
