@@ -1,0 +1,83 @@
+Microsoft Windows [Version 10.0.19045.3448]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\User>cd \Users\User\AppData\Local\Android\Sdk
+
+C:\Users\User\AppData\Local\Android\Sdk>cd \platform-tools
+지정된 경로를 찾을 수 없습니다.
+
+C:\Users\User\AppData\Local\Android\Sdk> \platform-tools
+'\platform-tools'은(는) 내부 또는 외부 명령, 실행할 수 있는 프로그램, 또는
+배치 파일이 아닙니다.
+
+C:\Users\User\AppData\Local\Android\Sdk>cd \Users\User\AppData\Local\Android\Sdk\platform-tools
+
+C:\Users\User\AppData\Local\Android\Sdk\platform-tools>dir adb*.exe
+ C 드라이브의 볼륨에는 이름이 없습니다.
+ 볼륨 일련 번호: 0E24-D794
+
+ C:\Users\User\AppData\Local\Android\Sdk\platform-tools 디렉터리
+
+2022-03-03  오후 02:40         5,977,600 adb.exe
+               1개 파일           5,977,600 바이트
+               0개 디렉터리  25,806,245,888 바이트 남음
+
+C:\Users\User\AppData\Local\Android\Sdk\platform-tools>dir adb*.exe
+ C 드라이브의 볼륨에는 이름이 없습니다.
+ 볼륨 일련 번호: 0E24-D794
+
+ C:\Users\User\AppData\Local\Android\Sdk\platform-tools 디렉터리
+
+2022-03-03  오후 02:40         5,977,600 adb.exe
+               1개 파일           5,977,600 바이트
+               0개 디렉터리  25,801,342,976 바이트 남음
+
+C:\Users\User\AppData\Local\Android\Sdk\platform-tools>dir adb*.exe
+ C 드라이브의 볼륨에는 이름이 없습니다.
+ 볼륨 일련 번호: 0E24-D794
+
+ C:\Users\User\AppData\Local\Android\Sdk\platform-tools 디렉터리
+
+2022-03-03  오후 02:40         5,977,600 adb.exe
+               1개 파일           5,977,600 바이트
+               0개 디렉터리  25,623,343,104 바이트 남음
+
+C:\Users\User\AppData\Local\Android\Sdk\platform-tools>adb root
+restarting adbd as root
+
+C:\Users\User\AppData\Local\Android\Sdk\platform-tools>adb shell
+generic_x86_64:/ #  cd  /data/data/com.cookandroid.project12
+/system/bin/sh: cd: /data/data/com.cookandroid.project12: No such file or directory
+2|generic_x86_64:/ #
+2|generic_x86_64:/ # cd \Users\User\AndroidStudioProjects\chapter12
+/system/bin/sh: cd: /UsersUserAndroidStudioProjectschapter12: No such file or directory
+2|generic_x86_64:/ # cd \data
+generic_x86_64:/data # cd \data
+generic_x86_64:/data/data # cd \com.cookandroid.project12_1
+/system/bin/sh: cd: /data/data/com.cookandroid.project12_1: No such file or directory
+2|generic_x86_64:/data/data # cd \com.example.chapter12
+generic_x86_64:/data/data/com.example.chapter12 # ls
+cache code_cache databases files
+generic_x86_64:/data/data/com.example.chapter12 # mkdir databases
+mkdir: 'databases': File exists
+1|generic_x86_64:/data/data/com.example.chapter12 # cd databases
+generic_x86_64:/data/data/com.example.chapter12/databases # pwd
+/data/data/com.example.chapter12/databases
+generic_x86_64:/data/data/com.example.chapter12/databases # sqlite3  mydb
+SQLite version 3.22.0 2018-12-19 01:30:22
+Enter ".help" for usage hints.
+sqlite> CREATE TABLE product (prodName  CHAR(10),  price  INT, mDate  char(8), company  char(10), amount int);
+sqlite> INSERT INTO product VALUES('TV',100,'20170722','Samsung',55);
+sqlite> INSERT INTO product VALUES('Computer',150,'20190505','LG',7);
+sqlite> NSERT INTO product VALUES('Monitor',50,'20210909','Daewoo',33);
+Error: near "NSERT": syntax error
+sqlite>  INSERT INTO product VALUES('Monitor',50,'20210909','Daewoo',33);
+sqlite> .header  on
+sqlite> .mode  column
+sqlite> SELECT * FROM product;
+prodName    price       mDate       company     amount
+----------  ----------  ----------  ----------  ----------
+TV          100         20170722    Samsung     55
+Computer    150         20190505    LG          7
+Monitor     50          20210909    Daewoo      33
+sqlite>
