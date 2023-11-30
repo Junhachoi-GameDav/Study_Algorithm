@@ -1,0 +1,130 @@
+june14@junhachoi:~$ vi helloflaskdb.py
+june14@junhachoi:~$ cat helloflaskdb.py
+from flask import Flask, render_template, json, request
+import pymysql.cursors
+
+app = Flask(__name__)
+
+# Connect to the database
+connection = pymysql.connect(host='localhost',
+                             user='scott',
+                             password='tiger',
+                             database='mydb',
+                             cursorclass=pymysql.cursors.DictCursor,
+                             charset='utf8'
+                             )
+
+# Route for displaying the sensor data
+@app.route('/')
+def display_sensor_data():
+    with connection.cursor() as cursor:
+        # Fetch data from Sensors table
+        cursor.execute('SELECT * FROM Sensors')
+        sensors_data = cursor.fetchall()
+        print(type(sensors_data))
+        print(sensors_data)
+
+        # Fetch data from SensorData table
+        cursor.execute('SELECT * FROM SensorData')
+        sensor_data_data = cursor.fetchall()
+        print(sensor_data_data)
+
+        # Fetch data from SensorStatus table
+        cursor.execute('SELECT * FROM SensorStatus')
+        sensor_status_data = cursor.fetchall()
+        print(sensor_status_data)
+
+        # Close the cursor and connection
+        #cursor.close()
+        #connection.close()
+
+        return render_template('index.html', sensors=sensors_data, sensor_data=sensor_data_data, sensor_status=sensor_status_data)
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+
+june14@junhachoi:~$ cat index.html    // 나중에 따로 템플릿 파일을 만들어서 넣어줬다.
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sensor Data</title>
+</head>
+<body>
+    <h1>Sensors</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Location</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sensor in sensors %}
+                <tr>
+                {% for item, value in sensor.items(): %}
+                    <td>{{ value }}</td>
+                {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h1>Sensor Data</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Sensor ID</th>
+                <th>Reading</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for data in sensor_data %}
+                <tr>
+                {% for item, value in data.items(): %}
+                    <td>{{ value }}</td>
+                {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h1>Sensor Status</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Sensor ID</th>
+                <th>Status</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for status in sensor_status %}
+                <tr>
+                {% for item, value in status.items(): %}
+                    <td>{{ value }}</td>
+                {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
+
+june14@junhachoi:~$ export FLASK_APP=helloflaskdb
+june14@junhachoi:~$ flask run
+ * Serving Flask app 'helloflaskdb'
+ * Debug mode: off
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on http://127.0.0.1:5000
+Press CTRL+C to quit
+<class 'list'>
+[{'id': 1, 'name': 'Sensor1', 'location': 'Location1'}, {'id': 2, 'name': 'Sensor2', 'location': 'Location2'}, {'id': 3, 'name': 'Sensor3', 'location': 'Location3'}]
+[{'id': 1, 'sensor_id': 1, 'reading': 25.5, 'timestamp': datetime.datetime(2023, 11, 30, 15, 7, 13)}, {'id': 2, 'sensor_id': 2, 'reading': 30.2, 'timestamp': datetime.datetime(2023, 11, 30, 15, 7, 13)}, {'id': 3, 'sensor_id': 1, 'reading': 26.8, 'timestamp': datetime.datetime(2023, 11, 30, 15, 7, 13)}, {'id': 4, 'sensor_id': 3, 'reading': 18.9, 'timestamp': datetime.datetime(2023, 11, 30, 15, 7, 13)}, {'id': 5, 'sensor_id': 2, 'reading': 30.5, 'timestamp': datetime.datetime(2023, 11, 30, 15, 58, 39)}]
+[{'id': 1, 'sensor_id': 1, 'status': 'Active', 'timestamp': datetime.datetime(2023, 11, 30, 15, 7, 34)}, {'id': 2, 'sensor_id': 2, 'status': 'Inactive', 'timestamp': datetime.datetime(2023, 11, 30, 15, 7, 34)}, {'id': 3, 'sensor_id': 3, 'status': 'Active', 'timestamp': datetime.datetime(2023, 11, 30, 15, 7, 34)}]
+127.0.0.1 - - [30/Nov/2023 16:41:44] "GET / HTTP/1.1" 200 -
+^Cjune14@junhachoi:~$

@@ -1,0 +1,95 @@
+*************************************************
+****** 	개인 노트북으로 옮김. PYTHON 준비.   ******
+*************************************************
+june14@junhachoi:~$ python3 -m pip install PyMySQL
+/usr/bin/python3: No module named pip
+
+june14@junhachoi:~$ python3
+Python 3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> python3
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'python3' is not defined
+>>>
+[2]+  Stopped                 python3
+
+june14@junhachoi:~$ pip3
+Command 'pip3' not found, but can be installed with:
+sudo apt install python3-pip
+
+june14@junhachoi:~$ sudo apt install python3-pip
+
+*************************************************
+****** 	설치 생략.   ******
+*************************************************
+
+june14@junhachoi:~$ python3 -m pip install PyMySQL
+Defaulting to user installation because normal site-packages is not writeable
+Collecting PyMySQL
+  Downloading PyMySQL-1.1.0-py3-none-any.whl (44 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 44.8/44.8 KB 906.3 kB/s eta 0:00:00
+Installing collected packages: PyMySQL
+Successfully installed PyMySQL-1.1.0
+
+
+
+june14@junhachoi:~$ vi mysqltest.py
+
+*************************************************
+****** 	소스코드 깃허브에서 복사.   ******
+*************************************************
+
+june14@junhachoi:~$ python3 mysqltest.py
+{'id': 2, 'name': 'Sensor2', 'sensor_id': 2, 'reading': 30.2, 'timestamp': datetime.datetime(2023, 11, 30, 15, 7, 13), 'status': 'Inactive'}
+
+june14@junhachoi:~$ sudo mariadb -u scott -ptiger
+[sudo] password for june14:
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 36
+Server version: 10.6.12-MariaDB-0ubuntu0.22.04.1 Ubuntu 22.04
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]> use mydb;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+MariaDB [mydb]> select id, reading, timestamp from SensorData;
++----+---------+---------------------+
+| id | reading | timestamp           |
++----+---------+---------------------+
+|  1 |    25.5 | 2023-11-30 15:07:13 |
+|  2 |    30.2 | 2023-11-30 15:07:13 |
+|  3 |    26.8 | 2023-11-30 15:07:13 |
+|  4 |    18.9 | 2023-11-30 15:07:13 |
+|  5 |    30.5 | 2023-11-30 15:58:39 |
++----+---------+---------------------+
+5 rows in set (0.001 sec)
+
+*************************************************
+****** 	flask 웹서버 .   ******
+*************************************************
+
+june14@junhachoi:~$ pip install Flask
+
+*************************************************
+****** 	설치 생략 .   ******
+*************************************************
+
+june14@junhachoi:~$ vi helloflask.py
+june14@junhachoi:~$ export FLASK_APP=helloflask.py
+june14@junhachoi:~$ flask run
+Command 'flask' not found, but can be installed with:
+sudo apt install python3-flask
+
+june14@junhachoi:~$ sudo apt install python3-flask
+
+*************************************************
+****** 	설치 생략 .   ******
+*************************************************
+
+june14@junhachoi:~$ flask run
