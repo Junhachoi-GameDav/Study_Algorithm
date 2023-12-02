@@ -58,3 +58,7 @@ Received message: hello wesoket!
 (for_flask) june14@junhachoi:~$ pip install pymysql
 //...생략...
 
+
+
+(for_flask) june14@junhachoi:~$ python3 websocket_plot.py
+Client connected
