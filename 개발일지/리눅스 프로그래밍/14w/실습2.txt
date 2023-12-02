@@ -1,0 +1,113 @@
+**************************************
+****** 	   plot.py 생성. 	*******
+**************************************
+june14@junhachoi:~$ vi plot.py
+june14@junhachoi:~$ python3 plot.py
+Time: 2023-12-02 23:50:37.106857 - Temperature: 28.06°C, Humidity: 53.79%, Illuminance: 841.82 lux
+Time: 2023-12-02 23:50:38.108270 - Temperature: 27.43°C, Humidity: 53.89%, Illuminance: 819.41 lux
+Time: 2023-12-02 23:50:39.109856 - Temperature: 27.12°C, Humidity: 48.75%, Illuminance: 502.29 lux
+Time: 2023-12-02 23:50:40.111567 - Temperature: 20.13°C, Humidity: 53.40%, Illuminance: 596.45 lux
+Time: 2023-12-02 23:50:41.113158 - Temperature: 26.73°C, Humidity: 52.28%, Illuminance: 941.38 lux
+Time: 2023-12-02 23:50:42.114806 - Temperature: 22.37°C, Humidity: 56.51%, Illuminance: 661.37 lux
+Time: 2023-12-02 23:50:43.116409 - Temperature: 20.40°C, Humidity: 44.05%, Illuminance: 503.43 lux
+Time: 2023-12-02 23:50:44.117898 - Temperature: 22.54°C, Humidity: 45.74%, Illuminance: 587.80 lux
+Time: 2023-12-02 23:50:45.119478 - Temperature: 27.83°C, Humidity: 50.08%, Illuminance: 749.02 lux
+Time: 2023-12-02 23:50:46.121045 - Temperature: 22.95°C, Humidity: 51.92%, Illuminance: 882.66 lux
+^Z
+[6]+  Stopped                 python3 plot.py
+
+june14@junhachoi:~$ sudo mariadb
+[sudo] password for june14:
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 31
+Server version: 10.6.12-MariaDB-0ubuntu0.22.04.1 Ubuntu 22.04
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]> use mydb
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+MariaDB [mydb]> desc SensorData;
++-----------+----------+------+-----+---------+----------------+
+| Field     | Type     | Null | Key | Default | Extra          |
++-----------+----------+------+-----+---------+----------------+
+| id        | int(11)  | NO   | PRI | NULL    | auto_increment |
+| sensor_id | int(11)  | YES  | MUL | NULL    |                |
+| reading   | float    | YES  |     | NULL    |                |
+| timestamp | datetime | YES  |     | NULL    |                |
++-----------+----------+------+-----+---------+----------------+
+4 rows in set (0.008 sec)
+
+**************************************
+****** 	 SensorData 테이블 생성. *******
+**************************************
+
+MariaDB [mydb]> alter TABLE SensorData add column temperature float;
+Query OK, 0 rows affected (0.078 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [mydb]> alter TABLE SensorData add column humidity float;
+Query OK, 0 rows affected (0.058 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [mydb]> alter TABLE SensorData add column illuminance float;
+Query OK, 0 rows affected (0.072 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+
+MariaDB [mydb]> desc SensorData;
++-------------+----------+------+-----+---------+----------------+
+| Field       | Type     | Null | Key | Default | Extra          |
++-------------+----------+------+-----+---------+----------------+
+| id          | int(11)  | NO   | PRI | NULL    | auto_increment |
+| sensor_id   | int(11)  | YES  | MUL | NULL    |                |
+| reading     | float    | YES  |     | NULL    |                |
+| timestamp   | datetime | YES  |     | NULL    |                |
+| temperature | float    | YES  |     | NULL    |                |
+| humidity    | float    | YES  |     | NULL    |                |
+| illuminance | float    | YES  |     | NULL    |                |
++-------------+----------+------+-----+---------+----------------+
+7 rows in set (0.001 sec)
+
+MariaDB [mydb]>
+
+//
+**************************************
+****** 	 python 파일 생성후 실행. *******
+**************************************
+
+
+june14@junhachoi:~$ python3 simul_sensors_mqtt_db.py
+
+Time:2023-12-03 00:16:53.661627 - SID:3, Reading:27.51, Temp:27.31'C, Humi:46.59%, Illuminanace:547.09 lux
+Error:name 'mmmmmhh' is not defined
+Received and stored: Time:2023-12-03 00:16:53, SID:3, Reading:27.509880644013826, Temp:27.31027380950048'C, Hum    i:46.587433910715774%, Illuminance: 547.087102586898 lux
+Time:2023-12-03 00:16:54.664033 - SID:1, Reading:21.32, Temp:28.28'C, Humi:48.02%, Illuminanace:709.13 lux
+Received and stored: Time:2023-12-03 00:16:54, SID:1, Reading:21.321868067526665, Temp:28.28254939285422'C, Hum    i:48.02448502256374%, Illuminance: 709.1253009453267 lux
+Time:2023-12-03 00:16:55.666423 - SID:1, Reading:22.46, Temp:23.67'C, Humi:57.06%, Illuminanace:758.31 lux
+Received and stored: Time:2023-12-03 00:16:55, SID:1, Reading:22.462555662121805, Temp:23.66594414775603'C, Hum    i:57.06390057676359%, Illuminance: 758.3090427810688 lux
+... 생략
+
+MariaDB [mydb]> select * from SensorData;
++----+-----------+---------+---------------------+-------------+----------+-------------+
+| id | sensor_id | reading | timestamp           | temperature | humidity | illuminance |
++----+-----------+---------+---------------------+-------------+----------+-------------+
+|  1 |         1 |    25.5 | 2023-11-30 15:07:13 |        NULL |     NULL |        NULL |
+|  2 |         2 |    30.2 | 2023-11-30 15:07:13 |        NULL |     NULL |        NULL |
+|  3 |         1 |    26.8 | 2023-11-30 15:07:13 |        NULL |     NULL |        NULL |
+|  4 |         3 |    18.9 | 2023-11-30 15:07:13 |        NULL |     NULL |        NULL |
+|  5 |         2 |    30.5 | 2023-11-30 15:58:39 |        NULL |     NULL |        NULL |
+|  6 |         3 | 27.5099 | 2023-12-03 00:16:53 |     27.3103 |  46.5874 |     547.087 |
+|  7 |         1 | 21.3219 | 2023-12-03 00:16:54 |     28.2825 |  48.0245 |     709.125 |
+|  8 |         1 | 22.4626 | 2023-12-03 00:16:55 |     23.6659 |  57.0639 |     758.309 |
+|  9 |         2 | 27.5763 | 2023-12-03 00:16:56 |     29.7288 |  50.5024 |     662.407 |
+| 10 |         1 | 25.7964 | 2023-12-03 00:16:57 |     25.7229 |  51.6982 |     533.556 |
+| 11 |         3 | 26.9556 | 2023-12-03 00:16:58 |     21.6157 |  52.8471 |     955.899 |
+| 12 |         1 | 29.7535 | 2023-12-03 00:16:59 |      20.403 |  55.7394 |     985.663 |
+| 13 |         1 | 21.3828 | 2023-12-03 00:17:00 |     23.5295 |   57.609 |     674.247 |
++----+-----------+---------+---------------------+-------------+----------+-------------+
+13 rows in set (0.000 sec)

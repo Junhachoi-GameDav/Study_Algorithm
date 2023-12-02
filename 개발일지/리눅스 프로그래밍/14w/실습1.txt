@@ -1,0 +1,137 @@
+**************************************
+강원대학교 멀티디자인학과 201522405 최준하
+**************************************
+
+Welcome to Ubuntu 22.04.3 LTS (GNU/Linux 5.15.133.1-microsoft-standard-WSL2 x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+ * Strictly confined Kubernetes makes edge and IoT secure. Learn how MicroK8s
+   just raised the bar for easy, resilient and secure K8s cluster deployment.
+
+   https://ubuntu.com/engage/secure-kubernetes-at-the-edge
+
+This message is shown once a day. To disable it please create the
+/home/june14/.hushlogin file.
+june14@junhachoi:~$ sudo apt-get install mosquitto mosquitto-clients
+[sudo] password for june14:
+
+**************************************
+****** 	    설치 생략. 	*******
+**************************************
+
+june14@junhachoi:~$ sudo systemctl start mosquitto.service
+
+june14@junhachoi:~$ ps -ef|grep mosq
+mosquit+     889       1  0 18:43 ?        00:00:00 /usr/sbin/mosquitto -c /etc/mosquitto/mosquitto.conf
+june14       930     473  0 18:55 pts/0    00:00:00 grep --color=auto mosq
+
+june14@junhachoi:~$ sudo mosquitto_passwd -c /etc/mosquitto/passwd myuser
+
+june14@junhachoi:~$ sudo nano /etc/mosquitto/mosquitto.conf
+
+june14@junhachoi:~$ sudo systemctl restart mosquitto.service
+
+
+june14@junhachoi:~$ mosquitto_sub -h localhost -t test -u myuser -P mypassword
+^Z
+[1]+  Stopped                 mosquitto_sub -h localhost -t test -u myuser -P mypassword
+june14@junhachoi:~$ mosquitto_pub -h localhost -t test -m "hello, world!!"
+mosquitto_pub -h localhost -t test -m "hello, worldmosquitto_sub -h localhost -t test -u myuser -P mypassword"
+june14@junhachoi:~$ mosquitto_sub -h localhost -t test -u myuser -P mypassword
+^Z
+[2]+  Stopped                 mosquitto_sub -h localhost -t test -u myuser -P mypassword
+june14@junhachoi:~$ mosquitto_pub -h localhost -t test -m "hello, world"
+june14@junhachoi:~$ cat mqtt_pub.py
+cat: mqtt_pub.py: No such file or directory
+
+**************************************
+****** 	   py파일이 깃허브에 없어서 
+영상보고 직접 코드 입력함. 	*******
+**************************************
+
+june14@junhachoi:~$ vi mqtt_pub.py
+june14@junhachoi:~$ vi mqtt_sub.py
+june14@junhachoi:~$ cat mqtt_pub.py
+import paho.mqtt.client as mqtt
+import time
+
+# MQTT Broker configuration
+broker_address = '127.0.0.1'
+broker_port = 1883
+topic = 'my/topic'
+
+# Create an MQTT client instance
+client = mqtt.Client()
+
+# Connect to the MQTT broker
+client.connect(broker_address, broker_port)
+
+# Publish a msg to the topic every 1 second
+while True:
+message = f"Hello, MQTT! Time: {time.strftime('%H:%M:%S')}"
+client.publish(topic, message)
+print(f"Published: {message}")
+time.sleep(1)
+june14@junhachoi:~$ cat mqtt_sub.py
+import paho.mqtt.client as mqtt
+
+# MQTT Broker configuration
+broker_address = '127.0.0.1'
+broker_port = 1883
+topic = 'my/topic'
+
+def on_connect(client, userdata, flags, rc):
+    print("Connected to MQTT broker")
+    # Subscribe to the topic
+    client.subscribe(topic)
+
+def on_message(client, userdata, msg):
+    print(f"Received: {msg.payload.decode()}")
+
+client = mqtt.Client()
+client.on_connect = on_connect
+client.on_message = on_message
+client.connect(broker_address, broker_port)
+client.loop_forever()
+
+**************************************
+****** 	   실행 결과.	*******
+**************************************
+
+june14@junhachoi:~$ python3 mqtt_pub.py
+Published: Hello, MQTT! Time: 23:10:31
+Published: Hello, MQTT! Time: 23:10:32
+Published: Hello, MQTT! Time: 23:10:33
+Published: Hello, MQTT! Time: 23:10:34
+Published: Hello, MQTT! Time: 23:10:35
+Published: Hello, MQTT! Time: 23:10:36
+Published: Hello, MQTT! Time: 23:10:37
+Published: Hello, MQTT! Time: 23:10:38
+Published: Hello, MQTT! Time: 23:10:39
+Published: Hello, MQTT! Time: 23:10:40
+Published: Hello, MQTT! Time: 23:10:41
+Published: Hello, MQTT! Time: 23:10:42
+Published: Hello, MQTT! Time: 23:10:43
+Published: Hello, MQTT! Time: 23:10:44
+^Z
+[3]+  Stopped                 python3 mqtt_pub.py
+june14@junhachoi:~$ python3 mqtt_sub.py
+Connected to MQTT broker
+Received: Hello, MQTT! Time: 23:12:00
+Received: Hello, MQTT! Time: 23:12:01
+Received: Hello, MQTT! Time: 23:12:02
+Received: Hello, MQTT! Time: 23:12:03
+Received: Hello, MQTT! Time: 23:12:04
+Received: Hello, MQTT! Time: 23:12:05
+Received: Hello, MQTT! Time: 23:12:06
+Received: Hello, MQTT! Time: 23:12:07
+Received: Hello, MQTT! Time: 23:12:08
+Received: Hello, MQTT! Time: 23:12:09
+Received: Hello, MQTT! Time: 23:12:10
+Received: Hello, MQTT! Time: 23:12:11
+Received: Hello, MQTT! Time: 23:12:12
+
+
