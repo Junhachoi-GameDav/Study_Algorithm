@@ -1,0 +1,45 @@
+0 The Fool / 광대, 바보 - 몽상, 우행, 극단, 열광
+1 The Magician / 마술사, 마법사, 기술사 - 의지, 수완, 외교
+2 The High Priestess / 교황, 사제장, 법황, 고위 사제 / 여 - 비밀, 신비, 영지
+3 The Empress / 여제, 여황제 - 결실, 행동, 세월의 길이, 미지의 것
+4 The Emperor / 황제 - 통치, 견고함, 방어, 동맹
+5 The Hierophant / 교황, 법황, 사제장 - 신조, 사회성, 은혜와 유덕
+6 The Lovers / 연인, 연애 - 매력, 사랑의 아름다움
+7 The Chariot / 전차, 정복자 - 원군, 섭리, 승리, 복수
+8 Strength / 힘, 기백, 강의, 역량, 의지 - 힘, 용기, 관대, 명예
+9 The Hermit / 은둔자 - 심려, 충고를 받다, 붕괴
+10 Wheel of Fortune / 운명의 수레바퀴, 운명 - 행운, 전환기, 향상
+11 Justice / 정의, 재판의 여신 - 평등, 올바름, 행정, 정당한 판결
+12 The Hanged Man / 매달린 사람, 매달린 남자, 사형수, 형사자 - 영지, 신중, 시련, 직관
+13 Death / 죽음, 사신 - 격변, 죽음과 재생
+14 Temperance / 절제 - 조정, 중용, 검약, 관리
+15 The Devil / 악마 - 폭력, 격렬, 바꿀 수 없음, 흑마술, 사심, 타락
+16 The Tower / 탑, 신의 집 - 비탄, 재난, 불명예, 전락
+17 The Star / 별 - 희망과 밝은 앞날, 명상, 영감, 방치
+18 The Moon / 달 - 숨은 적, 환상, 기만, 실패
+19 The Sun / 태양 - 물질적 행복, 행복한 결혼, 만족
+20 Judgement / 심판, 영겁 - 부활, 위치의 변화, 경신, 결과
+21 The World / 세계, 우주 - 완성, 약속된 성공, 나그네
+
+The Fool (더 풀)
+The Magician (더 매지션)
+The High Priestess (더 하이 프리스티스)
+The Empress (더 엠프레스)
+The Emperor (더 엠퍼러)
+The Hierophant (더 하이로펀트)
+The Lovers (더 러버스)
+The Chariot (더 챠리엇)
+Strength (스트렝스)
+The Hermit (더 허밋)
+Wheel of Fortune (휠 오브 포춘)
+Justice (저스티스)
+The Hanged Man (더 행드 맨)
+Death (데쓰)
+Temperance (템퍼런스)
+The Devil (더 데빌)
+The Tower (더 타워)
+The Star (더 스타)
+The Moon (더 문)
+The Sun (더 선)
+Judgement (저지먼트)
+The World (더 월드)

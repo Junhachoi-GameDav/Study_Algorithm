@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context=".MainActivity">
+
+    <!-- 카드를 나타낼 레이아웃 -->
+    <LinearLayout
+        android:id="@+id/cardLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal">
+
+        <!-- 카드 이미지뷰 -->
+        <ImageView
+            android:id="@+id/card1"
+            android:layout_width="100dp"
+            android:layout_height="150dp"
+            android:src="@drawable/card_back"
+            android:layout_margin="5dp"
+            android:onClick="onCardClick"
+            android:tag="0" />
+
+        <ImageView
+            android:id="@+id/card2"
+            android:layout_width="100dp"
+            android:layout_height="150dp"
+            android:src="@drawable/card_back"
+            android:layout_margin="5dp"
+            android:onClick="onCardClick"
+            android:tag="1" />
+
+        <ImageView
+            android:id="@+id/card3"
+            android:layout_width="100dp"
+            android:layout_height="150dp"
+            android:src="@drawable/card_back"
+            android:layout_margin="5dp"
+            android:onClick="onCardClick"
+            android:tag="2" />
+    </LinearLayout>
+
+    <!-- 운세를 나타낼 텍스트뷰 -->
+    <TextView
+        android:id="@+id/fortuneText"
+        android:layout_width="wrap_content"
+        android:layout_height="150dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:text=""
+        android:textAlignment="center"
+        android:textSize="18sp" />
+</LinearLayout>
