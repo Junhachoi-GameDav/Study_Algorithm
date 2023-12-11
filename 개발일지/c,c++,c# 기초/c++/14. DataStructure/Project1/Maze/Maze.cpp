@@ -1,5 +1,8 @@
-#include <iostream>
-using namespace std;
+#include "pch.h"
+#include "Vector.h"
+#include "Board.h"
+#include "Player.h"
+
 
 int main() {
 	
@@ -20,4 +23,17 @@ int main() {
 	// - 중간		o(1) 이것은 양방향 리스트 였을시 [1]<->[3] 이런식으로 서로가 어디있는지 아는상황에서 o(1)인 것이다.
 	// - 끝			o(1) 리스트 특성때문에 굳이 밀지않는다.
 	// - 임의 접근	o(n) index를 지정해서 고랐지만 리스트는 선을 따라 count를 하며 가니까
+
+
+	::srand(static_cast<uint32>(time(nullptr)));
+
+	while (true)
+	{
+		//입력
+
+		//로직
+
+		//랜더링
+	}
+
 }
