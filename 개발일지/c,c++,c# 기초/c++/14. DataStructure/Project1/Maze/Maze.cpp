@@ -3,6 +3,8 @@
 #include "Board.h"
 #include "Player.h"
 
+Board board;
+Player player;
 
 int main() {
 	
@@ -27,13 +29,17 @@ int main() {
 
 	::srand(static_cast<uint32>(time(nullptr)));
 
+	//초기화
+	board.Init(25, &player);
+	player.Init(&board);
+
 	while (true)
 	{
 		//입력
 
-		//로직
+		//로직 (업데이트 & 틱 함수 같은거)
 
 		//랜더링
+		board.Render();
 	}
-
 }

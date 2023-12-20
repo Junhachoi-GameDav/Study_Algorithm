@@ -13,6 +13,11 @@ enum class TileType
 	WALL
 };
 
+//전방선언을 해 ->나중에 나올꺼니까 너가 알아서 연결하고 일단 그냥 넘어가란 뜻
+// 해데끼리는 어지간하면 인쿠르드 하지말아야한다.
+//include "pl~~ 이거하지마
+class Player;
+
 class Board
 {
 public:
@@ -20,7 +25,7 @@ public:
 	Board();
 	~Board();
 
-	void			Init(int32 size); 
+	void			Init(int32 size, Player* player); 
 	void			Render();
 
 	void			GenerateMap();
@@ -35,5 +40,6 @@ public:
 private:
 	TileType	_tile[BOARD_MAX_SIZE][BOARD_MAX_SIZE];
 	int32		_size = 0;
+	Player*		_player = nullptr;
 };
 
