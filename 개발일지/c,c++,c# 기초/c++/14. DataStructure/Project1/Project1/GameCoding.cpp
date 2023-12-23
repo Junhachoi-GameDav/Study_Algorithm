@@ -10,7 +10,7 @@ public:
 	int data;
 	void* next = nullptr;
 };
-
-int main() {
-
-}
+//
+//int main() {
+//
+//}

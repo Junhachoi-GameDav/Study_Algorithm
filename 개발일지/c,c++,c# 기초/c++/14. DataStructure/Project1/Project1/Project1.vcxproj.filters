@@ -18,5 +18,11 @@
     <ClCompile Include="GameCoding.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Template.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Stack_and_Queue.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,10 +1,9 @@
 #pragma once
 #include <assert.h>
 
+template<typename T>
 class Vector
 {
-	using T = Pos;
-
 public:
 
 	//explicit 매개변수나 함수등에 다른 숫자가 예) 정수 또는 실수 등이 들어가는것을 방지
@@ -57,6 +56,12 @@ public:
 	T& back()
 	{
 		return _buffer[_size - 1]; //마지막 데이터 꺼내기
+	}
+
+	void resize(int size)
+	{
+		reserve(size);
+		_size = size;
 	}
 
 	void reserve(int capacity)
