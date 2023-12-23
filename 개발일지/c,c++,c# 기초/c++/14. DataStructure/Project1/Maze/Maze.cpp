@@ -33,11 +33,22 @@ int main() {
 	board.Init(25, &player);
 	player.Init(&board);
 
+	uint64 lastTick = 0;
+
 	while (true)
 	{
+#pragma region 프레임 관리
+		//::GetTickCount64() 윈도우api 함수중하나 경과된 시간을 틱(밀리세컨트 단위)로 환산
+		const uint64 currntTick = ::GetTickCount64();
+		const uint64 deltaTick = currntTick - lastTick; //사이의 시간
+		lastTick = currntTick;
+#pragma endregion
+
+
 		//입력
 
 		//로직 (업데이트 & 틱 함수 같은거)
+		player.Update(deltaTick);
 
 		//랜더링
 		board.Render();

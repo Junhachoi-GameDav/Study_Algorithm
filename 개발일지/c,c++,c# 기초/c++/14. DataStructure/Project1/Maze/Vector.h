@@ -3,7 +3,7 @@
 
 class Vector
 {
-	using T = int;
+	using T = Pos;
 
 public:
 
