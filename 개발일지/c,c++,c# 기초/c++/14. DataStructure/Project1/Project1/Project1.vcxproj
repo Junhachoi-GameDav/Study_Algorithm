@@ -128,6 +128,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="GameCoding.cpp" />
+    <ClCompile Include="recursive_function.cpp" />
     <ClCompile Include="Stack_and_Queue.cpp" />
     <ClCompile Include="Template.cpp" />
   </ItemGroup>
