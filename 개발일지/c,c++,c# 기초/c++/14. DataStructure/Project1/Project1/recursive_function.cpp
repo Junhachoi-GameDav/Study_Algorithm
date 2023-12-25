@@ -40,8 +40,8 @@ int Gcd(int a, int b)
 
 	return Gcd(b, a % b);
 }
-
-int main() {
-
-	Func(5);
-}
+//
+//int main() {
+//
+//	Func(5);
+//}

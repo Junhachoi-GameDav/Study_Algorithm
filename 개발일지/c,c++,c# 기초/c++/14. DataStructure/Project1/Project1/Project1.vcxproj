@@ -128,9 +128,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="GameCoding.cpp" />
+    <ClCompile Include="Priority_Queue.cpp" />
     <ClCompile Include="recursive_function.cpp" />
     <ClCompile Include="Stack_and_Queue.cpp" />
     <ClCompile Include="Template.cpp" />
+    <ClCompile Include="Tree.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
