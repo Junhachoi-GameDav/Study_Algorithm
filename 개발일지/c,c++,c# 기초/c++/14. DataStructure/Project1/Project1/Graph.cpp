@@ -3,6 +3,9 @@ using namespace std;
 #include <vector>
 #include <queue>
 
+//그래프 이미지는 강의에 있음
+
+
 //비효율적이지만 이런식으로 작동한다는 예시용 함수(이렇게 안만든다.)
 void CreateGraph_1()
 {
@@ -35,6 +38,11 @@ void CreateGraph_1()
 	}
 }
 
+
+// 지하철 노선도 = 서로 드문드문 연결 = 인접리스트가 적당함
+// 인스타 친구 = 서로 매우 뺵빽하게 연결 = 인접리스트가 비효율적({}안에가 너무 많음)
+
+//인접 리스트 : 실제 연결된 애들'만' 넣어준다.
 void CreateGraph_2()
 {
 	struct Vertex
@@ -50,9 +58,149 @@ void CreateGraph_2()
 
 	//adjacent[0].puch_back(1);
 	//adjacent[0].puch_back(3);
-	adjacent[0] = { 1, 3 };
+	adjacent[0] = { 1 , 3 };
+	adjacent[1] = { 1 , 2 , 3 };
+	adjacent[3] = { 4 };
+	adjacent[5] = { 4 };
+
+	// 0번->3번으로 연결되어있나?
+	bool connected = false;
+
+	int size = adjacent[0].size();
+	for (int i = 0; i < size; i++)
+	{
+		int vertex = adjacent[0][i];
+		if (vertex == 3)
+		{
+			connected = true;
+		}
+	}
+}
+
+//인접 행렬
+void CreateGraph_3()
+{
+	struct Vertex
+	{
+		int data;
+	};
+
+	vector<Vertex> v(6);
+
+	//연결된 목록을 행렬로 관리 = 표로 관리한다는 뜻
+	//예)
+	//[x][o][x][o][x][x]
+	//[o][x][o][o][x][x]
+	//[x][x][x][x][x][x]
+	//[x][x][x][x][o][x]
+	//[x][x][x][x][x][x]
+	//[x][x][x][x][0][x]
+
+	//adjacent[from][to] ?
+	// 행렬을 이용한 그래프 표현
+	// 메모리 소모 심하지만, 빠른 접근
+	vector<vector<bool>> adjacent(6, vector<bool>(6, false)); //2차원배열에 배열안에 있는것들 false로 초기화
+	adjacent[0][1] = true;
+	adjacent[0][3] = true;
+	adjacent[1][0] = true;
+	adjacent[1][2] = true;
+	adjacent[1][3] = true;
+	adjacent[3][4] = true;
+	adjacent[5][4] = true;
+
+	// 0번->3번 연결 되어있나?
+	bool connected = adjacent[0][3];
+
+
+	//응용 = 인트등으로도 만들수 있고 가중치도 줄수있다.
+	vector<vector<int>> adjacent2 =
+	{
+		//이중으로 만들뒤 false는 -1로 표현
+		{-1, 15, -1, 35, -1, -1},
+		{15, -1, +5, 10, -1, -1},
+		{-1, +5, -1, -1, -1, -1},
+		{35, 10, -1, -1, +5, -1},
+		{-1, -1, -1, +5, -1, +5},
+		{-1, -1, -1, -1, +5, -1}
+	};
+}
+
+
+// DFS (depth first search) = 어떻게든 깊이 파고들어서 찾는방법
+// 트리랑 비슷하다.(단 트리는 아래로즉 한방향으로만 가능했지만 이건 양방향이다.)
+
+
+// DFS = 재귀함수 = 스택
+// BFS =
+
+
+//DFS
+struct Vertex
+{
+	// int data;
+};
+
+vector<Vertex> vertices;
+vector<vector<int>> adjacent;
+
+//내가 방문한 목록
+vector<bool> visited;
+
+void CreateGraph_DFS()
+{
+	vertices.resize(6);
+
+	//인접 리스트
+	/*adjacent = vector<vector<int>>(6);
+	adjacent[0] = { 1 , 3 };
+	adjacent[1] = { 1 , 2 , 3 };
+	adjacent[3] = { 4 };
+	adjacent[5] = { 4 };*/
+
+	//인접 행렬
+	adjacent = vector<vector<int>>
+	{
+		{0,1,0,1,0,0},
+		{1,0,1,1,0,0},
+		{0,0,0,0,0,0},
+		{0,0,0,0,1,0},
+		{0,0,0,0,0,0},
+		{0,0,0,0,1,0},
+	};
+}
+
+void Dfs(int here)
+{
+	//방문했는지
+	visited[here] = true;
+	cout << "Visited : " << here << endl;
+
+	//인접한 길을 다 체크 , 인접리스트
+	//int size = adjacent[here].size();
+	//for (int i = 0; i < size; i++)
+	//{
+	//	int there = adjacent[here][i];
+	//	if (visited[there] == false)
+	//	{
+	//		Dfs(there); //재귀함수로 다시 실행
+	//	}
+	//}
+
+	// 인접 행렬 버전
+	for (int there = 0; there < 6; there++)
+	{
+		//길이 있는지?
+		if (adjacent[here][there] == 0) { continue; }
+
+		//아직 방문하지 않은곳에 한해서 방문
+		if (visited[there] == false) { Dfs(there); }
+	}
 }
 
 int main() {
 
+	CreateGraph_DFS();
+
+	visited = vector<bool>(6, false);
+	Dfs(0);
 }

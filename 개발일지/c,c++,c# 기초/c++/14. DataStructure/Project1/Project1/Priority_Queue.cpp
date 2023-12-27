@@ -87,22 +87,22 @@ private:
 	vector<T> _heap; //여기에 데이터를 넣음
 	Predicate _predicate;
 };
-
-int main()
-{
-	vector<int> v;
-	// less 또는 greater 등으로 바꿔서 구할수도 있다.
-	PriorityQueue<int , greater<int>> pq;
-
-
-	//제일 작은수를 구하는 방법은 그냥 음수로 넣으면 제일 작은수가 나옴 -10이 제일 크니까
-	pq.push(10);
-	pq.push(20);
-	pq.push(50);
-	pq.push(40);
-	pq.push(30);
-
-
-	int value = pq.top();
-	pq.pop();
-}
+//
+//int main()
+//{
+//	vector<int> v;
+//	// less 또는 greater 등으로 바꿔서 구할수도 있다.
+//	PriorityQueue<int , greater<int>> pq;
+//
+//
+//	//제일 작은수를 구하는 방법은 그냥 음수로 넣으면 제일 작은수가 나옴 -10이 제일 크니까
+//	pq.push(10);
+//	pq.push(20);
+//	pq.push(50);
+//	pq.push(40);
+//	pq.push(30);
+//
+//
+//	int value = pq.top();
+//	pq.pop();
+//}
