@@ -129,12 +129,13 @@ void CreateGraph_3()
 // DFS (depth first search) = 어떻게든 깊이 파고들어서 찾는방법
 // 트리랑 비슷하다.(단 트리는 아래로즉 한방향으로만 가능했지만 이건 양방향이다.)
 
+// BFS (breath first search) = 너비 우선 탐색 
+// 먼저 줄선놈이 먼저 들어간다. 선입선출
 
 // DFS = 재귀함수 = 스택
-// BFS =
+// BFS = 큐
 
 
-//DFS
 struct Vertex
 {
 	// int data;
@@ -143,8 +144,13 @@ struct Vertex
 vector<Vertex> vertices;
 vector<vector<int>> adjacent;
 
-//내가 방문한 목록
+//내가 방문한 목록 = DFS 용
 vector<bool> visited;
+
+//내가 발견한 목록 = BFS 용
+vector<bool> discovered;
+
+#pragma region DFS
 
 void CreateGraph_DFS()
 {
@@ -176,6 +182,12 @@ void Dfs(int here)
 	cout << "Visited : " << here << endl;
 
 	//인접한 길을 다 체크 , 인접리스트
+	// 시간복잡도 O(V+E) e가 많아지면 v^2랑 똑같아서 뭐가더 나은지 판별할수없음
+	// 서로 드문드문 연결 = 인접리스트가 적당함
+	// 
+	// V = Vertex
+	// E = Edge
+	// 
 	//int size = adjacent[here].size();
 	//for (int i = 0; i < size; i++)
 	//{
@@ -186,7 +198,9 @@ void Dfs(int here)
 	//	}
 	//}
 
-	// 인접 행렬 버전
+	// 인접 행렬 버전 
+	// 시간 복잡도 O(V^2)
+	// 서로 매우 뺵빽하게 연결 = 인접리스트가 비효율적({}안에가 너무 많음)
 	for (int there = 0; there < 6; there++)
 	{
 		//길이 있는지?
@@ -197,10 +211,119 @@ void Dfs(int here)
 	}
 }
 
+void DfsAll()
+{
+	visited = vector<bool>(6, false);
+
+	for (int i = 0; i < 6; i++)
+	{
+		if (visited[i] == false)
+		{
+			Dfs(i);
+		}
+	}
+}
+
+#pragma endregion
+
+#pragma region BFS
+void CreateGraph_BFS()
+{
+	vertices.resize(6);
+
+	//인접 리스트
+	/*adjacent = vector<vector<int>>(6);
+	adjacent[0] = { 1 , 3 };
+	adjacent[1] = { 1 , 2 , 3 };
+	adjacent[3] = { 4 };
+	adjacent[5] = { 4 };*/
+
+	//인접 행렬
+	adjacent = vector<vector<int>>
+	{
+		{0,1,0,1,0,0},
+		{1,0,1,1,0,0},
+		{0,0,0,0,0,0},
+		{0,0,0,0,1,0},
+		{0,0,0,0,0,0},
+		{0,0,0,0,1,0},
+	};
+}
+
+void Bfs(int here)
+{
+	//이런식으로 조건을 만들면 최단거리도 알수있다.
+
+	// 누구에 의해서 발견되었는가?
+	vector<int> parant(6, -1);
+	// 시작점에서 얼마나 떨어져 있는가?
+	vector<int> dist(6, -1);
+
+	queue<int> q;
+	q.push(here);
+	discovered[here] = true;
+
+	//초기화
+	parant[here] = here; //자기자신에 의해서 찾은거다.
+	dist[here] = 0; //0에서 시작
+
+	while (q.empty() == false)
+	{
+		here = q.front(); //넣고 방문했으니까
+		q.pop(); // 꺼냄
+
+		cout << "Visited : " << here << endl;
+
+		//어차피 둘다 똑같다.
+
+		//인접 리스트용
+		//int size = adjacent[here].size();
+		//for (int i = 0; i < size; i++)
+		//{
+		//	int there = adjacent[here][i];
+		//	if (discovered[there]) { continue; }
+		//	
+		//	q.push(there); //방문이 아닌 예약(큐라는 상자에 넣어놓고 기다리고 위에 front pop으로 넣고빼기
+		//	discovered[there] = true;
+		//}
+
+		//인접 행렬 용
+		for (int there = 0; there < 6; there++)
+		{
+			if (adjacent[here][there] == 0) { continue; }
+
+			if (discovered[there]) { continue; }
+
+			q.push(there);
+			discovered[there] = true;
+
+			parant[there] = here;
+			dist[there] = dist[here] + 1;
+		}
+	}
+}
+
+void BfsAll()
+{
+	discovered = vector<bool>(6, false);
+	for (int i = 0; i < 6; i++)
+	{
+		if (discovered[i] == false) { Bfs(i); }
+	}
+}
+
+#pragma endregion
+
+
 int main() {
 
-	CreateGraph_DFS();
+	//CreateGraph_DFS();
+	CreateGraph_BFS();
 
-	visited = vector<bool>(6, false);
-	Dfs(0);
+	//discovered = vector<bool>(false);
+
+	//Dfs(0);
+	//DfsAll();
+	//Bfs(0);
+	BfsAll();
 }

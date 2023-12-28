@@ -1,7 +1,4 @@
 ﻿  Graph.cpp
 E:\Study_Algorithm\개발일지\c,c++,c# 기초\c++\14. DataStructure\Project1\Project1\Graph.cpp(30,30): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 E:\Study_Algorithm\개발일지\c,c++,c# 기초\c++\14. DataStructure\Project1\Project1\Graph.cpp(69,31): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-E:\Study_Algorithm\개발일지\c,c++,c# 기초\c++\14. DataStructure\Project1\Project1\Graph.cpp(167,34): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-  Priority_Queue.cpp
-  Generating Code...
   Project1.vcxproj -> E:\Study_Algorithm\개발일지\c,c++,c# 기초\c++\14. DataStructure\Project1\x64\Debug\Project1.exe
