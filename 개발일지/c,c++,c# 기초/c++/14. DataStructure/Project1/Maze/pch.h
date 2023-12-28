@@ -5,6 +5,8 @@
 #include "Types.h"
 #include <Windows.h>
 #include <iostream>
+#include <vector>
+#include <queue>
 using namespace std;
 
 //모두다 public으로 설정한거니까 구조체

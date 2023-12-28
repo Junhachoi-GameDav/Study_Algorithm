@@ -7,7 +7,8 @@ void Player::Init(Board* board)
 	_pos = board->GetEnterPos();
 	_board = board;
 
-	CalculatePath();
+	//CalculatePath_right_hand();
+	CalculatePath_BFS();
 }
 
 void Player::Update(uint64 deltaTick)
@@ -33,7 +34,7 @@ bool Player::CanGo(Pos pos)
 	return tileType == TileType::EMPTY;
 }
 
-void Player::CalculatePath()
+void Player::CalculatePath_right_hand()
 {
 	Pos pos = _pos;
 
@@ -56,63 +57,38 @@ void Player::CalculatePath()
 		Pos(0,1),	//right
 	};
 
-	//for (int i = 0; i < 20; i++)
+
+
+	//목적지를 찾을때까지
+	//_dir = DIR_UP; //0
+
+	//while (pos != dest)
 	//{
-	//	//Pos next = pos + front[_dir];
+	//	int32 newDir = (_dir - 1 + DIR_COUNT) % DIR_COUNT;
+	//	if (CanGo(pos + front[newDir]))
+	//	{
+	//		//회전
+	//		_dir = (_dir - 1) % DIR_COUNT;
+	//		//한칸이동
+	//		pos += front[_dir];
+	//		//기록
+	//		_path.push_back(pos);
+	//		
+	//	}
+	//	else if (CanGo(pos + front[_dir]))
+	//	{
+	//		//한칸이동
+	//		pos += front[_dir];
+	//		//기록
+	//		_path.push_back(pos);
+	//	}
+	//	else
+	//	{
+	//		_dir = (_dir + 1) % DIR_COUNT;
+	//	}
 
-	//	if (CanGo(pos + front[_dir]))
-	//	{
-	//		pos += front[0];
-	//		_path.push_back(pos);
-	//	}
-	//	else if (CanGo(pos + front[1]))
-	//	{
-	//		pos += Pos(1, 0);
-	//		_path.push_back(pos);
-	//	}
-	//	else if (CanGo(pos + front[2]))
-	//	{
-	//		pos += Pos(1, 0);
-	//		_path.push_back(pos);
-	//	}
-	//	else if (CanGo(pos + front[3]))
-	//	{
-	//		pos += Pos(1, 0);
-	//		_path.push_back(pos);
-	//	}
-	//	pos += front[2];
-	//	_path.push_back(pos);
+	//	if (pos == dest) { break; }
 	//}
-
-	_dir = DIR_UP; //0
-
-	while (pos != dest)
-	{
-		int32 newDir = (_dir - 1 + DIR_COUNT) % DIR_COUNT;
-		if (CanGo(pos + front[newDir]))
-		{
-			//회전
-			_dir = (_dir - 1) % DIR_COUNT;
-			//한칸이동
-			pos += front[_dir];
-			//기록
-			_path.push_back(pos);
-			
-		}
-		else if (CanGo(pos + front[_dir]))
-		{
-			//한칸이동
-			pos += front[_dir];
-			//기록
-			_path.push_back(pos);
-		}
-		else
-		{
-			_dir = (_dir + 1) % DIR_COUNT;
-		}
-
-		if (pos == dest) { break; }
-	}
 
 	//내가 바라보는 방향 기준 앞에 있는 좌표
 	//Pos next = pos + front[_dir];
@@ -122,35 +98,86 @@ void Player::CalculatePath()
 	//_dir = (_dir + 1) % DIR_COUNT;
 
 	//int32 newDir = _dir;
+	
+}
 
-	//목적지를 찾을때까지
-	//while (pos != dest)
-	//{
-	//	//1. 현재 바라보는 방향기준으로  오른쪽으로 갈수있는지 확인
-	//	int32 newDir = (_dir - 1) % DIR_COUNT;
-	//	if (CanGo(pos + front[newDir]))
-	//	{
-	//		//오른쪽으로 90도 회전
-	//		_dir = (_dir - 1) % DIR_COUNT;
-	//		//앞으로 한 보 전진
-	//		pos += front[_dir];
-	//		//좌표 기록
-	//		_path.push_back(pos);
-	//		
-	//	}
-	//	//2. 전진 할수 있는지 확인
-	//	else if (CanGo(pos + front[3]))
-	//	{
-	//		//앞으로 한 보 전진
-	//		pos += front[_dir];
-	//		//좌표 기록
-	//		_path.push_back(pos);
-	//	}
-	//	// 3.둘다 아닐때 돌기
-	//	else
-	//	{
-	//		//왼쪽으로 90도 회전
-	//		_dir = (_dir + 1) % DIR_COUNT;
-	//	}
-	//}
+void Player::CalculatePath_BFS()
+{
+	Pos pos = _pos;
+	//목적지
+	Pos dest = _board->GetExitPos();
+
+	Pos front[4]
+	{
+		Pos(-1,0),	//up
+		Pos(0,-1),	//left
+		Pos(1,0),	//down
+		Pos(0,1),	//right
+	};
+
+	const int32 size = _board->GetSize();
+	vector<vector<bool>> discovered(size, vector<bool>(size, false));
+	// discovered[y][x] ?
+
+
+	// extra)
+	// parant[y][x] = pos -> (y, x) pos에 의해 발견됨
+	vector<vector<Pos>> parant(size, vector<Pos>(size, Pos(-1, -1)));
+
+	queue<Pos> q;
+	q.push(pos);
+	discovered[pos.y][pos.x] = true;
+
+	//초기화
+	parant[pos.y][pos.x] = pos; //자기자신에 의해서 발견
+
+
+	while (q.empty() == false)
+	{
+		pos = q.front();
+		q.pop();
+
+		//목적지 도착
+		if (pos == dest) { break; }
+
+		for (int32 dir = 0; dir < DIR_COUNT; dir++)
+		{
+			Pos nextPos = pos + front[dir];
+			//갈수 있는 지역은 맞는지 확인
+			if (CanGo(nextPos) == false) { continue; }
+
+			//이미 다른 경로에 의해 발견한 지역
+			if (discovered[nextPos.y][nextPos.x]) { continue; }
+
+			q.push(nextPos);
+			discovered[nextPos.y][nextPos.x] = true;
+			parant[nextPos.y][nextPos.x] = pos;
+		}
+	}
+
+	//패스
+	_path.clear();
+	//_path.push_back(pos);
+	pos = dest; //목적지부터시작
+
+	while (true)
+	{
+		_path.push_back(pos);
+
+		//시작점
+		if (pos == parant[pos.y][pos.x]) { break; }
+		//덮어쓰기 (뒤에서부터)
+		pos = parant[pos.y][pos.x];
+	}
+
+	//거꾸로 돌리기
+	/*vector<Pos> temp(_path.size());
+	for (int i = 0; i < _path.size(); i++)
+	{
+		temp[i] = _path[_path.size() - 1 - i];
+	}
+	_path = temp;*/
+
+	//이런 방법도 있다.
+	std::reverse(_path.begin(), _path.end());
 }
