@@ -1,16 +1,12 @@
 #include <iostream>
 using namespace std;
 
-class Node
+class node
 {
 public:
-	Node(int data) : data(data) {}
+	node(int data) : data(data) {}
 
 public:
 	int data;
 	void* next = nullptr;
 };
-//
-//int main() {
-//
-//}

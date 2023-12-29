@@ -314,16 +314,104 @@ void BfsAll()
 
 #pragma endregion
 
+// 다익스트라 = BFS 업그레이드 버전(BFS에 우선순위 큐를 한것)
+// 경로에 가중치를 줘서 먼저 어디를 갈지 고르는것
+// 우선순위 큐
+#pragma region 다익스트라
+void CreateGraph_Dijikstra()
+{
+	vertices.resize(6);
+
+	adjacent = vector<vector<int>>(6, vector<int>(6, -1));
+	adjacent[0][1] = adjacent[1][0] = 15;
+	adjacent[0][3] = adjacent[3][0] = 35;
+	adjacent[1][2] = adjacent[2][1] = 5;
+	adjacent[1][3] = adjacent[3][1] = 10;
+	adjacent[3][4] = adjacent[4][3] = 5;
+	adjacent[5][4] = adjacent[4][5] = 5;
+}
+
+struct VertexCost
+{
+	VertexCost(int cost, int vertex) : cost(cost), vertex(vertex) {}
+
+	//비교 const를 붙힌것과 안한것은 전혀 다른 함수이다.
+	//const는 안에서 함수를 수정하지 않겠다는 뜻
+	bool operator<(const VertexCost& other) const
+	{
+		return cost < other.cost;
+	}
+
+	bool operator>(const VertexCost& other) const
+	{
+		return cost > other.cost;
+	}
+
+
+	int cost;
+	int vertex;
+};
+
+void Dijikstra(int here)
+{
+	priority_queue<VertexCost, vector<VertexCost>, greater<VertexCost>> pq;
+	vector<int> best(6, INT32_MAX); //인트로 할수있는 최대 값
+	vector<int> parent(6, -1);
+
+	//초기화
+	pq.push(VertexCost(0, here));
+	best[here] = 0;
+	parent[here] = here;
+
+	while (pq.empty() == false)
+	{
+		//제일 좋은 후보 찾기
+		VertexCost v = pq.top();
+		pq.pop();
+
+		int cost = v.cost;
+		here = v.vertex;
+
+		//더 짧은 경로를 뒤늦게 찾았다면 스킵(굳이 갈필요없으니까)
+		if (best[here] < cost) { continue; }
+
+		//방문
+		cout << "방문! " << here << endl;
+
+		for (int there = 0; there < 6; there++)
+		{
+			//연결되지 않았다면 스킵
+			if (adjacent[here][there] == -1) { continue; }
+
+			//더 좋은 경로를 과거에 찾았으면 스킵(혹시 모르니까 또해줌)
+			int nextCost = best[here] + adjacent[here][there];
+			if (nextCost >= best[there]) { continue; }
+
+			//지금까지 찾은 경로중 최선의 수치면 갱신
+			//나중에 언제든지 갱신될수 있음
+			best[there] = nextCost;
+			parent[there] = here;
+			pq.push(VertexCost(nextCost, there));
+		}
+	}
+}
+
+#pragma endregion
+
+
+// A* (에이스타) 알고리즘 = 다익스트라 + 목적지를 알고있음
+// BFS나 다익스트라는 목적지에 대한 개념이 없음
+// Player.cpp에서 구현 ㄱㄱ
 
 int main() {
 
 	//CreateGraph_DFS();
-	CreateGraph_BFS();
-
-	//discovered = vector<bool>(false);
+	//CreateGraph_BFS();
+	CreateGraph_Dijikstra();
 
 	//Dfs(0);
 	//DfsAll();
 	//Bfs(0);
-	BfsAll();
+	//BfsAll();
+	Dijikstra(0);
 }
