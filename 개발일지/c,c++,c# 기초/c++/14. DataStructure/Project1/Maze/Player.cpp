@@ -291,7 +291,7 @@ void Player::CalculatePath_AStar()
 			Pos nextPos = node.pos + front[dir];
 			//갈수있는 지역인지 확인
 			if (CanGo(nextPos) == false) { continue; }
-			if (closed[nextPos.y][nextPos.y]) { continue; }
+			if (closed[nextPos.y][nextPos.x]) { continue; }
 
 			int32 g = node.g + cost[dir];
 			int32 h = 10 * (abs(dest.y - nextPos.y) + abs(dest.x - nextPos.x));
