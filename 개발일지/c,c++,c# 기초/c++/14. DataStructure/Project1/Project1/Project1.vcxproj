@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Func_ptr_and_Functor.cpp" />
     <ClCompile Include="GameCoding.cpp" />
     <ClCompile Include="Graph.cpp" />
     <ClCompile Include="Priority_Queue.cpp" />

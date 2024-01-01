@@ -402,16 +402,16 @@ void Dijikstra(int here)
 // A* (에이스타) 알고리즘 = 다익스트라 + 목적지를 알고있음
 // BFS나 다익스트라는 목적지에 대한 개념이 없음
 // Player.cpp에서 구현 ㄱㄱ
-
-int main() {
-
-	//CreateGraph_DFS();
-	//CreateGraph_BFS();
-	CreateGraph_Dijikstra();
-
-	//Dfs(0);
-	//DfsAll();
-	//Bfs(0);
-	//BfsAll();
-	Dijikstra(0);
-}
+//
+//int main() {
+//
+//	//CreateGraph_DFS();
+//	//CreateGraph_BFS();
+//	CreateGraph_Dijikstra();
+//
+//	//Dfs(0);
+//	//DfsAll();
+//	//Bfs(0);
+//	//BfsAll();
+//	Dijikstra(0);
+//}
