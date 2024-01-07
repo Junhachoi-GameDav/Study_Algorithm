@@ -30,6 +30,7 @@ int main() {
 }
 */
 //#2
+/*
 #include <iostream>
 using namespace std;
 
@@ -51,4 +52,58 @@ int main() {
 	cout << temp;
 	return 0;
 }
+*/
+//#3
+/*
+#include <iostream>
+using namespace std;
 
+int main() {
+	int n = 0 , sum = 0;
+	int arr[100000] = { 0 };
+	
+	while (true)
+	{
+		cin >> n;
+		if (n == -1) { break; } //Á¾·á
+		sum = 0;
+
+		for (int i = n; i > 1; i--)
+		{
+			if (n % i == 0)
+			{
+				arr[i] = n / i;
+				sum += arr[i];
+			}
+		}
+
+		if (sum == n && sum > 0)
+		{
+			cout << n << " = ";
+			for (int i = n; i > 1; i--)
+			{
+				if (n % i == 0)
+				{
+					cout << arr[i];
+					if (i > 2) { cout << " + "; }
+				}
+			}
+		}
+		else
+		{
+			cout << n << " is NOT perfect.";
+		}
+		cout << endl;
+	}
+	
+	return 0;
+}
+*/
+//#4
+#include <iostream>
+using namespace std;
+
+int main() {
+
+	return 0;
+}
