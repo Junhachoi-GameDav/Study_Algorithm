@@ -100,10 +100,26 @@ int main() {
 }
 */
 //#4
+/*
 #include <iostream>
 using namespace std;
 
 int main() {
+	int i,j,n = 0, count = 0, count2 = 0;
+	int arr[100] = { 0 };
 
+	cin >> n;
+	for (i = 0; i < n; i++)
+	{
+		cin >> arr[i];
+		for (j = arr[i];  j >= 1;  j--)
+		{
+			if (arr[i] % j == 0 && j > 1) { count++; }
+		}
+		if (count == 1) { count2++; }
+		count = 0;
+	}
+	cout << count2;
 	return 0;
 }
+*/
