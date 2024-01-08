@@ -123,3 +123,54 @@ int main() {
 	return 0;
 }
 */
+//#5
+/*
+#include <iostream>
+using namespace std;
+
+int main() {
+	int m = 0, n = 0, sum = 0, min = 0, count = 0;
+	int arr[10000] = { 0 };
+	bool is_empty = false;
+	cin >> m >> n;
+
+	for (int i = m; i <= n; i++)
+	{
+		arr[i-m] = i;
+		for (int j = arr[i-m]; j >= 1; j--)
+		{
+			if (arr[i - m] % j == 0) { count++; }
+		}
+		if (count == 2)
+		{ 
+			if (sum == 0) { min = arr[i - m]; }
+			sum += arr[i - m];
+			is_empty = true;
+		}
+		count = 0;
+	}
+	if(is_empty) { cout << sum << "\n" << min; }
+	else { cout << "-1"; }
+	return 0;
+}
+*/
+//#6
+#include <iostream>
+using namespace std;
+
+int main() {
+	int n = 0;
+	cin >> n;
+
+	for (int i = 2; i <= n;)				
+	{
+		if(n % i == 0)						
+		{
+			n = n / i;
+			cout << i << "\n";
+		}
+		else
+			i++;
+	}
+	return 0;
+}
