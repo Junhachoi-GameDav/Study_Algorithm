@@ -1,16 +1,4 @@
-﻿  Func_ptr_and_Functor.cpp
-  GameCoding.cpp
-  Graph.cpp
-F:\Study_Algorithm\개발일지\c,c++,c# 기초\c++\14. DataStructure\Project1\Project1\Graph.cpp(30,11): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-F:\Study_Algorithm\개발일지\c,c++,c# 기초\c++\14. DataStructure\Project1\Project1\Graph.cpp(69,11): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  Priority_Queue.cpp
-  recursive_function.cpp
-  Stack_and_Queue.cpp
+﻿  List.cpp
   STL.cpp
-  Template.cpp
-  Tree.cpp
-F:\Study_Algorithm\개발일지\c,c++,c# 기초\c++\14. DataStructure\Project1\Project1\Tree.cpp(77,11): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-F:\Study_Algorithm\개발일지\c,c++,c# 기초\c++\14. DataStructure\Project1\Project1\Tree.cpp(91,11): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  Vector.cpp
   코드를 생성하고 있습니다...
   Project1.vcxproj -> F:\Study_Algorithm\개발일지\c,c++,c# 기초\c++\14. DataStructure\Project1\x64\Debug\Project1.exe

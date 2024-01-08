@@ -1,20 +1,26 @@
 //#include <bits/stdc++.h>
 #include <iostream>
 #include <vector>
-#include "Vector.h"
+//#include "Vector.h"
 #include <list>
+//#include "List.h"
 #include <queue>
 using namespace std;
 
 
 //자료구조 또는 컨테이너라고 하며 stl과 같이 특정 헤더나 간단한 계산등을 미리 만들어 놓은 것이 stl이다.
 
+struct ItemInfo_test
+{
+	//매우 방대한 양
+};
 
 void Test(vector<int> &v) //이렇게 하면 사실상 복사를 하는거다. test함수를 실행할때마다 복사될것임
 {
 	//& 참조값으로 넣으면 복사가 되지않고 한번만 쓰니까 이렇게 ㄱㄱ
 	// vector는 보통 참조나 포인터를 대부분 사용하고 일반을 잘 안쓴다.
 }
+
 
 int main() {
 	//vector
@@ -131,7 +137,7 @@ int main() {
 
 	//만든 vector에서의 iterator
 	{
-		Vector<int> v;
+		/*Vector<int> v;
 		v.push_back(10);
 		v.push_back(20);
 		v.push_back(30);
@@ -142,12 +148,129 @@ int main() {
 		{
 			int data = *it;
 			cout << data << endl;
-		}
+		}*/
 
 		// it++;
 		// v.begin();
 		// v.end();
 		// *it
 		//이것들을 지원하게끔 만들어 주면 된다.
+	}
+
+	//list
+	{
+		//size (capacity란 개념 자체가 없음)
+		// - 시작		O(1)
+		// - 중간		O(1) << 주소가 기억이 되어있다면 
+		// - 끝			O(1)
+		// front
+		// back
+		// push_front (1차원 배열엔 없었는데 여긴있다.
+		// push_back
+		// 임의 접근 (지원 없음) x
+
+		//이론상으론 O(1)이라 빠를것 같지만 노드를 타고가는 연산이 애초에 비용도많이들고
+		//느리다.
+
+		//list<int> li;
+
+		//li.insert(li.end(), 1); //삽입
+		//li.insert(li.end(), 2); //삽입
+		//list<int>::iterator it = li.insert(li.end(), 3); //삽입
+		//li.insert(li.end(), 4); //삽입
+		//li.insert(li.end(), 5); //삽입
+
+		//li.erase(it);
+
+		/*List<int> li;
+		li.AddAtTail(10);
+		li.AddAtTail(20);
+		li.AddAtTail(30);*/
+
+		//list<int>::iterator it;
+		/*for (List<int>::iterator it = li.begin(); it != li.end();)
+		{
+			int value = *it;
+			if (value % 2 == 0)
+				it = li.erase(it);
+			else
+				it++;
+		}*/
+		/*List<int>::iterator it;
+		for (it = li.begin(); it != li.end(); it++)
+		{
+			int value = *it;
+			cout << value << '\n';
+		}*/
+	}
+
+	//auto
+	{
+		// c++11 (mordern c++) 에서 추가된 기능 람다식도 포함
+		// 현재 c++20까지 나왔으면 11이 대격변이였다고 한다.
+
+		//앞에 다 갖다 붙힐수있음 c#에 var 같은거임
+		//int a = 1;
+		//auto a = 1;
+		//template랑 뿌리가 비슷함
+		//마우스를 갖다 대면 컴파일러가 추정?한 자료형으로 바뀐게 보임
+
+		//int& ref = a;
+		//const int cst = a;
+		
+		// 주의 : auto는 const, &참조 는 떼고 추론함 이떄 그냥 붙혀주면됨
+		//auto& ref2 = ref;
+		//const auto cst2 = cst;
+
+		
+		// 장점:
+		//  - 타이핑이 개쉬워짐 vector<int>::itera ~~ 이거 하나하나 쓰고있을 필요없음
+		// 단점:
+		//	- 가독성이 떨어지고 오류 일일히 찾기 힘듬
+		
+		//vector<int> v;
+		//auto it = v.begin(); // 이정도는 가독성도 괜찮고 걍 써도 된다.
+		//iterator나 매우긴 std::map<int, int>::iterator it = ~~ 이런거에 쓰면 굳
+		// template이랑 자주 사용되어진다. &참조 값만 잘 붙히는것에 주의하자
+	}
+
+	//ranged-based for문
+	{
+
+		vector<int> v{1, 2, 3, 4, 5};
+		
+		//일반적인 for문
+		for (int i = 0; i < v.size(); i++)
+		{
+			int data = v[i];
+			cout << data << '\n';
+		}
+
+		//auto로 줄인 포문
+		for (auto it = v.begin(); it != v.end(); it++)
+		{
+			int data = *it;
+			cout << data << '\n';
+		}
+
+		//신규 포문 c# foreach 같은거
+		for (int data : v)
+		{
+			cout << data << '\n';
+		}
+
+		//안에 데이터를 고치고싶으면 & 참조값을 붙히면 된다.
+		vector<ItemInfo_test> item_v;
+		for (auto& data : item_v)//아이템을 모두 순회할때 
+		{
+			//& 참조를 안 붙히면 계속 복사가 일어나서 메모리 누수가됨
+			// 일반 자료형 아니고서야 일반적으로 & 참조를 붙힌다고 보면 됨
+			// 내부적으론 사실 iterator에 begin() 과 end() 사용한 방법이라고 볼수 있음
+		}
+
+		// 한번 순회(스캔)할때는 너무 좋지만 안에 복잡한 함수나 다른 함수로 이동하는
+		// 로직을 짜면 메모리 오염이나 의도치않은 로직이 될수있으니 깔끔하게 
+		// 간단한 로직에서만 사용해야한다.
+
 	}
 }

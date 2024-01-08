@@ -130,6 +130,7 @@
     <ClCompile Include="Func_ptr_and_Functor.cpp" />
     <ClCompile Include="GameCoding.cpp" />
     <ClCompile Include="Graph.cpp" />
+    <ClCompile Include="List.cpp" />
     <ClCompile Include="Priority_Queue.cpp" />
     <ClCompile Include="recursive_function.cpp" />
     <ClCompile Include="Stack_and_Queue.cpp" />
@@ -139,6 +140,7 @@
     <ClCompile Include="Vector.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="List.h" />
     <ClInclude Include="Vector.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
