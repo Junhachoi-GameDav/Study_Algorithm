@@ -21,14 +21,14 @@ vector<string> split(string input, string delimeter)
 	// 앞에서 d를 찾고 d 전에 글자들을 넣은후 뒤에 글짜를 지움. 그러고 다시 앞에글짜를 지운것을 넣어서
 	// 결과적으로 d만 빼고 글자를 넣어놓은것임
 }
-
-int main() {
-	string s = "abcdabc";
-	string d = "d";
-	vector<string> a = split(s, d);
-
-	for (string b : a)
-	{
-		cout << b << "\n";
-	}
-}
+//
+//int main() {
+//	string s = "abcdabc";
+//	string d = "d";
+//	vector<string> a = split(s, d);
+//
+//	for (string b : a)
+//	{
+//		cout << b << "\n";
+//	}
+//}
