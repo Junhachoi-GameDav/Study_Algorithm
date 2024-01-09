@@ -33,6 +33,7 @@ int main() {
 }
 */
 //#3
+/*
 #include <iostream>
 using namespace std;
 
@@ -57,4 +58,15 @@ int main() {
 		else if (count_y == 2) { y[3] = y[0]; }
 	}
 	cout << x[3] << " " << y[3];
+}
+*/
+//#4
+#include <iostream>
+using namespace std;
+
+int main() {
+	unsigned int n = 0;
+	cin >> n;
+	cout << n * 4;
+	return 0;
 }
