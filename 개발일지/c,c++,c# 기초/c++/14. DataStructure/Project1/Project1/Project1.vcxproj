@@ -127,6 +127,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BinarySearchTree.cpp" />
+    <ClCompile Include="Binary_search.cpp" />
     <ClCompile Include="Func_ptr_and_Functor.cpp" />
     <ClCompile Include="GameCoding.cpp" />
     <ClCompile Include="Graph.cpp" />
@@ -140,6 +142,7 @@
     <ClCompile Include="Vector.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BinarySearchTree.h" />
     <ClInclude Include="List.h" />
     <ClInclude Include="Vector.h" />
   </ItemGroup>

@@ -1,4 +1,3 @@
-﻿  List.cpp
-  STL.cpp
-  코드를 생성하고 있습니다...
-  Project1.vcxproj -> F:\Study_Algorithm\개발일지\c,c++,c# 기초\c++\14. DataStructure\Project1\x64\Debug\Project1.exe
+﻿  Binary_search.cpp
+E:\Study_Algorithm\개발일지\c,c++,c# 기초\c++\14. DataStructure\Project1\Project1\Binary_search.cpp(23,32): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  Project1.vcxproj -> E:\Study_Algorithm\개발일지\c,c++,c# 기초\c++\14. DataStructure\Project1\x64\Debug\Project1.exe
