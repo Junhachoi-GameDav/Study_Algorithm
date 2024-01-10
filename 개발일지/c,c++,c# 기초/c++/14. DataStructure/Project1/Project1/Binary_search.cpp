@@ -49,24 +49,24 @@ void BinarySearch(int n)
 //이진 탐색			-> O(logN), 데이터 추가삭제 어려움
 //이진 탐색 트리	-> 대소비교만함 (트리의 균형이 안맞음) 깊이가 짧아야 빠른데 깊이가 하나만 겁나 늘어남
 //레드 블랙 트리	->
-
-int main() {
-
-	/*numbers = { 1, 8, 15, 23, 32, 44, 56, 63, 81, 91 };
-	BinarySearch(81);*/
-
-	BinarySearchTree bst;
-	
-	bst.insert(20);
-	bst.insert(30);
-	bst.insert(10);
-
-	bst.insert(25);
-	bst.insert(26);
-	bst.insert(40);
-	bst.insert(50);
-
-	bst.Delete(26);
-
-	bst.Print();
-}
+//
+//int main() {
+//
+//	/*numbers = { 1, 8, 15, 23, 32, 44, 56, 63, 81, 91 };
+//	BinarySearch(81);*/
+//
+//	BinarySearchTree bst;
+//	
+//	bst.insert(20);
+//	bst.insert(30);
+//	bst.insert(10);
+//
+//	bst.insert(25);
+//	bst.insert(26);
+//	bst.insert(40);
+//	bst.insert(50);
+//
+//	bst.Delete(26);
+//
+//	bst.Print();
+//}

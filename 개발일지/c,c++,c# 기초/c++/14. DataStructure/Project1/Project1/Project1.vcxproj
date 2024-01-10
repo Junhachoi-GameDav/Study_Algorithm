@@ -132,7 +132,10 @@
     <ClCompile Include="Func_ptr_and_Functor.cpp" />
     <ClCompile Include="GameCoding.cpp" />
     <ClCompile Include="Graph.cpp" />
+    <ClCompile Include="hash_map%28unordered_map%29.cpp" />
     <ClCompile Include="List.cpp" />
+    <ClCompile Include="map.cpp" />
+    <ClCompile Include="practice_all.cpp" />
     <ClCompile Include="Priority_Queue.cpp" />
     <ClCompile Include="recursive_function.cpp" />
     <ClCompile Include="Stack_and_Queue.cpp" />
