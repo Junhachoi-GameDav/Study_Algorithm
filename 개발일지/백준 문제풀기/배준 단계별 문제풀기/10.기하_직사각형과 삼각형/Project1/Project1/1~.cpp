@@ -61,6 +61,7 @@ int main() {
 }
 */
 //#4
+/*
 #include <iostream>
 using namespace std;
 
@@ -68,5 +69,66 @@ int main() {
 	unsigned int n = 0;
 	cin >> n;
 	cout << n * 4;
+	return 0;
+}
+*/
+//#5
+/*
+#include <iostream>
+using namespace std;
+
+int main() {
+	int n = 0;
+	cin >> n;
+	int* x = new int[n];
+	int* y = new int[n];
+
+	for (int i = 0; i < n; i++)
+	{
+		cin >> x[i] >> y[i];
+	}
+
+	int min_x = x[0], max_x = x[0];
+	int min_y = y[0], max_y = y[0];
+	for (int i = 0; i < n; i++)
+	{
+		if (x[i] > max_x) { max_x = x[i]; }
+		if (x[i] < min_x) { min_x = x[i]; }
+
+		if (y[i] > max_y) { max_y = y[i]; }
+		if (y[i] < min_y) { min_y = y[i]; }
+	}
+	
+	cout << (max_x - min_x) * (max_y - min_y);
+	return 0;
+}
+*/
+//#5-re
+/*
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+	int n = 0; cin >> n;
+	int x[100000] = { 0 };
+	int y[100000] = { 0 };
+	for (int i = 0; i < n; i++)
+	{
+		cin >> x[i] >> y[i];
+	}
+
+	sort(x, x + n);
+	sort(y, y + n);
+
+	cout << (x[n-1] - x[0]) * (y[n-1] - y[0]);
+	return 0;
+}
+*/
+//#6
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+
 	return 0;
 }
