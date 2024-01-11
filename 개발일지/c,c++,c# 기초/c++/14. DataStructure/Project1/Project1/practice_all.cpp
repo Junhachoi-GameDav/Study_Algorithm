@@ -94,6 +94,7 @@ private:
 	//unordered_map<int, Env*> _envs;
 };
 
+/*
 int main() {
 	Field::GetInstance()->Add(new Player(1)); //1À» ³Ö°í
 
@@ -113,3 +114,4 @@ int main() {
 	}
 	
 }
+*/
