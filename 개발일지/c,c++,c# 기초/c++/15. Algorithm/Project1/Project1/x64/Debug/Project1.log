@@ -1,0 +1,7 @@
+﻿  sort.cpp
+F:\Study_Algorithm\개발일지\c,c++,c# 기초\c++\15. Algorithm\Project1\Project1\sort.cpp(11,22): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+F:\Study_Algorithm\개발일지\c,c++,c# 기초\c++\15. Algorithm\Project1\Project1\sort.cpp(11,14): warning C4267: '초기화 중': 'size_t'에서 'const int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+F:\Study_Algorithm\개발일지\c,c++,c# 기초\c++\15. Algorithm\Project1\Project1\sort.cpp(26,22): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+F:\Study_Algorithm\개발일지\c,c++,c# 기초\c++\15. Algorithm\Project1\Project1\sort.cpp(26,14): warning C4267: '초기화 중': 'size_t'에서 'const int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+F:\Study_Algorithm\개발일지\c,c++,c# 기초\c++\15. Algorithm\Project1\Project1\sort.cpp(134,26): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Project1.vcxproj -> F:\Study_Algorithm\개발일지\c,c++,c# 기초\c++\15. Algorithm\Project1\x64\Debug\Project1.exe
