@@ -15,7 +15,7 @@ int main() {
 
 
 	//비교
-	if (str == str2){}
+	if (str == str2) {}
 	str.compare(str2); // 1 or 0
 
 	//복사

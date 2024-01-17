@@ -1,4 +1,4 @@
-#include <iostream>
+ï»¿#include <iostream>
 using namespace std;
 #include <vector>
 #include <list>
@@ -6,9 +6,9 @@ using namespace std;
 #include <algorithm>
 
 
-// °á·ĞÀûÀ¸·Î Á¤·ÄÀº O(NlogN)ÀÌ¶ó°í ¸»ÇÒ ¼ö ÀÖ°í mapÀÌ ÀÖ´Âµ¥µµ ±»ÀÌ ¼­ÄªÇÒ¶§ ¾²´ÂÀÌÀ¯´Â ÀÎº¥Åä¸® ±â´Éµé ‹š¹®ÀÌ´Ù.
-// ¾ÆÀÌÅÛ º°·Î Á¤·Ä, µî±Şº°·Î Á¤·Äµî ui¿¡¼­ ¸¹ÀÌ¾´´Ù°íÇÑ´Ù.
-// ¹öÆ°À» ´­·¯¼­ Á¤·Ä ½ÃÅ°´Â ±â´É¿¡ µé¾î°£´Ù°í º¸¸é µÈ´Ù. O(NlogN)ÀÌ¶ó¼­ °è¼Ó ¾²±â¿£ ¹«¸®°¡ ÀÖ´Ù.
+// ê²°ë¡ ì ìœ¼ë¡œ ì •ë ¬ì€ O(NlogN)ì´ë¼ê³  ë§í•  ìˆ˜ ìˆê³  mapì´ ìˆëŠ”ë°ë„ êµ³ì´ ì„œì¹­í• ë•Œ ì“°ëŠ”ì´ìœ ëŠ” ì¸ë²¤í† ë¦¬ ê¸°ëŠ¥ë“¤ Â‹Âšë¬¸ì´ë‹¤.
+// ì•„ì´í…œ ë³„ë¡œ ì •ë ¬, ë“±ê¸‰ë³„ë¡œ ì •ë ¬ë“± uiì—ì„œ ë§ì´ì“´ë‹¤ê³ í•œë‹¤.
+// ë²„íŠ¼ì„ ëˆŒëŸ¬ì„œ ì •ë ¬ ì‹œí‚¤ëŠ” ê¸°ëŠ¥ì— ë“¤ì–´ê°„ë‹¤ê³  ë³´ë©´ ëœë‹¤. O(NlogN)ì´ë¼ì„œ ê³„ì† ì“°ê¸°ì—” ë¬´ë¦¬ê°€ ìˆë‹¤.
 
 
 
@@ -19,7 +19,7 @@ void BubbleSort(vector<int>& v)
 
 	for (int i = 0; i < n - 1; i++)
 	{
-		for (int j = 0; j < n-1-i; j++)
+		for (int j = 0; j < n - 1 - i; j++)
 		{
 			if (v[i] > v[j + 1])
 				swap(v[j], v[j + 1]);
@@ -32,11 +32,11 @@ void SelectionSort(vector<int>& v)
 {
 	const int n = v.size();
 
-	for (int i = 0; i < n-1; i++)
+	for (int i = 0; i < n - 1; i++)
 	{
 		int best_idx = i;
 
-		for (int j = i+1; j < n; j++)
+		for (int j = i + 1; j < n; j++)
 		{
 			if (v[j] < v[best_idx])
 			{
@@ -44,7 +44,7 @@ void SelectionSort(vector<int>& v)
 			}
 		}
 
-		if(i != best_idx)
+		if (i != best_idx)
 			swap(v[i], v[best_idx]);
 	}
 }
@@ -52,8 +52,8 @@ void SelectionSort(vector<int>& v)
 //O(NlogN)
 void HeapSort(vector<int>& v)
 {
-	priority_queue<int, vector<int>, greater<int>> pq;//¿ì¼±¼øÀ§ Å¥
-	
+	priority_queue<int, vector<int>, greater<int>> pq;//ìš°ì„ ìˆœìœ„ í
+
 	//O(NlogN)
 	for (int num : v)
 	{
@@ -70,11 +70,11 @@ void HeapSort(vector<int>& v)
 }
 
 
-// º´ÇÕ Á¤·Ä(Áß¿ä~!) (Å©·¡ÇÁÅæ ÄÚÅ×¿¡ ³ª¿Ô´Ù°íÇÔ) ÀÌ°Å ¸¹ÀÌ ¾´´Ù°íÇÔ
-// ºĞÇÒ Á¤º¹ÀÌ¶õ°ÍÀ» ÀÌ¿ëÇÔ
-// - ºĞÇÒ (Divide)		Å«¹®Á¦¸¦ ³ª´©¾î¼­ °£´ÜÇÏ°Ô ¸¸µë
-// - Á¤º¹ (Conquer)		ºĞÇÒµÈ ¹®Á¦¸¦ ÇØ°á
-// - °áÇÕ (Combine)		°á°ú¸¦ ÃëÇÕÈÄ ¸¶¹«¸®
+// ë³‘í•© ì •ë ¬(ì¤‘ìš”~!) (í¬ë˜í”„í†¤ ì½”í…Œì— ë‚˜ì™”ë‹¤ê³ í•¨) ì´ê±° ë§ì´ ì“´ë‹¤ê³ í•¨
+// ë¶„í•  ì •ë³µì´ë€ê²ƒì„ ì´ìš©í•¨
+// - ë¶„í•  (Divide)		í°ë¬¸ì œë¥¼ ë‚˜ëˆ„ì–´ì„œ ê°„ë‹¨í•˜ê²Œ ë§Œë“¬
+// - ì •ë³µ (Conquer)		ë¶„í• ëœ ë¬¸ì œë¥¼ í•´ê²°
+// - ê²°í•© (Combine)		ê²°ê³¼ë¥¼ ì·¨í•©í›„ ë§ˆë¬´ë¦¬
 
 void MergeResult(vector<int>& v, int left, int mid, int right)
 {
@@ -83,7 +83,7 @@ void MergeResult(vector<int>& v, int left, int mid, int right)
 
 	vector<int> temp;
 
-	while (left_idx <= mid && right_idx <= right) //Áı¾î³Ö¾îÁÜ
+	while (left_idx <= mid && right_idx <= right) //ì§‘ì–´ë„£ì–´ì¤Œ
 	{
 		if (v[left_idx] <= v[right_idx])
 		{
@@ -97,7 +97,7 @@ void MergeResult(vector<int>& v, int left, int mid, int right)
 		}
 	}
 
-	if (left_idx > mid) //¿ŞÂÊÀÌ ¸ÕÀú ³¡³ª¸é
+	if (left_idx > mid) //ì™¼ìª½ì´ ë¨¼ì € ëë‚˜ë©´
 	{
 		while (right_idx <= mid)
 		{
@@ -113,7 +113,7 @@ void MergeResult(vector<int>& v, int left, int mid, int right)
 			left_idx++;
 		}
 	}
-	//ÀÓ½Ã·Îµé°íÀÖ´ø ¸ğµç µ¥ÀÌÅÍ temp¸¦ µ¤¾î¾º¿ò
+	//ì„ì‹œë¡œë“¤ê³ ìˆë˜ ëª¨ë“  ë°ì´í„° tempë¥¼ ë®ì–´ì”Œì›€
 	for (int i = 0; i < temp.size(); i++)
 	{
 		v[left + i] = temp[i];
@@ -127,15 +127,15 @@ void MergeSort(vector<int>& v, int left, int right)
 
 	int mid = (left + right) / 2;
 
-	MergeSort(v, left, mid); //Àç±Í·Î ´Ù½Ã ³ª´®
+	MergeSort(v, left, mid); //ì¬ê·€ë¡œ ë‹¤ì‹œ ë‚˜ëˆ”
 	MergeSort(v, mid + 1, right);
 
 	MergeResult(v, left, mid, right);
 }
 
 
-// Äü Á¤·Ä
-// °­ÀÇºÁ~
+// í€µ ì •ë ¬
+// ê°•ì˜ë´~
 
 int Partition(vector<int>& v, int left, int right)
 {
@@ -145,12 +145,12 @@ int Partition(vector<int>& v, int left, int right)
 
 	while (low <= high)
 	{
-		while (low <= right&& pivot>= v[low])
+		while (low <= right && pivot >= v[low])
 		{
 			low++;
 		}
 
-		while (high >= left +1 && pivot <= v[high])
+		while (high >= left + 1 && pivot <= v[high])
 		{
 			high--;
 		}
@@ -164,7 +164,7 @@ int Partition(vector<int>& v, int left, int right)
 	return high;
 }
 
-// O(NlogN) ÃÖ¾ÇÀÏ¶©=pivot°ªÀÌ Á¦ÀÏ ÀÛ°Å³ª ÇÒ¶§ O(N^2) µÇ±âµµÇÑ´Ù.
+// O(NlogN) ìµœì•…ì¼ë•=pivotê°’ì´ ì œì¼ ì‘ê±°ë‚˜ í• ë•Œ O(N^2) ë˜ê¸°ë„í•œë‹¤.
 void QuickSort(vector<int>& v, int left, int right)
 {
 	if (left > right) { return; }
