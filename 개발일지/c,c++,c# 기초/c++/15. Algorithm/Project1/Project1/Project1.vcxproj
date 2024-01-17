@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="lambda.cpp" />
+    <ClCompile Include="rvalue_ref.cpp" />
     <ClCompile Include="sort.cpp" />
     <ClCompile Include="string.cpp" />
   </ItemGroup>

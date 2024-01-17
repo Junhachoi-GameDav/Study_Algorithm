@@ -174,13 +174,13 @@ void QuickSort(vector<int>& v, int left, int right)
 	QuickSort(v, left, pivot - 1);
 	QuickSort(v, pivot + 1, right);
 }
-
-int main() {
-	vector<int> v{1, 5, 4, 2, 3};
-
-	//BubbleSort(v);
-	//SelectionSort(v);
-	//HeapSort(v);
-	//MergeSort(v, 0, v.size()-1);
-	QuickSort(v, 0, v.size() - 1);
-}
+//
+//int main() {
+//	vector<int> v{1, 5, 4, 2, 3};
+//
+//	//BubbleSort(v);
+//	//SelectionSort(v);
+//	//HeapSort(v);
+//	//MergeSort(v, 0, v.size()-1);
+//	QuickSort(v, 0, v.size() - 1);
+//}
