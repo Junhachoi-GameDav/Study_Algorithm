@@ -125,10 +125,84 @@ int main() {
 }
 */
 //#6
+/*
 #include <bits/stdc++.h>
 using namespace std;
 
 int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL); cout.tie(NULL);
 
+	int n[3] = { 0 };
+	for (int i = 0; i < 3; i++) cin >> n[i];
+
+	if (n[0] + n[1] + n[2] == 180)
+	{
+		if (n[0] == 60 && n[1] == 60 && n[2] == 60) cout << "Equilateral";
+		else if (n[0] == n[1] || n[1] == n[2] || n[0] == n[2])
+			cout << "Isosceles";
+		else
+			cout << "Scalene";
+	}
+	else
+	{
+		cout << "Error";
+	}
+
+	return 0;
+}
+*/
+//#7
+/*
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+	while (true)
+	{
+		int n = 0;
+		vector<int> vs;
+		for (int i = 0; i < 3; i++)
+		{
+			cin >> n;
+			vs.push_back(n);
+		}
+		sort(vs.begin(), vs.end());
+
+		if (vs[0] == 0 && vs[1] == 0 && vs[2] == 0)
+			break;
+
+		if (vs[0] + vs[1] <= vs[2])
+			cout << "Invalid" << '\n';
+		else if (vs[0] == vs[1] && vs[1] == vs[2] && vs[0] == vs[2])
+			cout << "Equilateral" << '\n';
+		else if (vs[0] == vs[1] || vs[1] == vs[2] || vs[0] == vs[2])
+			cout << "Isosceles" << '\n';
+		else
+			cout << "Scalene" << '\n';
+	}
+	return 0;
+}
+*/
+//#8
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+	int n, result = 0;
+	vector<int> vs;
+	for (int i = 0; i < 3; i++)
+	{
+		cin >> n;
+		vs.push_back(n);
+	}
+
+	sort(vs.begin(), vs.end());
+	
+	if (vs[0] + vs[1] > vs[2])
+		result = vs[0] + vs[1] + vs[2];
+	else
+		result = (vs[0] + vs[1]) + (vs[0] + vs[1] - 1);
+	cout << result << '\n';
 	return 0;
 }

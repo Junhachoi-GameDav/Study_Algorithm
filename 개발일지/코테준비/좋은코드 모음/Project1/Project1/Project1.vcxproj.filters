@@ -24,5 +24,11 @@
     <ClCompile Include="unique.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="adjacency_matrix.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="adjacency_list.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
