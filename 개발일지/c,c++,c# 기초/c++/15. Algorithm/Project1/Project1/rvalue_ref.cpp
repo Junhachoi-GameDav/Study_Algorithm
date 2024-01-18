@@ -78,44 +78,44 @@ void TestKnight_RValueRef(Knight&& knight)
 {
 	knight._hp = 100; //수정가능 + 원본 이제 안씀
 }
-
-int main() {
-	//c++11  rvalue_ref 오른값 참조
-
-	// l-value : 단일식을 넘어서 계속 지속되는 개체
-	// r-value : l-value가 아닌 나머지
-
-	int a = 3;
-	a = 10;
-	a = 5;  //a  :  l-value (왼값)
-	//나머지 3, 10, 5 가 오른값이다.
-
-
-	Knight k1;
-	k1._pet = new Pet();
-
-	Knight k2;
-
-	//k2 = static_cast<Knight&&>(k1); //k1을 더이상 사용하지 않을거니까 다 꺼내 써라 //위에는 빈 껍데기가 됨
-	k2 = move(k1); //둘다 똑같음 말그대로 이동이라는 느낌이긴 하지만 정확히는 rvalue_cast 라고 봐야한다.
-
-	//Knight k2 = k1; //복사 생성자가 개입
-	//Knight k2;
-	//k2 = k1; // 복사 대입 연산자가 개입
-
-	//TestKnight_Copy(k1);
-	// 임시객체(단일식이아닌) knight()를 넣으면
-	//TestKnight_LValue(Knight()); //const 가 없으면 왼쪽값만 받는다.
-	//TestKnight_ConstLValue(Knight());
-
-	//TestKnight_RValueRef(k1); //이러면 위에 원본은 사용중이거나 사용할거라 오류를 띄움 그러나..~~!!
-	//TestKnight_RValueRef(static_cast<Knight&&>(k1)); //이렇게 &&오른값으로 캐스팅 해버리면 됨..
-
-
-	//그래서 이걸 언제 쓰는가
-
-	//vector에서 배열을 다른 배열로 복사해서 붙여넣는건 효율이 안좋다.
-	// 작으면 큰 차이가 없지만 배열이나 함수가 엄청 그면 복사가 매우 힘들것이다. 그때 이동하는것
-	// 또는 소유권 이전 등 말그대로 이동해야 효율적일때 쓴다.
-	// 솔직히 게임같은거를 만들때는 많이 안쓴다. 하지만 라이브러리나 스크립트 엔지니어와 같이 아주 깊히 있는 코딩을 할때 많이 쓴다고한다.
-}
+//
+//int main() {
+//	//c++11  rvalue_ref 오른값 참조
+//
+//	// l-value : 단일식을 넘어서 계속 지속되는 개체
+//	// r-value : l-value가 아닌 나머지
+//
+//	int a = 3;
+//	a = 10;
+//	a = 5;  //a  :  l-value (왼값)
+//	//나머지 3, 10, 5 가 오른값이다.
+//
+//
+//	Knight k1;
+//	k1._pet = new Pet();
+//
+//	Knight k2;
+//
+//	//k2 = static_cast<Knight&&>(k1); //k1을 더이상 사용하지 않을거니까 다 꺼내 써라 //위에는 빈 껍데기가 됨
+//	k2 = move(k1); //둘다 똑같음 말그대로 이동이라는 느낌이긴 하지만 정확히는 rvalue_cast 라고 봐야한다.
+//
+//	//Knight k2 = k1; //복사 생성자가 개입
+//	//Knight k2;
+//	//k2 = k1; // 복사 대입 연산자가 개입
+//
+//	//TestKnight_Copy(k1);
+//	// 임시객체(단일식이아닌) knight()를 넣으면
+//	//TestKnight_LValue(Knight()); //const 가 없으면 왼쪽값만 받는다.
+//	//TestKnight_ConstLValue(Knight());
+//
+//	//TestKnight_RValueRef(k1); //이러면 위에 원본은 사용중이거나 사용할거라 오류를 띄움 그러나..~~!!
+//	//TestKnight_RValueRef(static_cast<Knight&&>(k1)); //이렇게 &&오른값으로 캐스팅 해버리면 됨..
+//
+//
+//	//그래서 이걸 언제 쓰는가
+//
+//	//vector에서 배열을 다른 배열로 복사해서 붙여넣는건 효율이 안좋다.
+//	// 작으면 큰 차이가 없지만 배열이나 함수가 엄청 그면 복사가 매우 힘들것이다. 그때 이동하는것
+//	// 또는 소유권 이전 등 말그대로 이동해야 효율적일때 쓴다.
+//	// 솔직히 게임같은거를 만들때는 많이 안쓴다. 하지만 라이브러리나 스크립트 엔지니어와 같이 아주 깊히 있는 코딩을 할때 많이 쓴다고한다.
+//}
