@@ -142,41 +142,50 @@ void Test(shared_ptr<Knight>& k) // 참조를 안붙히면 복사가 되서 count가 되지만 �
 //public:
 //	T* _ptr;
 //};
-
-int main() {
-	//Knight* knight = new Knight();
-	//Wrapper<Knight> w(new Knight());
-
-	//Knight* k1 = new Knight();
-	//Knight* k2 = new Knight();
-	//shared_ptr<Knight> k1(new Knight()); //래퍼함수에서 한것처럼 관리함
-	//shared_ptr<Knight> k2(new Knight());
-
-	//shared_ptr<Knight> k3;
-	//k3 = k1; //복사 이건 knight를 복사하는게 아니라 shaed_ptr을 복사하는거다.
-
-
-	//k1->_target = k2;
-
-	//delete k2;  //이러면 오류가남
-	//k1->Attack(); // k2를 찾을수가 없어서
-
-
-
-	shared_ptr<Knight> k1(new Knight());
-	shared_ptr<Knight> k2(new Knight());
-
-	//k1->_target = k2; //이제 지워져도 오류가 나진 않겠지... 그러나
-	// c#처럼 gc에서 관리하는 느낌이라고 보면된다. 아무도 사용하지 않을때 지워지는것이라
-	// 원할때 지울수 없다는 단점이 있다.
-
-	// 또한 억까인 상황이 있는데 바로 이거다.
-	k1->_target = k2;
-	k2->_target = k1;
-	//이런식으로 서로 물고있으면 메모리 릭이 일어남 언젠간
-	//방법은 그냥 하나를 null로 밀어주는 수밖에 없음
-	//k1->_target = nullptr; // count--;
-	//생각보다 찾기는 쉽다고한다. 그냥 사이클만 풀어주면 되니까
-
-	//이것을 해결해주는 방법이 있는데 바로 weak_ptr가 그러하다.
-}
+//
+//int main() {
+//	//Knight* knight = new Knight();
+//	//Wrapper<Knight> w(new Knight());
+//
+//	//Knight* k1 = new Knight();
+//	//Knight* k2 = new Knight();
+//	//shared_ptr<Knight> k1(new Knight()); //래퍼함수에서 한것처럼 관리함
+//	//shared_ptr<Knight> k2(new Knight());
+//
+//	//shared_ptr<Knight> k3;
+//	//k3 = k1; //복사 이건 knight를 복사하는게 아니라 shaed_ptr을 복사하는거다.
+//
+//
+//	//k1->_target = k2;
+//
+//	//delete k2;  //이러면 오류가남
+//	//k1->Attack(); // k2를 찾을수가 없어서
+//
+//
+//
+//	shared_ptr<Knight> k1(new Knight());
+//	shared_ptr<Knight> k2(new Knight());
+//
+//	//k1->_target = k2; //이제 지워져도 오류가 나진 않겠지... 그러나
+//	// c#처럼 gc에서 관리하는 느낌이라고 보면된다. 아무도 사용하지 않을때 지워지는것이라
+//	// 원할때 지울수 없다는 단점이 있다.
+//
+//	// 또한 억까인 상황이 있는데 바로 이거다.
+//	k1->_target = k2;
+//	k2->_target = k1;
+//	//이런식으로 서로 물고있으면 메모리 릭이 일어남 언젠간
+//	//방법은 그냥 하나를 null로 밀어주는 수밖에 없음
+//	//k1->_target = nullptr; // count--;
+//	//생각보다 찾기는 쉽다고한다. 그냥 사이클만 풀어주면 되니까
+//
+//	//이것을 해결해주는 방법이 있는데 바로 weak_ptr가 그러하다.
+//
+//
+//	// unique_ptr 이것도한 단순하다.
+//	// 복사 생성자 복사 대입연사자를 다 막아놓은 거랑 같다. 그것 외에는 일반 포인터랑 똑같음
+//	unique_ptr<Knight> k(new Knight());
+//
+//	unique_ptr<Knight> k22 = move(k);
+//	// 그러나 이동을 하면 사용가능함
+//	// 근데 효율도 그렇고 쓸모가 없어서 거의 안쓴다.
+//}
