@@ -29,6 +29,7 @@ int main() {
 }
 */
 //#2
+/*
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -56,5 +57,29 @@ int main() {
 		}
 	}
 	cout << 0;
+	return 0;
+}
+*/
+//#3
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+	int a, b, c, d, e, f;
+	cin >> a >> b >> c >> d >> e >> f;
+
+	for (int x = -999; x <= 999; x++)
+	{
+		for (int y = -999; y <= 999; y++)
+		{
+			int temp1 = (a * x) + (b * y);
+			int temp2 = (d * x) + (e * y);
+			if (c == temp1 && f == temp2)
+			{
+				cout << x << ' ' << y;
+				return 0;
+			}
+		}
+	}
 	return 0;
 }
