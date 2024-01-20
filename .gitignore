@@ -1,2 +1,84 @@
+# Windows API Gitignore
 
+# Visual Studio Code
+.vscode/
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows shortcuts
+*.lnk
+
+# Windows help files
+*.h1
+*.h2
+*.h3
+*.hh
+*.chm
+*.cnt
+
+# Windows font files
+*.fon
+
+# Windows system files
+*.bat
+*.cmd
+*.ini
+*.log
+*.reg
+*.dll
+*.lock
+*.tmp
+
+# Windows Installer files
+*.pidb
+*.pdb
+*.pgb
+
+# Windows shortcuts
+*.url
+
+# Windows runtime files
+*.manifest
+*.local
+*.manifest
+
+# Windows Installer Directory Cache
+Installer2/
+
+# Windows Installer data files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows shortcuts
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Ignore precompiled header files
+*.pch
+*.gch
+
+.vscode/
+.vs/
+bin/
+obj/
+ipch/
 개발일지/c,c++,c\# 기초/c++/디버깅 연습 문제/.vs/Exercise/v17/.suo
