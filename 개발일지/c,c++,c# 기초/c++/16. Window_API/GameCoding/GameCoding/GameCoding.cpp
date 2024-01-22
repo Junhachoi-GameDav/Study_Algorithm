@@ -70,14 +70,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         {
             uint64 now = ::GetTickCount64();
 
-            if (now - prevTick >= 10)
-            {
-                //게임 로직
-                game.Update();
-                game.Render();
+            game.Update();
+            game.Render();
 
-                prevTick = now;
-            }
+            prevTick = now;
         }
     }
 

@@ -16,3 +16,10 @@ public:											\
 //단점으로는 디버깅이 잘 안될수있다. 꼭필요한것에만 쓰도록
 
 #define GET_SINGLE(classname)	classname::GetInstance()
+
+#define SAFE_DELETE(ptr)						\
+if (ptr)										\
+{												\
+	delete ptr;									\
+	ptr = nullptr;								\
+}

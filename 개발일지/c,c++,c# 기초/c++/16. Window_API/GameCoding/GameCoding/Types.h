@@ -10,3 +10,9 @@ using uint32	 = unsigned __int32;
 using uint64	 = unsigned __int64;
 using ll		 = long long;
 using ull		 = unsigned long long;
+
+struct Pos
+{
+	float x = 0;
+	float y = 0;
+};
