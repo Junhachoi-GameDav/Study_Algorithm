@@ -3,7 +3,12 @@ F:\Study_Algorithm\개발일지\c,c++,c# 기초\c++\16. Window_API\GameCoding\Ga
 F:\Study_Algorithm\개발일지\c,c++,c# 기초\c++\16. Window_API\GameCoding\GameCoding\GameCoding.cpp;F:\Study_Algorithm\개발일지\c,c++,c# 기초\c++\16. Window_API\GameCoding\GameCoding\x64\Debug\GameCoding.obj
 F:\Study_Algorithm\개발일지\c,c++,c# 기초\c++\16. Window_API\GameCoding\GameCoding\GameScene.cpp;F:\Study_Algorithm\개발일지\c,c++,c# 기초\c++\16. Window_API\GameCoding\GameCoding\x64\Debug\GameScene.obj
 F:\Study_Algorithm\개발일지\c,c++,c# 기초\c++\16. Window_API\GameCoding\GameCoding\InputManager.cpp;F:\Study_Algorithm\개발일지\c,c++,c# 기초\c++\16. Window_API\GameCoding\GameCoding\x64\Debug\InputManager.obj
+F:\Study_Algorithm\개발일지\c,c++,c# 기초\c++\16. Window_API\GameCoding\GameCoding\Missile.cpp;F:\Study_Algorithm\개발일지\c,c++,c# 기초\c++\16. Window_API\GameCoding\GameCoding\x64\Debug\Missile.obj
+F:\Study_Algorithm\개발일지\c,c++,c# 기초\c++\16. Window_API\GameCoding\GameCoding\Monster.cpp;F:\Study_Algorithm\개발일지\c,c++,c# 기초\c++\16. Window_API\GameCoding\GameCoding\x64\Debug\Monster.obj
+F:\Study_Algorithm\개발일지\c,c++,c# 기초\c++\16. Window_API\GameCoding\GameCoding\Object.cpp;F:\Study_Algorithm\개발일지\c,c++,c# 기초\c++\16. Window_API\GameCoding\GameCoding\x64\Debug\Object.obj
+F:\Study_Algorithm\개발일지\c,c++,c# 기초\c++\16. Window_API\GameCoding\GameCoding\ObjectManager.cpp;F:\Study_Algorithm\개발일지\c,c++,c# 기초\c++\16. Window_API\GameCoding\GameCoding\x64\Debug\ObjectManager.obj
 F:\Study_Algorithm\개발일지\c,c++,c# 기초\c++\16. Window_API\GameCoding\GameCoding\pch.cpp;F:\Study_Algorithm\개발일지\c,c++,c# 기초\c++\16. Window_API\GameCoding\GameCoding\x64\Debug\pch.obj
+F:\Study_Algorithm\개발일지\c,c++,c# 기초\c++\16. Window_API\GameCoding\GameCoding\Player.cpp;F:\Study_Algorithm\개발일지\c,c++,c# 기초\c++\16. Window_API\GameCoding\GameCoding\x64\Debug\Player.obj
 F:\Study_Algorithm\개발일지\c,c++,c# 기초\c++\16. Window_API\GameCoding\GameCoding\Scene.cpp;F:\Study_Algorithm\개발일지\c,c++,c# 기초\c++\16. Window_API\GameCoding\GameCoding\x64\Debug\Scene.obj
 F:\Study_Algorithm\개발일지\c,c++,c# 기초\c++\16. Window_API\GameCoding\GameCoding\SceneManager.cpp;F:\Study_Algorithm\개발일지\c,c++,c# 기초\c++\16. Window_API\GameCoding\GameCoding\x64\Debug\SceneManager.obj
 F:\Study_Algorithm\개발일지\c,c++,c# 기초\c++\16. Window_API\GameCoding\GameCoding\TimeManager.cpp;F:\Study_Algorithm\개발일지\c,c++,c# 기초\c++\16. Window_API\GameCoding\GameCoding\x64\Debug\TimeManager.obj

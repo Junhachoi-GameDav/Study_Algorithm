@@ -3,6 +3,7 @@
 #include "Types.h"
 #include "Defines.h"
 #include "Enums.h"
+#include "Utils.h"
 
 #include <Windows.h>
 #include <vector>

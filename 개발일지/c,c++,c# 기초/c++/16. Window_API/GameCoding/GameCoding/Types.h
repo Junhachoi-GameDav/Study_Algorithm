@@ -11,6 +11,13 @@ using uint64	 = unsigned __int64;
 using ll		 = long long;
 using ull		 = unsigned long long;
 
+struct Stat
+{
+	int32 hp = 0;
+	int32 maxHp = 0;
+	float speed = 0;
+};
+
 struct Pos
 {
 	float x = 0;

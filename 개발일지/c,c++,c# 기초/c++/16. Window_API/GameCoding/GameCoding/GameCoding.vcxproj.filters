@@ -30,6 +30,9 @@
     <Filter Include="소스 파일\02.Scene\Game">
       <UniqueIdentifier>{b9a5a859-8438-46cd-b63c-d003dfa30919}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\03.Objects\Game">
+      <UniqueIdentifier>{5ed03bcf-fc65-40c7-9887-e70c52cfe040}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameCoding.h">
@@ -80,6 +83,21 @@
     <ClInclude Include="GameScene.h">
       <Filter>소스 파일\02.Scene\Game</Filter>
     </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>소스 파일\03.Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Missile.h">
+      <Filter>소스 파일\03.Objects\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Monster.h">
+      <Filter>소스 파일\03.Objects\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>소스 파일\03.Objects\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectManager.h">
+      <Filter>소스 파일\01.Managers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="GameCoding.rc">
@@ -124,6 +142,21 @@
     </ClCompile>
     <ClCompile Include="GameScene.cpp">
       <Filter>소스 파일\02.Scene\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>소스 파일\03.Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Missile.cpp">
+      <Filter>소스 파일\03.Objects\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Monster.cpp">
+      <Filter>소스 파일\03.Objects\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>소스 파일\03.Objects\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectManager.cpp">
+      <Filter>소스 파일\01.Managers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
