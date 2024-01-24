@@ -5,6 +5,6 @@ enum class SceneType
 	NONE,
 	DEVSCENE,
 	GAMESCENE,
-
+	EDITSCENE,
 	
 };
