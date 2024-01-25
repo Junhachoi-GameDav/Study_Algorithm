@@ -33,6 +33,12 @@
     <Filter Include="소스 파일\03.Objects\Game">
       <UniqueIdentifier>{5ed03bcf-fc65-40c7-9887-e70c52cfe040}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\04.Resources">
+      <UniqueIdentifier>{1af8316b-76d3-46a4-a750-cc730bc750a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\04.Resources\Game">
+      <UniqueIdentifier>{6063b456-55e7-41dc-8ca3-65e384363955}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameCoding.h">
@@ -101,6 +107,15 @@
     <ClInclude Include="EditScene.h">
       <Filter>소스 파일\02.Scene\Game</Filter>
     </ClInclude>
+    <ClInclude Include="ResourceBase.h">
+      <Filter>소스 파일\04.Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="LineMesh.h">
+      <Filter>소스 파일\04.Resources\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager.h">
+      <Filter>소스 파일\01.Managers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="GameCoding.rc">
@@ -163,6 +178,15 @@
     </ClCompile>
     <ClCompile Include="EditScene.cpp">
       <Filter>소스 파일\02.Scene\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceBase.cpp">
+      <Filter>소스 파일\04.Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="LineMesh.cpp">
+      <Filter>소스 파일\04.Resources\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager.cpp">
+      <Filter>소스 파일\01.Managers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
