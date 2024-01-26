@@ -29,7 +29,7 @@ public:
 protected:
 	ObjectType _type = ObjectType::None;
 	Stat _stat = {};
-	Pos _pos = {};
+	Vector _pos = {};
 
 };
 
