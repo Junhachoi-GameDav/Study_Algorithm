@@ -20,7 +20,6 @@ void GameScene::Init()
 	GET_SINGLE(ObjectManager)->Add(player);*/
 
 	Monster* monster = GET_SINGLE(ObjectManager)->CreateObject<Monster>();
-	monster->SetPos(Pos{ 400, 400 });
 	GET_SINGLE(ObjectManager)->Add(monster);
 	
 }
