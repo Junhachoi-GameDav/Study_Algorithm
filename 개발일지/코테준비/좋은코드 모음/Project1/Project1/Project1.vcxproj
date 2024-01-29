@@ -131,6 +131,7 @@
     <ClCompile Include="adjacency_list.cpp" />
     <ClCompile Include="adjacency_matrix.cpp" />
     <ClCompile Include="BFS.cpp" />
+    <ClCompile Include="stack.cpp" />
     <ClCompile Include="tree_traversal.cpp" />
     <ClCompile Include="DFS.cpp" />
     <ClCompile Include="permutation.cpp" />

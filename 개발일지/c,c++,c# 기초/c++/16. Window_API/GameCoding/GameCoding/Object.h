@@ -30,6 +30,6 @@ protected:
 	ObjectType _type = ObjectType::None;
 	Stat _stat = {};
 	Vector _pos = {};
-
+	Dir _dir = Dir::Left;
 };
 

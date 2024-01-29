@@ -1,8 +1,10 @@
 #include "pch.h"
 #include "SceneManager.h"
 #include "DevScene.h"
-#include "GameScene.h"
 #include "EditScene.h"
+//
+#include "FortressScene.h"
+#include "MenuScene.h"
 
 
 void SceneManager::Init()
@@ -42,11 +44,14 @@ void SceneManager::ChangeScene(SceneType sceneType)
 		case SceneType::DEVSCENE:
 			newScene = new DevScene();
 			break;
-		case SceneType::GAMESCENE:
-			newScene = new GameScene();
-			break;
 		case SceneType::EDITSCENE:
 			newScene = new EditScene();
+			break;
+		case SceneType::MENUSCENE:
+			newScene = new MenuScene();
+			break;
+		case SceneType::FORTRESSSCENE:
+			newScene = new FortressScene();
 			break;
 	}
 

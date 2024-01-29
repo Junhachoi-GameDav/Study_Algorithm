@@ -93,3 +93,20 @@
 //	cout << cnt;
 //	return 0;
 //}
+
+//
+// ÀÎÆ®Çü Dfs
+// 
+//int Dfs(int here)
+//{
+//	int ret = 1;
+//	visited[here] = 1;
+//
+//	for (int there : v[here])
+//	{
+//		if (visited[there]) continue;
+//		visited[there] = 1;
+//		ret += Dfs(there);
+//	}
+//	return ret;
+//}

@@ -6,5 +6,19 @@ enum class SceneType
 	DEVSCENE,
 	GAMESCENE,
 	EDITSCENE,
-	
+	//
+	MENUSCENE,
+	FORTRESSSCENE
+};
+
+enum class PlayerType
+{
+	CanonTank,
+	MissileTank,
+};
+
+enum class Dir
+{
+	Left,
+	Right,
 };
