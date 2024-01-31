@@ -45,5 +45,11 @@
     <ClCompile Include="stack.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Brute Force Search.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Combination.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
