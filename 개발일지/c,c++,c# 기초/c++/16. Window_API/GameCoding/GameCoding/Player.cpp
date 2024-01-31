@@ -5,6 +5,8 @@
 #include "ObjectManager.h"
 #include "ResourceManager.h"
 #include "LineMesh.h"
+#include "UIManager.h"
+#include "Bullet.h"
 
 Player::Player() : Object(ObjectType::Player)
 {
@@ -31,6 +33,8 @@ void Player::Update()
 	float deltaTime = GET_SINGLE(TimeManager)->GetDeltaTime();
 
 	if (_playerTurn == false) { return; }
+	
+	UpdateFireAngle();
 
 	if (GET_SINGLE(InputManager)->GetButton(KeyType::A))
 	{
@@ -46,12 +50,14 @@ void Player::Update()
 
 	if (GET_SINGLE(InputManager)->GetButton(KeyType::W))
 	{
-		//_pos.y -= _stat.speed * deltaTime;
+		//clamp 특정 범위 까지만 반환함 = 0 ~ 75
+		_fireAngle = ::clamp(_fireAngle + 50 * deltaTime, 0.f, 75.f);
+
 	}
 
 	if (GET_SINGLE(InputManager)->GetButton(KeyType::S))
 	{
-		//_pos.y += _stat.speed * deltaTime;
+		_fireAngle = ::clamp(_fireAngle - 50 * deltaTime, 0.f, 75.f);
 	}
 
 
@@ -66,9 +72,26 @@ void Player::Update()
 	}
 
 
-	if (GET_SINGLE(InputManager)->GetButtonDown(KeyType::SpaceBar))
+	if (GET_SINGLE(InputManager)->GetButton(KeyType::SpaceBar))
 	{
-		
+		float percent = GET_SINGLE(UIManager)->GetPowerPercent();
+		percent = min(100, percent + 100 * deltaTime);
+		GET_SINGLE(UIManager)->SetPowerPercent(percent);
+	}
+
+	if (GET_SINGLE(InputManager)->GetButtonUp(KeyType::SpaceBar))
+	{
+		//
+		_playerTurn = false;
+		float percent = GET_SINGLE(UIManager)->GetPowerPercent();
+		float speed = 10.f * percent;
+		float angle = GET_SINGLE(UIManager)->GetBarrelAngle();
+
+		Bullet* bullet = GET_SINGLE(ObjectManager)->CreateObject<Bullet>();
+		bullet->SetOwner(this);
+		bullet->SetPos(_pos);
+		bullet->SetSpeed(Vector{speed * ::cos(angle * PI / 180), -1 * speed * ::sin(angle * PI /180)});
+		GET_SINGLE(ObjectManager)->Add(bullet);
 	}
 }
 
@@ -106,7 +129,21 @@ void Player::Render(HDC hdc)
 wstring Player::GetMeshKey()
 {
 	if (_playerType == PlayerType::CanonTank)
-		return L"MissileTank";
+		return L"CanonTank";
 
-	return L"CanonTank";
+	return L"MissileTank";
+}
+
+void Player::UpdateFireAngle()
+{
+	if (_dir == Dir::Left)
+	{
+		GET_SINGLE(UIManager)->SetPlayerAngle(180);
+		GET_SINGLE(UIManager)->SetBarrelAngle(180 - _fireAngle);
+	}
+	else
+	{
+		GET_SINGLE(UIManager)->SetPlayerAngle(0);
+		GET_SINGLE(UIManager)->SetBarrelAngle(_fireAngle);
+	}
 }
