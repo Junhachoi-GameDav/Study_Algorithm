@@ -110,3 +110,77 @@
 //	}
 //	return ret;
 //}
+
+
+// 골드4 문제 dfs + 구현
+#include <bits/stdc++.h>
+using namespace std;
+
+int n, l, r, sum = 0, cnt = 0;
+int arr[54][54], visited[54][54];
+
+int dy[] = { -1,0,1,0 };
+int dx[] = { 0,1,0,-1 };
+
+vector<pair<int, int>> v;
+
+void Dfs(int y, int x, vector<pair<int, int>>& v)
+{
+	for (int i = 0; i < 4; i++)
+	{
+		int ny = y + dy[i];
+		int nx = x + dx[i];
+		if (ny < 0 || ny >= n || nx < 0 || nx >= n || visited[ny][nx]) continue;
+		int ret = abs(arr[ny][nx] - arr[y][x]);
+		if (ret >= l && ret <= r)
+		{
+			visited[ny][nx] = 1;
+			v.push_back({ ny,nx });
+			sum += arr[ny][nx];
+			Dfs(ny, nx, v);
+		}
+	}
+}
+
+int main() {
+	ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+	cin >> n >> l >> r;
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			cin >> arr[i][j];
+		}
+	}
+
+	while (true)
+	{
+		bool flag = 0;
+		memset(visited, 0, sizeof(visited));
+		for (int i = 0; i < n; i++)
+		{
+			for (int j = 0; j < n; j++)
+			{
+				if (!visited[i][j])
+				{
+					v.clear();
+					visited[i][j] = 1;
+					v.push_back({ i,j });
+					sum = arr[i][j];
+					Dfs(i, j, v);
+					if (v.size() == 1) continue;
+					for (pair<int, int> it : v)
+					{
+						arr[it.first][it.second] = sum / v.size();
+						flag = 1;
+					}
+				}
+			}
+		}
+		if (!flag) break;
+		cnt++;
+	}
+	cout << cnt;
+
+	return 0;
+}
