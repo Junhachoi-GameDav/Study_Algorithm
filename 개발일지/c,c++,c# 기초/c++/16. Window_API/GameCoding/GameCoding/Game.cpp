@@ -18,12 +18,12 @@ Game::~Game()
 	_CrtDumpMemoryLeaks();
 }
 
-void Game::Init(HWND hWnd)
+void Game::Init(HWND hwnd)
 {
-	_hwnd = hWnd;
-	_hdc = ::GetDC(hWnd);
+	_hwnd = hwnd;
+	_hdc = ::GetDC(hwnd);
 
-	::GetClientRect(hWnd, &_rect);
+	::GetClientRect(hwnd, &_rect);
 
 	_hdcBack = ::CreateCompatibleDC(_hdc); // _hdc와 호환되는 DC를 생성
 	_bmpBack = ::CreateCompatibleBitmap(_hdc, _rect.right, _rect.bottom); //_hdc와 호환되는 비트맵 생성
@@ -31,11 +31,11 @@ void Game::Init(HWND hWnd)
 	::DeleteObject(prev);
 	
 	GET_SINGLE(TimeManager)->Init();
-	GET_SINGLE(InputManager)->Init(hWnd);
+	GET_SINGLE(InputManager)->Init(hwnd);
 	GET_SINGLE(SceneManager)->Init();
-	GET_SINGLE(ResourceManager)->Init();
+	GET_SINGLE(ResourceManager)->Init(hwnd, fs::path(L"F:\\Study_Algorithm\\개발일지\\c,c++,c# 기초\\c++\\16. Window_API\\GameCoding\\Resources"));
 
-	GET_SINGLE(SceneManager)->ChangeScene(SceneType::MENUSCENE);
+	GET_SINGLE(SceneManager)->ChangeScene(SceneType::DEVSCENE);
 }
 
 void Game::Update()

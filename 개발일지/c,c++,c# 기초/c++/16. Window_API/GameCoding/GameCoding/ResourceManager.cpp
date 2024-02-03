@@ -1,51 +1,57 @@
 #include "pch.h"
 #include "ResourceManager.h"
-#include "LineMesh.h"
+#include "Texture.h"
+#include "Sprite.h"
 
 ResourceManager::~ResourceManager()
 {
 	Clear();
 }
 
-void ResourceManager::Init()
+void ResourceManager::Init(HWND hwnd, fs::path resourcePath)
 {
-	{
-		LineMesh* mesh = new LineMesh();
-		mesh->Load(L"UI.txt");
-		_lineMeshes[L"UI"] = mesh;
-	}
-	{
-		LineMesh* mesh = new LineMesh();
-		mesh->Load(L"Menu.txt");
-		_lineMeshes[L"Menu"] = mesh;
-	}
-	{
-		LineMesh* mesh = new LineMesh();
-		mesh->Load(L"MissileTank.txt");
-		_lineMeshes[L"MissileTank"] = mesh;
-	}
-	{
-		LineMesh* mesh = new LineMesh();
-		mesh->Load(L"CanonTank.txt");
-		_lineMeshes[L"CanonTank"] = mesh;
-	}
+	_hwnd = hwnd;
+	_resourcePath = resourcePath;
+
 
 }
 
 void ResourceManager::Clear()
 {
-	for (auto mesh : _lineMeshes)
+	for (auto& item : _textures)
 	{
-		SAFE_DELETE(mesh.second);
+		SAFE_DELETE(item.second);
 	}
-	_lineMeshes.clear();
+	_textures.clear();
 }
 
-const LineMesh* ResourceManager::GetLineMesh(wstring key)
+Texture* ResourceManager::LoadTexture(const wstring& key, const wstring& path, uint32 transparant)
 {
-	auto findIt = _lineMeshes.find(key);
-	if (findIt == _lineMeshes.end())
-		return nullptr;
-	
-	return findIt->second;
+	if (_textures.find(key) != _textures.end())
+		return _textures[key];
+
+	fs::path fullPath = _resourcePath / path; //나누기가 아니라 path안에 들어있는 합치기 기능이다.
+
+	Texture* texture = new Texture();
+	texture->LoadBmp(_hwnd, fullPath.c_str());
+	texture->SetTransparent(transparant);
+	_textures[key] = texture;
+
+	return texture;
+}
+
+Sprite* ResourceManager::CreateSprite(const wstring& key, Texture* texture, int32 x, int32 y, int32 cx, int32 cy)
+{
+	if (_sprites.find(key) != _sprites.end())
+		return _sprites[key];
+
+	if (cx == 0)
+		cx = texture->GetSize().x;
+	if (cy == 0)
+		cy = texture->GetSize().y;
+
+	Sprite* sprite = new Sprite(texture, x,y,cx,cy);
+	_sprites[key] = sprite;
+
+	return sprite;
 }

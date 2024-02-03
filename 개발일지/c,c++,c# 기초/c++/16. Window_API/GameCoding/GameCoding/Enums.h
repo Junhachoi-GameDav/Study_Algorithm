@@ -6,9 +6,6 @@ enum class SceneType
 	DEVSCENE,
 	GAMESCENE,
 	EDITSCENE,
-	//
-	MENUSCENE,
-	FORTRESSSCENE
 };
 
 enum class PlayerType
