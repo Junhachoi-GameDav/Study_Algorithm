@@ -5,6 +5,7 @@
 #include "ResourceManager.h"
 #include "Texture.h"
 #include "Sprite.h"
+#include "Actor.h"
 
 DevScene::DevScene()
 {
@@ -31,11 +32,17 @@ void DevScene::Init()
 	Texture* tex  = GET_SINGLE(ResourceManager)->GetTexture(L"Start");
 	GET_SINGLE(ResourceManager)->CreateSprite(L"Start_On", tex, 150, 0, 150, 150);
 
+	//
+	Actor* actor = new Actor();
+	_actor = actor;
+
 }
 
 void DevScene::Update()
 {
 	float daltaTime = GET_SINGLE(TimeManager)->GetDeltaTime();
+
+	//_actor
 }
 
 void DevScene::Render(HDC hdc)

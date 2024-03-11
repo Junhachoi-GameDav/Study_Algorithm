@@ -12,7 +12,7 @@ enum class ObjectType
 class Object
 {
 public:
-	Object();
+	//Object();
 	Object(ObjectType type);
 	virtual ~Object();
 
