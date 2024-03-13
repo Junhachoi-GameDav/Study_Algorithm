@@ -1,0 +1,32 @@
+imageWatch 프로그램
+- 비주얼스튜디오에서 opencv 변수를 디버깅하느동안 볼수 없으니까 이것으로 볼수있다.
+
+ //영상좌표 이미지좌표로 전환
+std::vector<cv::Mat> cam_pos_changeTo_img_pos(const websocket_client& my_client)
+{
+	constexpr double focal_length = 4.8;
+	constexpr double pixel_size = 0.0007;
+	constexpr double focal_length_in_pixel = focal_length / pixel_size;
+
+	cv::Mat vision_to_photo = (cv::Mat_<double>(3, 3) <<
+		1.0, 0.0, -(img_width / 2),
+		0.0, -1.0, (img_height / 2),
+		0.0, 0.0, -focal_length_in_pixel);
+
+	std::vector<cv::Mat> photo_points;
+
+	for (const auto& i : my_client._poly_vec)
+	{
+		//원 영상좌표 출력
+		//std::cout << "video pos = " << i.x << ' ' << i.y << '\n';
+		// 카메라 스펙 9248 x 6944 pixels  0.7 마이크로미터 피치(0.0000007 미터)
+		// 4608 x 3456 사진 = 2,304 ~ -2,304 x 1,728 ~ -1,728
+
+		cv::Mat pos = (cv::Mat_<double>(3, 1) << i.x, i.y, 1.0);
+
+		cv::Mat Photo_point = vision_to_photo * pos;
+
+		photo_points.push_back(Photo_point);
+	}
+	return photo_points;
+}

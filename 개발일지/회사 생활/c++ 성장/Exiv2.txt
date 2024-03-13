@@ -1,0 +1,58 @@
+-메타데이터란 이미지등에 있는 위치정보나 해상도 등등이다. 이것을 가져다 쓸수있다.
+
+
+//변환
+double convertRationalToDecimal(const Exiv2::Rational& rational)
+{
+	if (rational.second == 0) return 0.0; // 분모가 0이면 변환할 수 없음
+	return static_cast<double>(rational.first) / static_cast<double>(rational.second);
+}
+
+double convertGPSCoordinate(const Exiv2::Value& value)
+{
+	// '도-분-초' 값을 십진수로 변환
+
+	double degrees = convertRationalToDecimal(value.toRational(0));
+	if (value.count() < 2) { return degrees; } //도만 있다면
+
+	double minutes = convertRationalToDecimal(value.toRational(1));
+	if (value.count() < 3) { return degrees + minutes; } //도, 분 만 있다면
+
+	double seconds = convertRationalToDecimal(value.toRational(2));
+
+	return degrees + minutes / 60.0 + seconds / 3600.0;
+}
+
+//메타데이터 읽기
+std::array<double, 3> cur_value;
+double img_width = 0;
+double img_height = 0;
+
+void ReadMetadata() {
+	std::unique_ptr<Exiv2::Image> image = Exiv2::ImageFactory::open("IMG_03_0000000003_L.jpg");
+	if (!image) { return; }
+
+	image->readMetadata();
+
+	Exiv2::ExifData& exifData = image->exifData();
+	if (exifData.empty()) { return; }
+
+	//가로세로 얻기
+	img_width = image->pixelWidth();
+	img_height = image->pixelHeight();
+
+	int num = 0;
+	for (auto& i : exifData)
+	{
+		//위도 , 경도 , 고도
+		if (i.tagName() == "GPSLatitude" || i.tagName() == "GPSLongitude" || i.tagName() == "GPSAltitude")
+		{
+			const Exiv2::Value& value = i.value();
+			std::cout << i.tagName() << " = " << i.value() << '\n';
+			//std::format("{} = {}\n", i.tagName(), i.value());
+			cur_value[num] = convertGPSCoordinate(value);
+			std::cout << i.tagName() << " = " << cur_value[num] << '\n';
+			num++;
+		}
+	}
+}
