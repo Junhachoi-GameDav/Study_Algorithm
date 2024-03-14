@@ -13,9 +13,43 @@
 
 
 //proj 파일을 받아서 계산
+//-	proj 라이브러리(9.x.x 버전 이상)을 사용하여 메타데이터의 위/경도 좌표를 EPSG:5186으로 변환한다. 
+#pragma region proj ?
+//double Mat_changeTo_double(const cv::Mat& mat)
+//{
+//	return mat.at<double>(0);
+//}
+//std::array<double, 3> transform(const std::vector<cv::Mat>& s)
+//{
+//	double longitude = Mat_changeTo_double(s[1]); // 경도
+//	double latitude = Mat_changeTo_double(s[0]); // 위도
+//	double altitude = Mat_changeTo_double(s[2]); // 고도
+//
+//
+//	std::unique_ptr<PJ_CONTEXT, decltype((void(*)(PJ_CONTEXT*))(proj_context_destroy))> ctx(proj_context_create(), (void(*)(PJ_CONTEXT*))(proj_context_destroy));
+//	std::shared_ptr<PJ> trans_obj
+//	(
+//		proj_create_crs_to_crs
+//		(
+//			ctx.get(),
+//			"+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs",
+//			"+proj=tmerc +lat_0=38 +lon_0=127 +k=1 +x_0=200000 +y_0=600000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs",
+//			nullptr
+//		),
+//		proj_destroy
+//	);
+//	// from src to dst
+//	PJ_COORD from = proj_coord(longitude, latitude, altitude, 0.0); //경도, 위도, 고도
+//	PJ_COORD to = proj_trans(trans_obj.get(), PJ_DIRECTION::PJ_FWD, from);
+//
+//	return { to.xyz.x, to.xyz.y, to.xyz.z };
+//}
+
+#pragma endregion
+
 std::array<double, 3> transform(const std::span<double>& s)
 {
-	
+
 	std::unique_ptr<PJ_CONTEXT, decltype((void(*)(PJ_CONTEXT*))(proj_context_destroy))> ctx(proj_context_create(), (void(*)(PJ_CONTEXT*))(proj_context_destroy));
 	std::shared_ptr<PJ> trans_obj
 	(
@@ -34,7 +68,6 @@ std::array<double, 3> transform(const std::span<double>& s)
 
 	return { to.xyz.x, to.xyz.y, to.xyz.z };
 }
-
 
 //변환
 double convertRationalToDecimal(const Exiv2::Rational& rational)
@@ -94,7 +127,7 @@ void ReadMetadata() {
 }
 
 //영상좌표 이미지좌표로 전환
-std::vector<cv::Mat> cam_pos_changeTo_img_pos(const websocket_client& my_client)
+cv::Mat_<double> cam_pos_changeTo_img_pos(const websocket_client& my_client)
 {
 	constexpr double focal_length = 4.8;
 	constexpr double pixel_size = 0.0007;
@@ -105,7 +138,7 @@ std::vector<cv::Mat> cam_pos_changeTo_img_pos(const websocket_client& my_client)
 		0.0, -1.0, (img_height / 2),
 		0.0, 0.0, -focal_length_in_pixel);
 
-	std::vector<cv::Mat> photo_points;
+	cv::Mat_<double> photo_points;
 
 	for (const auto& i : my_client._poly_vec)
 	{
@@ -120,6 +153,7 @@ std::vector<cv::Mat> cam_pos_changeTo_img_pos(const websocket_client& my_client)
 
 		photo_points.push_back(Photo_point);
 	}
+	std::cout << "Polygon -> Changed to img!!" << '\n';
 	return photo_points;
 }
 
@@ -127,17 +161,25 @@ std::vector<cv::Mat> cam_pos_changeTo_img_pos(const websocket_client& my_client)
 //
 
 
+
+
 int main() {
 
 	websocket_client my_client("ws://175.116.181.24:9003");
 	
     ReadMetadata();
-	auto vv = transform(cur_value);
 
-    my_client.run();
-	cam_pos_changeTo_img_pos(my_client);
+	auto img_meta = transform(cur_value);
+
+
+	cv::Mat_<double> ground = (cv::Mat_<double>(3, 1) << img_meta[0], img_meta[1], img_meta[2]);
 	
-	std::cout << "f";
+	my_client.run();
+	
+	auto img_pos = cam_pos_changeTo_img_pos(my_client);
+
+
+	
 	
 	/*
 	cv::Mat point(3, 1, CV_64F);

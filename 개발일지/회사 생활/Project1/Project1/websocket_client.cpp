@@ -20,13 +20,7 @@ websocket_client::websocket_client(const std::string& uri) : uri(uri) {
 
 websocket_client::~websocket_client()
 {
-    //std::error_code ec;
-    //auto con = c.get_connection(uri, ec);
-    //auto handle = con->get_handle();
-    //c.close(handle, websocketpp::close::status::normal, "");
-    //while (con->get_state() != websocketpp::session::state::closed)
-    //    std::this_thread::yield();
-    //
+    c.set_close_handler(bind(&websocket_client::on_close, this, _1));
 }
 
 void websocket_client::on_open(websocketpp::connection_hdl hdl) {
@@ -59,9 +53,19 @@ void websocket_client::on_message(websocketpp::connection_hdl hdl, client::messa
 
             searchStart = matches.suffix().first;
         }
-        c.stop(); 
+        c.stop();//클라이언트에서 더이상 이벤트 멈춤
     }
 }
+
+void websocket_client::on_close(websocketpp::connection_hdl hdl)
+{
+    websocketpp::lib::error_code ec;
+    client::connection_ptr con = c.get_connection(uri, ec);
+
+    c.close(con->get_handle(), websocketpp::close::status::normal, "접속 종료");
+}
+
+
 
 void websocket_client::run() {
     websocketpp::lib::error_code ec;
@@ -70,5 +74,5 @@ void websocket_client::run() {
 
     c.connect(con);
     c.run();
-    c.get_con_from_hdl(con)->close(websocketpp::close::status::normal, "접속 종료");
 }
+

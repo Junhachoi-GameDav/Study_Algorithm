@@ -18,6 +18,7 @@ private:
     client c;
     void on_open(websocketpp::connection_hdl hdl);
     void on_message(websocketpp::connection_hdl hdl, client::message_ptr msg);
+    void on_close(websocketpp::connection_hdl hdl);
 
 public:
     std::string uri;
