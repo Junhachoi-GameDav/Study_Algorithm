@@ -138,7 +138,8 @@ cv::Mat_<double> cam_pos_changeTo_img_pos(const websocket_client& my_client)
 		0.0, -1.0, (img_height / 2),
 		0.0, 0.0, -focal_length_in_pixel);
 
-	cv::Mat_<double> photo_points;
+	//cv::Mat_<double> photo_points;
+	std::vector<double> xs, ys, zs;
 
 	for (const auto& i : my_client._poly_vec)
 	{
@@ -151,17 +152,31 @@ cv::Mat_<double> cam_pos_changeTo_img_pos(const websocket_client& my_client)
 
 		cv::Mat Photo_point = vision_to_photo * pos;
 
-		photo_points.push_back(Photo_point);
+		//기존 행과 열을 바꾸기위한 vec
+		xs.push_back(Photo_point.at<double>(0, 0));
+		ys.push_back(Photo_point.at<double>(1, 0));
+		zs.push_back(Photo_point.at<double>(2, 0));
 	}
+
+	int n = xs.size();
+	cv::Mat_<double> photo_points(3, n); 
+	for (int i = 0; i < n; ++i)
+	{
+		photo_points(0, i) = xs[i];
+		photo_points(1, i) = ys[i];
+		photo_points(2, i) = zs[i];
+	}
+
 	std::cout << "Polygon -> Changed to img!!" << '\n';
 	return photo_points;
 }
 
-//지상 좌표로 변환
-//
-
-
-
+//람다 구하기
+constexpr double Altitude = 20;
+double make_lamda(const cv::Mat1d& img_meta, const cv::Mat1d& img_pos)
+{
+	return img_pos.at<double>(2, 0) / (Altitude - img_meta.at<double>(2, 0));
+}
 
 int main() {
 
@@ -170,15 +185,26 @@ int main() {
     ReadMetadata();
 
 	auto img_meta = transform(cur_value);
-
-
 	cv::Mat_<double> ground = (cv::Mat_<double>(3, 1) << img_meta[0], img_meta[1], img_meta[2]);
-	
+	constexpr double rx = 1.0;
+	constexpr double ry = -1.0;
+	constexpr double rz = 270.0;
+	//rotation order = zxy
+
+
 	my_client.run();
 	
 	auto img_pos = cam_pos_changeTo_img_pos(my_client);
+	
+	auto lamda = make_lamda(ground, img_pos);
 
-
+	//실 좌표
+	cv::Mat a = img_pos / lamda;
+	cv::Mat real_pos = a.clone();
+	for (int i = 0; i < a.cols; ++i)
+		real_pos.col(i) += ground;
+	
+	std::cout << "test";
 	
 	
 	/*
