@@ -1,0 +1,13 @@
+core
+thread
+
+context switching
+
+
+//gpu
+
+cuda
+
+directx
+opengl
+vulkan

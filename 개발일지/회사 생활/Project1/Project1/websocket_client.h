@@ -6,13 +6,15 @@
 
 #include <string>
 
+#include <oneapi/tbb/task_group.h>
+
 typedef websocketpp::client<websocketpp::config::asio_client> client;
 
 class websocket_client {
 public:
     websocket_client(const std::string& uri);
     ~websocket_client();
-    void run();
+    void runAndGetPolygon();
 
 private:
     client c;
@@ -21,11 +23,9 @@ private:
     
 private:
     std::string uri;
-    std::string _polygon;
     std::thread thr;
     client::connection_ptr con;
-    
+    oneapi::tbb::task_group tg;
 public:
     std::vector<cv::Point> _poly_vec;
-    //client::connection_ptr con;
 };

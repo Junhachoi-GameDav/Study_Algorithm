@@ -7,7 +7,6 @@
 #include <string>
 #include <thread>
 
-
 using websocketpp::lib::bind;
 using websocketpp::lib::placeholders::_1;
 using websocketpp::lib::placeholders::_2;
@@ -28,9 +27,8 @@ websocket_client::~websocket_client()
     websocketpp::lib::error_code ec;
     con->close(websocketpp::close::status::normal, "", ec);
 
-    while (con->get_state() == websocketpp::session::state::closed) {
+    while (con->get_state() == websocketpp::session::state::closed)
         std::this_thread::yield();
-    }
 }
 
 void websocket_client::on_open(websocketpp::connection_hdl hdl) {
@@ -38,7 +36,7 @@ void websocket_client::on_open(websocketpp::connection_hdl hdl) {
     if (!file.is_open())
         return;
 
-    std::string buffer((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+    const std::string buffer((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
     c.send(hdl, buffer, websocketpp::frame::opcode::binary);
 }
 
@@ -47,11 +45,10 @@ void websocket_client::on_message(websocketpp::connection_hdl hdl, client::messa
         return;
 
     std::cout << "Received message: " << msg->get_payload() << '\n';
-
-    _polygon = msg->get_payload();
+    const std::string _polygon = msg->get_payload();
 
     //정규포현식으로 polygon 점 분리
-    std::regex reg(R"(\d+\s\d+)");
+    const std::regex reg(R"(\d+\s\d+)");
     std::smatch matches;
     auto searchStart(_polygon.cbegin());
 
@@ -69,11 +66,8 @@ void websocket_client::on_message(websocketpp::connection_hdl hdl, client::messa
     c.stop();//클라이언트에서 더이상 이벤트 멈춤
 }
 
-void websocket_client::run() {
-    /*websocketpp::lib::error_code ec;
-    client::connection_ptr con = c.get_connection(uri, ec);*/
-    //_con = con;
-
+void websocket_client::runAndGetPolygon() {
+   
     websocketpp::lib::error_code ec;
     con = c.get_connection(uri, ec);
 
@@ -81,10 +75,10 @@ void websocket_client::run() {
         return;
 
     c.connect(con);
-    thr = std::thread([this]()->void
+    tg.run([this]()->void
     {
         c.run();
     });
-    thr.join();
+    tg.wait();
 }
 

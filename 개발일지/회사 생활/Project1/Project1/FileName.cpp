@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <span>
+#include <filesystem>
 
 #include "websocket_client.h"
 
@@ -49,6 +50,7 @@
 
 std::array<double, 3> transform(const std::span<double>& s)
 {
+	assert(s.size() <= 3);
 
 	std::unique_ptr<PJ_CONTEXT, decltype((void(*)(PJ_CONTEXT*))(proj_context_destroy))> ctx(proj_context_create(), (void(*)(PJ_CONTEXT*))(proj_context_destroy));
 	std::shared_ptr<PJ> trans_obj
@@ -80,23 +82,49 @@ double convertGPSCoordinate(const Exiv2::Value& value)
 {
 	// '도-분-초' 값을 십진수로 변환
 
-	double degrees = convertRationalToDecimal(value.toRational(0));
+	const double degrees = convertRationalToDecimal(value.toRational(0));
 	if (value.count() < 2) { return degrees; } //도만 있다면
 
-	double minutes = convertRationalToDecimal(value.toRational(1));
+	const double minutes = convertRationalToDecimal(value.toRational(1));
 	if (value.count() < 3) { return degrees + minutes; } //도, 분 만 있다면
 
-	double seconds = convertRationalToDecimal(value.toRational(2));
+	const double seconds = convertRationalToDecimal(value.toRational(2));
 
 	return degrees + minutes / 60.0 + seconds / 3600.0;
 }
 
-
 //메타데이터 읽기
-std::array<double, 3> cur_value;
-double img_width = 0;
-double img_height = 0;
+//전역이 아니게 고치기 -> 최대한 전역변수는 없는게 좋다.
+//전역변수에 의존하는 함수는 좋지 않다.
 
+std::array<double, 3> readMetadata(const std::string& img_path)
+{
+	assert(std::filesystem::exists(img_path));
+
+	std::array<double, 3> cur_value {};
+	const std::unique_ptr<Exiv2::Image> image = Exiv2::ImageFactory::open(img_path);
+
+	image->readMetadata();
+
+	const Exiv2::ExifData& exifData = image->exifData();
+	
+	int num = 0;
+	for (const auto& i : exifData)
+	{
+		//위도 , 경도 , 고도
+		if (i.tagName() == "GPSLatitude" || i.tagName() == "GPSLongitude" || i.tagName() == "GPSAltitude")
+		{
+			const Exiv2::Value& value = i.value();
+			cur_value[num] = convertGPSCoordinate(value);
+			std::cout << std::format("{} = {}\n", i.tagName(), cur_value[num]);
+			num++;
+		}
+	}
+
+	return cur_value;
+}
+
+/*
 void ReadMetadata() {
 	std::unique_ptr<Exiv2::Image> image = Exiv2::ImageFactory::open("IMG_03_0000000003_L.jpg");
 	if (!image) { return; }
@@ -117,23 +145,31 @@ void ReadMetadata() {
 		if (i.tagName() == "GPSLatitude" || i.tagName() == "GPSLongitude" || i.tagName() == "GPSAltitude")
 		{
 			const Exiv2::Value& value = i.value();
-			std::cout << i.tagName() << " = " << i.value() << '\n';
-			//std::format("{} = {}\n", i.tagName(), i.value());
+
+			std::cout << std::format("{} = {}\n", i.tagName(), i.value().toString());
+			
 			cur_value[num] = convertGPSCoordinate(value);
 			std::cout << i.tagName() << " = " << cur_value[num] << '\n';
+			
 			num++;
 		}
 	}
-}
+}*/
 
 //영상좌표 이미지좌표로 전환
-cv::Mat_<double> cam_pos_changeTo_img_pos(const websocket_client& my_client)
+cv::Mat_<double> camPos_ChangeTo_ImgPos(const websocket_client& my_client, const std::string& img_path)
 {
+	const std::unique_ptr<Exiv2::Image> image = Exiv2::ImageFactory::open(img_path);
+
+	const double& img_width = image->pixelWidth();
+	const double& img_height = image->pixelHeight();
+
 	constexpr double focal_length = 4.8;
 	constexpr double pixel_size = 0.0007;
 	constexpr double focal_length_in_pixel = focal_length / pixel_size;
 
-	cv::Mat vision_to_photo = (cv::Mat_<double>(3, 3) <<
+
+	const cv::Mat vision_to_photo = (cv::Mat_<double>(3, 3) <<
 		1.0, 0.0, -(img_width / 2),
 		0.0, -1.0, (img_height / 2),
 		0.0, 0.0, -focal_length_in_pixel);
@@ -144,13 +180,12 @@ cv::Mat_<double> cam_pos_changeTo_img_pos(const websocket_client& my_client)
 	for (const auto& i : my_client._poly_vec)
 	{
 		//원 영상좌표 출력
-		//std::cout << "video pos = " << i.x << ' ' << i.y << '\n';
 		// 카메라 스펙 9248 x 6944 pixels  0.7 마이크로미터 피치(0.0000007 미터)
 		// 4608 x 3456 사진 = 2,304 ~ -2,304 x 1,728 ~ -1,728
 
-		cv::Mat pos = (cv::Mat_<double>(3, 1) << i.x, i.y, 1.0);
+		const cv::Mat pos = (cv::Mat_<double>(3, 1) << i.x, i.y, 1.0);
 
-		cv::Mat Photo_point = vision_to_photo * pos;
+		const cv::Mat Photo_point = vision_to_photo * pos;
 
 		//기존 행과 열을 바꾸기위한 vec
 		xs.push_back(Photo_point.at<double>(0, 0));
@@ -158,7 +193,7 @@ cv::Mat_<double> cam_pos_changeTo_img_pos(const websocket_client& my_client)
 		zs.push_back(Photo_point.at<double>(2, 0));
 	}
 
-	int n = xs.size();
+	const int n = static_cast<int>(xs.size());
 	cv::Mat_<double> photo_points(3, n); 
 	for (int i = 0; i < n; ++i)
 	{
@@ -172,16 +207,15 @@ cv::Mat_<double> cam_pos_changeTo_img_pos(const websocket_client& my_client)
 }
 
 //람다 구하기
-constexpr double Altitude = 20;
-double make_lamda(const cv::Mat1d& img_meta, const cv::Mat1d& img_pos)
+double makeLamda(const cv::Mat1d& img_meta, const cv::Mat1d& img_pos)
 {
+	assert(not img_meta.empty() and not img_pos.empty());
+
+	constexpr double Altitude = 20;
 	return img_pos.at<double>(2, 0) / (Altitude - img_meta.at<double>(2, 0));
 }
 
 //회전행렬 (카메라 자세)
-constexpr double rx = 1.0;
-constexpr double ry = -1.0;
-constexpr double rz = 270.0;
 cv::Mat eulerToRotationMatrix(double roll, double pitch, double yaw) {
 	// 라디안으로 변환
 	roll = roll * CV_PI / 180.0;
@@ -189,67 +223,61 @@ cv::Mat eulerToRotationMatrix(double roll, double pitch, double yaw) {
 	yaw = yaw * CV_PI / 180.0;
 
 	// roll
-	cv::Mat Rx = (cv::Mat_<double>(3, 3) << 
+	const cv::Mat Rx = (cv::Mat_<double>(3, 3) << 
 		1, 0, 0,
 		0, cos(roll), -sin(roll),
 		0, sin(roll), cos(roll));
 
 	// pitch
-	cv::Mat Ry = (cv::Mat_<double>(3, 3) <<
+	const cv::Mat Ry = (cv::Mat_<double>(3, 3) <<
 		cos(pitch), 0, sin(pitch),
 		0, 1, 0,
 		-sin(pitch), 0, cos(pitch));
 
 	// yaw
-	cv::Mat Rz = (cv::Mat_<double>(3, 3) <<
+	const cv::Mat Rz = (cv::Mat_<double>(3, 3) <<
 		cos(yaw), -sin(yaw), 0,
 		sin(yaw), cos(yaw), 0,
 		0, 0, 1);
 
-	cv::Mat R = Ry * Rx * Rz; //z가 먼저
+	const cv::Mat R = Ry * Rx * Rz; //z가 먼저
+	
 	return R;
 }
 
+
 int main() {
-
+	//
 	websocket_client my_client("ws://175.116.181.24:9003");
+	my_client.runAndGetPolygon();
 	
-    ReadMetadata();
+	//
+	auto meta_data = readMetadata("IMG_03_0000000003_L.jpg");
+	const auto img_meta = transform(meta_data);
+	const cv::Mat_<double> ground_meta = (cv::Mat_<double>(3, 1) << img_meta[0], img_meta[1], img_meta[2]);
 
-	auto img_meta = transform(cur_value);
-	cv::Mat_<double> ground_meta = (cv::Mat_<double>(3, 1) << img_meta[0], img_meta[1], img_meta[2]);
-
-	my_client.run();
+	//
+	const auto img_pos = camPos_ChangeTo_ImgPos(my_client, "IMG_03_0000000003_L.jpg");
 	
-	auto img_pos = cam_pos_changeTo_img_pos(my_client);
+	//
+	const auto lamda = makeLamda(ground_meta, img_pos);
 
-	auto lamda = make_lamda(ground_meta, img_pos);
-
-	auto cam_rot = eulerToRotationMatrix(rx, ry, rz);
+	//
+	constexpr double rx = 1.0;
+	constexpr double ry = -1.0;
+	constexpr double rz = 270.0;
+	const auto cam_rot = eulerToRotationMatrix(rx, ry, rz);
 	cam_rot.t(); //전치 행렬
 
+
 	//실 좌표
-	cv::Mat p = img_pos / lamda;
-	cv::Mat real_pos = cam_rot * p.clone();
+	const cv::Mat p = img_pos / lamda;
+	const cv::Mat real_pos = cam_rot * p.clone();
 	for (int i = 0; i < p.cols; ++i)
 	{
 		real_pos.col(i) += ground_meta;
 		std::cout << "real_pos["<< i << "] =\n" << real_pos.col(i) << '\n';
 	}
-	std::cout << "test";
-	
-	
-	/*
-	cv::Mat point(3, 1, CV_64F);
-	static_cast<double* const>(static_cast<void* const>(point.data))[0] = static_cast<double>(polygon[0].first);
-	static_cast<double* const>(static_cast<void* const>(point.data))[1] = static_cast<double>(polygon[0].second);
-	static_cast<double* const>(static_cast<void* const>(point.data))[2] = 1.0;
-
-	cv::Mat transform(3, 3, CV_64F);
-	cv::Mat result = 2.0 * point;
-	*/
-	//transform(cur_value);
-	//std::stod();
 
 	return 0;
 }
