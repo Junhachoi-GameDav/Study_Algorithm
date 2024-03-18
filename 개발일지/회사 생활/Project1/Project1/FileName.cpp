@@ -140,7 +140,7 @@ cv::Mat_<double> cam_pos_changeTo_img_pos(const websocket_client& my_client)
 
 	//cv::Mat_<double> photo_points;
 	std::vector<double> xs, ys, zs;
-
+	
 	for (const auto& i : my_client._poly_vec)
 	{
 		//원 영상좌표 출력
@@ -178,6 +178,38 @@ double make_lamda(const cv::Mat1d& img_meta, const cv::Mat1d& img_pos)
 	return img_pos.at<double>(2, 0) / (Altitude - img_meta.at<double>(2, 0));
 }
 
+//회전행렬 (카메라 자세)
+constexpr double rx = 1.0;
+constexpr double ry = -1.0;
+constexpr double rz = 270.0;
+cv::Mat eulerToRotationMatrix(double roll, double pitch, double yaw) {
+	// 라디안으로 변환
+	roll = roll * CV_PI / 180.0;
+	pitch = pitch * CV_PI / 180.0;
+	yaw = yaw * CV_PI / 180.0;
+
+	// roll
+	cv::Mat Rx = (cv::Mat_<double>(3, 3) << 
+		1, 0, 0,
+		0, cos(roll), -sin(roll),
+		0, sin(roll), cos(roll));
+
+	// pitch
+	cv::Mat Ry = (cv::Mat_<double>(3, 3) <<
+		cos(pitch), 0, sin(pitch),
+		0, 1, 0,
+		-sin(pitch), 0, cos(pitch));
+
+	// yaw
+	cv::Mat Rz = (cv::Mat_<double>(3, 3) <<
+		cos(yaw), -sin(yaw), 0,
+		sin(yaw), cos(yaw), 0,
+		0, 0, 1);
+
+	cv::Mat R = Ry * Rx * Rz; //z가 먼저
+	return R;
+}
+
 int main() {
 
 	websocket_client my_client("ws://175.116.181.24:9003");
@@ -185,25 +217,25 @@ int main() {
     ReadMetadata();
 
 	auto img_meta = transform(cur_value);
-	cv::Mat_<double> ground = (cv::Mat_<double>(3, 1) << img_meta[0], img_meta[1], img_meta[2]);
-	constexpr double rx = 1.0;
-	constexpr double ry = -1.0;
-	constexpr double rz = 270.0;
-	//rotation order = zxy
-
+	cv::Mat_<double> ground_meta = (cv::Mat_<double>(3, 1) << img_meta[0], img_meta[1], img_meta[2]);
 
 	my_client.run();
 	
 	auto img_pos = cam_pos_changeTo_img_pos(my_client);
-	
-	auto lamda = make_lamda(ground, img_pos);
+
+	auto lamda = make_lamda(ground_meta, img_pos);
+
+	auto cam_rot = eulerToRotationMatrix(rx, ry, rz);
+	cam_rot.t(); //전치 행렬
 
 	//실 좌표
-	cv::Mat a = img_pos / lamda;
-	cv::Mat real_pos = a.clone();
-	for (int i = 0; i < a.cols; ++i)
-		real_pos.col(i) += ground;
-	
+	cv::Mat p = img_pos / lamda;
+	cv::Mat real_pos = cam_rot * p.clone();
+	for (int i = 0; i < p.cols; ++i)
+	{
+		real_pos.col(i) += ground_meta;
+		std::cout << "real_pos["<< i << "] =\n" << real_pos.col(i) << '\n';
+	}
 	std::cout << "test";
 	
 	

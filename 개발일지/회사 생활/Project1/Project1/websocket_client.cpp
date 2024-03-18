@@ -5,6 +5,8 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <thread>
+
 
 using websocketpp::lib::bind;
 using websocketpp::lib::placeholders::_1;
@@ -20,7 +22,15 @@ websocket_client::websocket_client(const std::string& uri) : uri(uri) {
 
 websocket_client::~websocket_client()
 {
-    c.set_close_handler(bind(&websocket_client::on_close, this, _1));
+    if (con && con->get_state() == websocketpp::session::state::closed)
+        return;
+
+    websocketpp::lib::error_code ec;
+    con->close(websocketpp::close::status::normal, "", ec);
+
+    while (con->get_state() == websocketpp::session::state::closed) {
+        std::this_thread::yield();
+    }
 }
 
 void websocket_client::on_open(websocketpp::connection_hdl hdl) {
@@ -33,46 +43,48 @@ void websocket_client::on_open(websocketpp::connection_hdl hdl) {
 }
 
 void websocket_client::on_message(websocketpp::connection_hdl hdl, client::message_ptr msg) {
-    if (msg->get_opcode() == websocketpp::frame::opcode::text) {
-        std::cout << "Received message: " << msg->get_payload() << '\n';
-        
-        _polygon = msg->get_payload();
+    if (msg->get_opcode() != websocketpp::frame::opcode::text)
+        return;
 
-        //정규포현식으로 polygon 점 분리
-        std::regex reg(R"(\d+\s\d+)");
-        std::smatch matches;
-        auto searchStart(_polygon.cbegin());
+    std::cout << "Received message: " << msg->get_payload() << '\n';
 
-        while (std::regex_search(searchStart, _polygon.cend(), matches, reg)) 
-        {
-            std::istringstream iss(matches[0].str()); //matches 분리시겨줌
-            int x;
-            int y;
-            iss >> x >> y;
-            _poly_vec.push_back({ x, y }); //vector에 넣음
+    _polygon = msg->get_payload();
 
-            searchStart = matches.suffix().first;
-        }
-        c.stop();//클라이언트에서 더이상 이벤트 멈춤
+    //정규포현식으로 polygon 점 분리
+    std::regex reg(R"(\d+\s\d+)");
+    std::smatch matches;
+    auto searchStart(_polygon.cbegin());
+
+    while (std::regex_search(searchStart, _polygon.cend(), matches, reg))
+    {
+        std::istringstream iss(matches[0].str()); //matches 분리시겨줌
+        int x;
+        int y;
+        iss >> x >> y;
+        _poly_vec.push_back({ x, y }); //vector에 넣음
+
+        searchStart = matches.suffix().first;
     }
+
+    c.stop();//클라이언트에서 더이상 이벤트 멈춤
 }
-
-void websocket_client::on_close(websocketpp::connection_hdl hdl)
-{
-    websocketpp::lib::error_code ec;
-    client::connection_ptr con = c.get_connection(uri, ec);
-
-    c.close(con->get_handle(), websocketpp::close::status::normal, "접속 종료");
-}
-
-
 
 void websocket_client::run() {
+    /*websocketpp::lib::error_code ec;
+    client::connection_ptr con = c.get_connection(uri, ec);*/
+    //_con = con;
+
     websocketpp::lib::error_code ec;
-    client::connection_ptr con = c.get_connection(uri, ec);
-    if (ec) { return; }
+    con = c.get_connection(uri, ec);
+
+    if (ec)
+        return;
 
     c.connect(con);
-    c.run();
+    thr = std::thread([this]()->void
+    {
+        c.run();
+    });
+    thr.join();
 }
 
