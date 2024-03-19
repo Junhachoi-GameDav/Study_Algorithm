@@ -22,10 +22,11 @@ private:
     void on_message(websocketpp::connection_hdl hdl, client::message_ptr msg);
     
 private:
-    std::string uri;
-    std::thread thr;
+    const std::string uri;
+    //const std::thread thr;
     client::connection_ptr con;
     oneapi::tbb::task_group tg;
+
 public:
     std::vector<cv::Point> _poly_vec;
 };

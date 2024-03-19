@@ -1,0 +1,23 @@
+절대 경로는 보통 다음과 같은 것들을 의미한다.
+
+https://velog.io/@bami
+C:\Program Files\Git
+
+상대 경로는 보통 다음과 같이 명시한 것들을 의미한다.
+./src/compnents/Counter.js
+../../img/logo.jpg
+
+
+기호	의미
+/	root
+./	현재 위치
+../	상위 경로
+
+
+const std::filesystem::path cur_path = std::filesystem::current_path(); //현재 디렉토리 가져옴
+const std::filesystem::path img_path = cur_path / "image" / "IMG_03_0000000003_L.jpg";
+
+//메타데이터 읽기
+std::array<double, 3> meta_data = readMetadata(img_path.string());
+
+이런식으로 응용이 가능하다.

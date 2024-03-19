@@ -7,6 +7,8 @@
 #include <string>
 #include <thread>
 
+#include <filesystem>
+
 using websocketpp::lib::bind;
 using websocketpp::lib::placeholders::_1;
 using websocketpp::lib::placeholders::_2;
@@ -32,7 +34,12 @@ websocket_client::~websocket_client()
 }
 
 void websocket_client::on_open(websocketpp::connection_hdl hdl) {
-    std::ifstream file("IMG_03_0000000003_L.jpg", std::ios::binary);
+    
+    //사진파일 가져오기
+    const std::filesystem::path cur_path = std::filesystem::current_path(); //현재 디렉토리 가져옴
+    const std::filesystem::path img_path = cur_path / "image" / "IMG_03_0000000003_L.jpg";
+    
+    std::ifstream file(img_path, std::ios::binary);
     if (!file.is_open())
         return;
 

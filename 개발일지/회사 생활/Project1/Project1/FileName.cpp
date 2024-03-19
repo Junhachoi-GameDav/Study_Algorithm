@@ -12,6 +12,8 @@
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
 
+//전역이 아니게 고치기 -> 최대한 전역변수는 없는게 좋다.
+//전역변수에 의존하는 함수는 좋지 않다.
 
 //proj 파일을 받아서 계산
 //-	proj 라이브러리(9.x.x 버전 이상)을 사용하여 메타데이터의 위/경도 좌표를 EPSG:5186으로 변환한다. 
@@ -47,7 +49,6 @@
 //}
 
 #pragma endregion
-
 std::array<double, 3> transform(const std::span<double>& s)
 {
 	assert(s.size() <= 3);
@@ -74,19 +75,21 @@ std::array<double, 3> transform(const std::span<double>& s)
 //변환
 double convertRationalToDecimal(const Exiv2::Rational& rational)
 {
-	if (rational.second == 0) return 0.0; // 분모가 0이면 변환할 수 없음
+	if (rational.second == 0) 
+		return 0.0; // 분모가 0이면 변환할 수 없음
+
 	return static_cast<double>(rational.first) / static_cast<double>(rational.second);
 }
 
-double convertGPSCoordinate(const Exiv2::Value& value)
+double convertGPSCoordinate(const Exiv2::Value& value) // '도-분-초' 값을 십진수로 변환
 {
-	// '도-분-초' 값을 십진수로 변환
-
 	const double degrees = convertRationalToDecimal(value.toRational(0));
-	if (value.count() < 2) { return degrees; } //도만 있다면
+	if (value.count() < 2) //도만 있다면
+		return degrees;
 
 	const double minutes = convertRationalToDecimal(value.toRational(1));
-	if (value.count() < 3) { return degrees + minutes; } //도, 분 만 있다면
+	if (value.count() < 3) //도, 분 만 있다면
+		return degrees + minutes;
 
 	const double seconds = convertRationalToDecimal(value.toRational(2));
 
@@ -94,20 +97,17 @@ double convertGPSCoordinate(const Exiv2::Value& value)
 }
 
 //메타데이터 읽기
-//전역이 아니게 고치기 -> 최대한 전역변수는 없는게 좋다.
-//전역변수에 의존하는 함수는 좋지 않다.
-
 std::array<double, 3> readMetadata(const std::string& img_path)
 {
 	assert(std::filesystem::exists(img_path));
 
-	std::array<double, 3> cur_value {};
 	const std::unique_ptr<Exiv2::Image> image = Exiv2::ImageFactory::open(img_path);
-
+	
 	image->readMetadata();
 
 	const Exiv2::ExifData& exifData = image->exifData();
 	
+	std::array<double, 3> cur_value{};
 	int num = 0;
 	for (const auto& i : exifData)
 	{
@@ -124,43 +124,13 @@ std::array<double, 3> readMetadata(const std::string& img_path)
 	return cur_value;
 }
 
-/*
-void ReadMetadata() {
-	std::unique_ptr<Exiv2::Image> image = Exiv2::ImageFactory::open("IMG_03_0000000003_L.jpg");
-	if (!image) { return; }
-
-	image->readMetadata();
-
-	Exiv2::ExifData& exifData = image->exifData();
-	if (exifData.empty()) { return; }
-
-	//가로세로 얻기
-	img_width = image->pixelWidth();
-	img_height = image->pixelHeight();
-
-	int num = 0;
-	for (auto& i : exifData)
-	{
-		//위도 , 경도 , 고도
-		if (i.tagName() == "GPSLatitude" || i.tagName() == "GPSLongitude" || i.tagName() == "GPSAltitude")
-		{
-			const Exiv2::Value& value = i.value();
-
-			std::cout << std::format("{} = {}\n", i.tagName(), i.value().toString());
-			
-			cur_value[num] = convertGPSCoordinate(value);
-			std::cout << i.tagName() << " = " << cur_value[num] << '\n';
-			
-			num++;
-		}
-	}
-}*/
-
 //영상좌표 이미지좌표로 전환
 cv::Mat_<double> camPos_ChangeTo_ImgPos(const websocket_client& my_client, const std::string& img_path)
 {
-	const std::unique_ptr<Exiv2::Image> image = Exiv2::ImageFactory::open(img_path);
+	assert(std::filesystem::exists(img_path));
 
+	const std::unique_ptr<Exiv2::Image> image = Exiv2::ImageFactory::open(img_path);
+	
 	const double& img_width = image->pixelWidth();
 	const double& img_height = image->pixelHeight();
 
@@ -168,13 +138,11 @@ cv::Mat_<double> camPos_ChangeTo_ImgPos(const websocket_client& my_client, const
 	constexpr double pixel_size = 0.0007;
 	constexpr double focal_length_in_pixel = focal_length / pixel_size;
 
-
 	const cv::Mat vision_to_photo = (cv::Mat_<double>(3, 3) <<
 		1.0, 0.0, -(img_width / 2),
 		0.0, -1.0, (img_height / 2),
 		0.0, 0.0, -focal_length_in_pixel);
 
-	//cv::Mat_<double> photo_points;
 	std::vector<double> xs, ys, zs;
 	
 	for (const auto& i : my_client._poly_vec)
@@ -245,39 +213,52 @@ cv::Mat eulerToRotationMatrix(double roll, double pitch, double yaw) {
 	return R;
 }
 
-
 int main() {
-	//
+	
+	//웹 소켓 연결
 	websocket_client my_client("ws://175.116.181.24:9003");
 	my_client.runAndGetPolygon();
+
+
+	//사진파일 가져오기
+	const std::filesystem::path cur_path = std::filesystem::current_path(); //현재 디렉토리 가져옴
+	const std::filesystem::path img_path = cur_path / "image" / "IMG_03_0000000003_L.jpg";
 	
-	//
-	auto meta_data = readMetadata("IMG_03_0000000003_L.jpg");
-	const auto img_meta = transform(meta_data);
+
+	//메타데이터 읽기
+	std::array<double, 3> meta_data = readMetadata(img_path.string());
+	const std::array<double, 3> img_meta = transform(meta_data);
 	const cv::Mat_<double> ground_meta = (cv::Mat_<double>(3, 1) << img_meta[0], img_meta[1], img_meta[2]);
 
-	//
-	const auto img_pos = camPos_ChangeTo_ImgPos(my_client, "IMG_03_0000000003_L.jpg");
-	
-	//
-	const auto lamda = makeLamda(ground_meta, img_pos);
 
-	//
-	constexpr double rx = 1.0;
-	constexpr double ry = -1.0;
-	constexpr double rz = 270.0;
-	const auto cam_rot = eulerToRotationMatrix(rx, ry, rz);
-	cam_rot.t(); //전치 행렬
+	//영상좌표 -> 사진좌표
+	const cv::Mat_<double> img_pos = camPos_ChangeTo_ImgPos(my_client, img_path.string());
+	
+
+	//람다
+	const double lamda = makeLamda(ground_meta, img_pos);
+
+	//카메라 위치
+	constexpr double rotation_x = 1.0;
+	constexpr double rotation_y = -1.0;
+	constexpr double rotation_z = 270.0;
+	const cv::Mat cam_rotation = eulerToRotationMatrix(rotation_x, rotation_y, rotation_z);
+	cam_rotation.t(); //전치 행렬
 
 
 	//실 좌표
-	const cv::Mat p = img_pos / lamda;
-	const cv::Mat real_pos = cam_rot * p.clone();
-	for (int i = 0; i < p.cols; ++i)
+	const cv::Mat photo = img_pos / lamda;
+	const cv::Mat real_pos = cam_rotation * photo.clone();
+	for (int i = 0; i < photo.cols; ++i)
 	{
 		real_pos.col(i) += ground_meta;
 		std::cout << "real_pos["<< i << "] =\n" << real_pos.col(i) << '\n';
 	}
+
+
+	//exe 실행시 바로 꺼지는거 방지용
+	std::string test_end;
+	std::cin >> test_end;
 
 	return 0;
 }
