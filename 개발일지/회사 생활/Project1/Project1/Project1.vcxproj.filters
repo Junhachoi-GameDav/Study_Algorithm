@@ -14,12 +14,12 @@
     <ClCompile Include="FileName.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="websocket_client.cpp">
+    <ClCompile Include="Websocket_client.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="websocket_client.h">
+    <ClInclude Include="Websocket_client.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
   </ItemGroup>

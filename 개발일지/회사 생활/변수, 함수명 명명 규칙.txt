@@ -1,0 +1,32 @@
+출처 : https://benstagram.tistory.com/146
+
+
+주로 쓰는 반의어는 아래 표로 정리하였습니다.
+
+get / set			받다/ 받다
+add / remove		추가/제거
+create / destroy		창조/파괴하다
+start / stop		시동/정지
+insert / delete		삽입/삭제
+increment / decrement	증가/감소
+old / new		구/신
+begin / end		시작/끝
+girst / last		긴/마지막
+up / down		위/아래
+min / max		최소/최대
+next / previous		다음/이전
+open /close		열다/ 닫다
+show /hide		보이다/ 숨기다
+suspend /resume		일시 정지/재개하다
+parent / child		부모/아이
+
+0. 공통 명명 규칙
+
+대소문자가 구분되며 길이에 제한이 없다.
+예약어를 사용해서는 안 된다.
+숫자로 시작해서는 안 된다.
+특수문자는 '_' 와 '$'만을 허용한다.
+파스칼 표기법 (PascalCase)과 카멜 표기법(camelCase)를 사용한다.
+      PascalCase : 모든 단어에서 첫 번째 문자는 대문자이며 나머지는 소문자이다.
+      camelCase : 최초에 사용된 단어를 제외한 첫 번째 문자가 대문자이며 나머지는 소문자이다.
+반의어는 반드시 대응하는 개념으로 사용해야 한다.

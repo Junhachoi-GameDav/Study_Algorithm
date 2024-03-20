@@ -140,10 +140,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="FileName.cpp" />
-    <ClCompile Include="websocket_client.cpp" />
+    <ClCompile Include="Websocket_client.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="websocket_client.h" />
+    <ClInclude Include="Websocket_client.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
