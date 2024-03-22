@@ -262,9 +262,10 @@ int main()
 		// std::cout << '\n' << "real_pos [" << i << "] =\n" << real_pos.col(i) << '\n';
 	}
 
+#pragma region 호모그래피(투시 변환) => 사진 모서리 구한 후 회전
+
 	const int img_width = image.cols;
 	const int img_height = image.rows;
-	//image.release();
 
 	// 사진 모서리 구하기
 	cv::Mat corners = (cv::Mat_<double>(3, 4) <<
@@ -282,18 +283,16 @@ int main()
 		0.0, -1.0, (img_height / 2),
 		0.0, 0.0, -focal_length_in_pixel);
 
-	
-	/** result
-	* @brief	- 호모그래피를 사용하여 투시 변환, 변환된 사진 출력
-	*/
-	const cv::Mat photo_corners = vision_to_photo * corners;
-	const cv::Mat rot_photo_corners = cam_rotation * photo_corners;
+	const cv::Mat rot_photo_corners = cam_rotation * vision_to_photo * corners;
+
+	// 다시 영상좌표로 전환
 	rot_photo_corners.row(2) /= -focal_length_in_pixel;
 	for (int i = 0; i < 4; ++i)
 		rot_photo_corners.col(i) /= static_cast<double* const>(static_cast<void* const>(rot_photo_corners.data))[i + 8];
-
+	
 	rot_photo_corners.row(1) = -rot_photo_corners.row(1);
 
+	// 음수를 양수로 전환
 	cv::Point2d minmax_x;
 	cv::Point2d minmax_y;
 	cv::minMaxIdx(rot_photo_corners.row(0), &minmax_x.x, &minmax_x.y);
@@ -301,11 +300,18 @@ int main()
 	cv::minMaxIdx(rot_photo_corners.row(1), &minmax_y.x, &minmax_y.y);
 	rot_photo_corners.row(1) -= minmax_y.x;
 
-	//cv::Mat homography = cv::findHomography(corners.t(), rot_photo_corners.t());
+	// 호모그래피로 투시 변환
 	cv::Mat homography = cv::findHomography(corners.t(), rot_photo_corners.t(), cv::noArray(), cv::RANSAC, 0.0);
 	cv::Size warped_size(static_cast<int>(std::floor(minmax_x.y - minmax_x.x)), static_cast<int>(std::floor(minmax_y.y - minmax_y.x)));
+
+	// 이미지 출력
 	cv::Mat copy_img;
 	cv::warpPerspective(image, copy_img, homography, warped_size);
+
+	image.release();
+
+#pragma endregion
+
 
 	// exe 실행 시 바로 꺼지는거 방지용
 	std::cout << '\n' << "아무키나 입력해서 종료";
