@@ -3,6 +3,7 @@
 //
 
 #pragma once
+#include "Image_GPS_viewerDoc.h"
 
 
 class CImageGPSviewerView : public CView
@@ -17,6 +18,7 @@ public:
 
 // 작업입니다.
 public:
+	CImage m_image;
 
 // 재정의입니다.
 public:
@@ -34,7 +36,6 @@ public:
 	virtual void AssertValid() const;
 	virtual void Dump(CDumpContext& dc) const;
 #endif
-
 protected:
 
 // 생성된 메시지 맵 함수

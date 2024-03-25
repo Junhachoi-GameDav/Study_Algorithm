@@ -5,7 +5,7 @@
 #include "FileView.h"
 #include "Resource.h"
 #include "Image_GPS_viewer.h"
-
+#include "Image_GPS_viewerView.h"
 #include <filesystem>
 
 #ifdef _DEBUG
@@ -64,6 +64,7 @@ int CFileView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_FileViewImages.Create(IDB_FILE_VIEW, 16, 0, RGB(255, 0, 255));
 	m_wndFileView.SetImageList(&m_FileViewImages, TVSIL_NORMAL);
 
+
 	m_wndToolBar.Create(this, AFX_DEFAULT_TOOLBAR_STYLE, IDR_EXPLORER);
 	m_wndToolBar.LoadToolBar(IDR_EXPLORER, 0, 0, TRUE /* 잠금 */);
 
@@ -79,7 +80,7 @@ int CFileView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_wndToolBar.SetRouteCommandsViaFrame(FALSE);
 
 	// 정적 트리 뷰 데이터를 더미 코드로 채웁니다.
-	FillFileView();
+	//FillFileView();
 	AdjustLayout();
 
 	return 0;
@@ -91,39 +92,40 @@ void CFileView::OnSize(UINT nType, int cx, int cy)
 	AdjustLayout();
 }
 
-void CFileView::FillFileView()
+/*void CFileView::FillFileView()
 {
 	HTREEITEM hRoot = m_wndFileView.InsertItem(_T("image 파일"), 0, 0);
 	m_wndFileView.SetItemState(hRoot, TVIS_BOLD, TVIS_BOLD);
 
-	//HTREEITEM hSrc = m_wndFileView.InsertItem(_T("image 소스 파일"), 0, 0, hRoot);
+	HTREEITEM hSrc = m_wndFileView.InsertItem(_T("image 소스 파일"), 0, 0, hRoot);
 
-	//m_wndFileView.InsertItem(_T("image"), 2, 2, hRoot);
-	/*m_wndFileView.InsertItem(_T("FakeApp.rc"), 1, 1, hSrc);
+	m_wndFileView.InsertItem(_T("image"), 1, 1, hRoot);
+	m_wndFileView.InsertItem(_T("FakeApp.rc"), 1, 1, hSrc);
 	m_wndFileView.InsertItem(_T("FakeAppDoc.cpp"), 1, 1, hSrc);
 	m_wndFileView.InsertItem(_T("FakeAppView.cpp"), 1, 1, hSrc);
 	m_wndFileView.InsertItem(_T("MainFrm.cpp"), 1, 1, hSrc);
-	m_wndFileView.InsertItem(_T("pch.cpp"), 1, 1, hSrc);*/
+	m_wndFileView.InsertItem(_T("pch.cpp"), 1, 1, hSrc);
 
-	/*HTREEITEM hInc = m_wndFileView.InsertItem(_T("FakeApp 헤더 파일"), 0, 0, hRoot);
+	HTREEITEM hInc = m_wndFileView.InsertItem(_T("FakeApp 헤더 파일"), 0, 0, hRoot);
 	m_wndFileView.InsertItem(_T("FakeApp.h"), 2, 2, hInc);
 	m_wndFileView.InsertItem(_T("FakeAppDoc.h"), 2, 2, hInc);
 	m_wndFileView.InsertItem(_T("FakeAppView.h"), 2, 2, hInc);
 	m_wndFileView.InsertItem(_T("Resource.h"), 2, 2, hInc);
 	m_wndFileView.InsertItem(_T("MainFrm.h"), 2, 2, hInc);
-	m_wndFileView.InsertItem(_T("pch.h"), 2, 2, hInc);*/
+	m_wndFileView.InsertItem(_T("pch.h"), 2, 2, hInc);
 
-	/*HTREEITEM hRes = m_wndFileView.InsertItem(_T("FakeApp 리소스 파일"), 0, 0, hRoot);
+	HTREEITEM hRes = m_wndFileView.InsertItem(_T("FakeApp 리소스 파일"), 0, 0, hRoot);
 
 	m_wndFileView.InsertItem(_T("FakeApp.ico"), 2, 2, hRes);
 	m_wndFileView.InsertItem(_T("FakeApp.rc2"), 2, 2, hRes);
 	m_wndFileView.InsertItem(_T("FakeAppDoc.ico"), 2, 2, hRes);
-	m_wndFileView.InsertItem(_T("FakeToolbar.bmp"), 2, 2, hRes);*/
+	m_wndFileView.InsertItem(_T("FakeToolbar.bmp"), 2, 2, hRes);
 
 	m_wndFileView.Expand(hRoot, TVE_EXPAND);
-	//m_wndFileView.Expand(hSrc, TVE_EXPAND);
-	//m_wndFileView.Expand(hInc, TVE_EXPAND);
+	m_wndFileView.Expand(hSrc, TVE_EXPAND);
+	m_wndFileView.Expand(hInc, TVE_EXPAND);
 }
+*/
 
 void CFileView::OnContextMenu(CWnd* pWnd, CPoint point)
 {
@@ -178,7 +180,43 @@ void CFileView::OnProperties()
 
 void CFileView::OnFileOpen()
 {
+	POSITION pos = AfxGetApp()->GetFirstDocTemplatePosition();
+
+	if (pos == nullptr)
+		return;
+
+	CDocTemplate* pTemplate = AfxGetApp()->GetNextDocTemplate(pos);
+
+	if (pTemplate == nullptr) 
+		return;
+
+	CDocument* pDocument = pTemplate->OpenDocumentFile(nullptr);
 	
+
+	HTREEITEM hSelectedItem = this->m_wndFileView.GetSelectedItem();
+
+	if (hSelectedItem == nullptr)
+		return;
+
+	CString selectedItemText = this->m_wndFileView.GetItemText(hSelectedItem);
+	pDocument->SetTitle(selectedItemText);
+	
+	//CView* pView = pDocument->GetNextView(pos);
+
+	//CImageGPSviewerView* pImageView = dynamic_cast<CImageGPSviewerView*>(pView);
+	//
+	//// 현재 디렉토리 가져옴
+	//std::filesystem::path current_path = std::filesystem::current_path();
+	//CString directory_path = CString(current_path.c_str());
+
+	//// jpg열기
+	//CFileDialog j_dlg(TRUE, nullptr, nullptr, OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_ALLOWMULTISELECT, _T("JPEG Files (*.jpg)|*.jpg||"));
+	//j_dlg.m_ofn.lpstrInitialDir = directory_path;
+
+	//const CString strPath = j_dlg.GetNextPathName(pos);
+	//std::filesystem::path image_path(strPath.GetString());
+
+	//pImageView->m_image.Load(strPath);
 }
 
 
@@ -258,12 +296,15 @@ void CFileView::OnChangeVisualStyle()
 
 void CFileView::UpdateFileView(const std::string& path)
 {
+	//m_wndFileView
 	CString cstrPath(path.c_str());
+	//TVITEMW tvitem;
+	//m_wndFileView.GetItem(&tvitem);
+	
+	HTREEITEM hRoot = this->m_wndFileView.InsertItem(cstrPath, 2, 2);
+	this->m_wndFileView.SetItemState(hRoot, TVIS_BOLD, TVIS_BOLD);
 
-	HTREEITEM hRoot = m_wndFileView.InsertItem(cstrPath, 0, 0);
-	m_wndFileView.SetItemState(hRoot, TVIS_BOLD, TVIS_BOLD);
-
-	m_wndFileView.Expand(hRoot, TVE_EXPAND);
+	this->m_wndFileView.Expand(hRoot, TVE_EXPAND);
 }
 
 

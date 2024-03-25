@@ -8,11 +8,14 @@
 #include "afxdialogex.h"
 #include "Image_GPS_viewer.h"
 #include "MainFrm.h"
+#include "FileView.h"
 
 #include "ChildFrm.h"
 #include "Image_GPS_viewerDoc.h"
 #include "Image_GPS_viewerView.h"
 #include <filesystem>
+
+#include <opencv2/opencv.hpp>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -206,23 +209,33 @@ void CImageGPSviewerApp::OnAppAbout()
 
 void CImageGPSviewerApp::OnFileOpen()
 {
-	//CWinAppEx::OnFileOpen();
-	CFileDialog fd(TRUE, nullptr, nullptr, OFN_FILEMUSTEXIST, _T("ALL FILES (*.*)|*.*|"));
+	// 현재 디렉토리 가져옴
+	std::filesystem::path current_path = std::filesystem::current_path();
+	CString directory_path = CString(current_path.c_str());
 	
-	if (fd.DoModal() != IDOK)
-	{
+	// jpg열기
+	CFileDialog j_dlg(TRUE, nullptr, nullptr, OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_ALLOWMULTISELECT, _T("JPEG Files (*.jpg)|*.jpg||"));
+	j_dlg.m_ofn.lpstrInitialDir = directory_path;
+	
+
+	// 다중 선택 열기
+	if (j_dlg.DoModal() != IDOK)
 		return;
+
+	POSITION pos = j_dlg.GetStartPosition();
+	
+	while (pos != nullptr)
+	{
+		const CString strPath = j_dlg.GetNextPathName(pos);
+		std::filesystem::path image_path(strPath.GetString());
+		const std::string image_name = image_path.filename().string();
+
+		//cv::Mat img = cv::imread(image_path.string());
+		//cv::imshow(image_name, img);
+		//cv::waitKey(0);
+
+		(static_cast<CMainFrame* const>(AfxGetMainWnd()))->m_wndFileView.UpdateFileView(image_name);
 	}
-
-	//const CString wstr_path = fd.GetPathName();
-	//std::wstring wstr(wstr_path);
-	std::filesystem::path image_path(fd.GetPathName().GetString());
-	std::string simage_path;
-
-	CMainFrame* main_frame{};
-	//main_frame->m_wndFileView.FillFileView();
-	main_frame->m_wndFileView.UpdateFileView(simage_path);
-
 }
 
 // CImageGPSviewerApp 사용자 지정 로드/저장 방법

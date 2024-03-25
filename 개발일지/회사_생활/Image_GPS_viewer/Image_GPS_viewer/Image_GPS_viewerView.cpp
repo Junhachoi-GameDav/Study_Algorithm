@@ -53,14 +53,25 @@ BOOL CImageGPSviewerView::PreCreateWindow(CREATESTRUCT& cs)
 
 // CImageGPSviewerView 그리기
 
-void CImageGPSviewerView::OnDraw(CDC* /*pDC*/)
+void CImageGPSviewerView::OnDraw(CDC* pDC)
 {
 	CImageGPSviewerDoc* pDoc = GetDocument();
 	ASSERT_VALID(pDoc);
 	if (!pDoc)
 		return;
+	
+	CImage img;
+	img.Create(640, 480, 8);
+	const RECT rect{ 0, 0 };
+	CClientDC dc(this);
+	img.Draw(dc, 0, 0);
 
-	// TODO: 여기에 원시 데이터에 대한 그리기 코드를 추가합니다.
+	//img.
+	//// TODO: 여기에 원시 데이터에 대한 그리기 코드를 추가합니다.
+	//if (!m_image.IsNull())
+	//{
+	//	m_image.Draw(pDC->GetSafeHdc(), 0, 0); // (0,0) 위치에 이미지 그리기
+	//}
 }
 
 

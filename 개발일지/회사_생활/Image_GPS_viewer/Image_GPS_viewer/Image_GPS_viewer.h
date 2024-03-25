@@ -25,6 +25,10 @@ public:
 	virtual BOOL InitInstance();
 	virtual int ExitInstance();
 
+public:
+	//CImage m_image;
+
+
 // 구현입니다.
 	UINT  m_nAppLook;
 	BOOL  m_bHiColorIcons;

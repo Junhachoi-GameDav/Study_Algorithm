@@ -22,16 +22,17 @@ public:
 
 	void AdjustLayout();
 	void OnChangeVisualStyle();
-	//void UpdateFileView(const std::string& path);
 
 // 특성입니다.
-protected:
+public:
+	CImage m_image;
 	CViewTree m_wndFileView;
 	CImageList m_FileViewImages;
 	CFileViewToolBar m_wndToolBar;
+	CListCtrl m_wndFileList;
 
 public:
-	void FillFileView();
+	//void FillFileView();
 	void UpdateFileView(const std::string& path);
 
 // 구현입니다.
