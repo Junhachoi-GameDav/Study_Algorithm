@@ -22,7 +22,7 @@ public:
 
 // 재정의입니다.
 public:
-	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
+//	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 	virtual BOOL LoadFrame(UINT nIDResource, DWORD dwDefaultStyle = WS_OVERLAPPEDWINDOW | FWS_ADDTOTITLE, CWnd* pParentWnd = nullptr, CCreateContext* pContext = nullptr);
 
 // 구현입니다.

@@ -185,6 +185,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnBnClickedOk();
+//	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };
 
 CAboutDlg::CAboutDlg() noexcept : CDialogEx(IDD_ABOUTBOX)
@@ -227,6 +228,7 @@ void CImageGPSviewerApp::OnFileOpen()
 	while (pos != nullptr)
 	{
 		const CString strPath = j_dlg.GetNextPathName(pos);
+		Cimg_path = strPath;
 		std::filesystem::path image_path(strPath.GetString());
 		const std::string image_name = image_path.filename().string();
 
@@ -261,9 +263,6 @@ void CImageGPSviewerApp::SaveCustomState()
 }
 
 // CImageGPSviewerApp 메시지 처리기
-
-
-
 
 
 void CAboutDlg::OnBnClickedOk()

@@ -29,6 +29,7 @@ BEGIN_MESSAGE_MAP(CImageGPSviewerView, CView)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CImageGPSviewerView::OnFilePrintPreview)
 	ON_WM_CONTEXTMENU()
 	ON_WM_RBUTTONUP()
+	ON_WM_LBUTTONDOWN()
 END_MESSAGE_MAP()
 
 // CImageGPSviewerView 생성/소멸
@@ -61,17 +62,23 @@ void CImageGPSviewerView::OnDraw(CDC* pDC)
 		return;
 	
 	CImage img;
-	img.Create(640, 480, 8);
-	const RECT rect{ 0, 0 };
+	//img.Create(640, 480, 8);
+	
+	CImageGPSviewerApp* pApp = static_cast<CImageGPSviewerApp*>(AfxGetApp());
+	
+	if (pApp == nullptr)
+		return;
+
+	HRESULT hr = img.Load(pApp->Cimg_path);
+	
+	if ( hr != S_OK || pApp->Cimg_path == "")
+		return;
+
+	//img.Create(img.GetWidth(), img.GetHeight(), 8);
+
 	CClientDC dc(this);
 	img.Draw(dc, 0, 0);
-
-	//img.
-	//// TODO: 여기에 원시 데이터에 대한 그리기 코드를 추가합니다.
-	//if (!m_image.IsNull())
-	//{
-	//	m_image.Draw(pDC->GetSafeHdc(), 0, 0); // (0,0) 위치에 이미지 그리기
-	//}
+	//pApp->Cimg_path = "";
 }
 
 
@@ -105,6 +112,15 @@ void CImageGPSviewerView::OnRButtonUp(UINT /* nFlags */, CPoint point)
 {
 	ClientToScreen(&point);
 	OnContextMenu(this, point);
+}
+
+void CImageGPSviewerView::OnLButtonDown(UINT nFlags, CPoint point)
+{
+	CImage img;
+	img.Create(640, 480, 8);
+	CClientDC dc(this);
+	img.Draw(dc, 0, 0);
+	CView::OnLButtonDown(nFlags, point);
 }
 
 void CImageGPSviewerView::OnContextMenu(CWnd* /* pWnd */, CPoint point)

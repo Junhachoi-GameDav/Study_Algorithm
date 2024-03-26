@@ -192,7 +192,6 @@ void CFileView::OnFileOpen()
 
 	CDocument* pDocument = pTemplate->OpenDocumentFile(nullptr);
 	
-
 	HTREEITEM hSelectedItem = this->m_wndFileView.GetSelectedItem();
 
 	if (hSelectedItem == nullptr)
@@ -200,7 +199,7 @@ void CFileView::OnFileOpen()
 
 	CString selectedItemText = this->m_wndFileView.GetItemText(hSelectedItem);
 	pDocument->SetTitle(selectedItemText);
-	
+
 	//CView* pView = pDocument->GetNextView(pos);
 
 	//CImageGPSviewerView* pImageView = dynamic_cast<CImageGPSviewerView*>(pView);
@@ -306,5 +305,4 @@ void CFileView::UpdateFileView(const std::string& path)
 
 	this->m_wndFileView.Expand(hRoot, TVE_EXPAND);
 }
-
 

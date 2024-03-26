@@ -8,7 +8,7 @@
 #endif
 
 #include "resource.h"       // 주 기호입니다.
-
+#include <filesystem>
 
 // CImageGPSviewerApp:
 // 이 클래스의 구현에 대해서는 Image_GPS_viewer.cpp을(를) 참조하세요.
@@ -26,8 +26,7 @@ public:
 	virtual int ExitInstance();
 
 public:
-	//CImage m_image;
-
+	CString Cimg_path;
 
 // 구현입니다.
 	UINT  m_nAppLook;
@@ -42,4 +41,9 @@ public:
 	DECLARE_MESSAGE_MAP()
 };
 
+//class CImageGPSviewerApp : public CImageGPSviewerView
+//{
+//public:
+//	void OnDraw(CDC* pDC) override;
+//};
 extern CImageGPSviewerApp theApp;

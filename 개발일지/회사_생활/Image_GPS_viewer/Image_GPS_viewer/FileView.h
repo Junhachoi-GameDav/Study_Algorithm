@@ -3,6 +3,7 @@
 
 #include "ViewTree.h"
 #include "pch.h"
+#include <map>
 
 class CFileViewToolBar : public CMFCToolBar
 {
@@ -30,6 +31,9 @@ public:
 	CImageList m_FileViewImages;
 	CFileViewToolBar m_wndToolBar;
 	CListCtrl m_wndFileList;
+
+public:
+	std::map<int, CString> m_FilePaths;
 
 public:
 	//void FillFileView();
