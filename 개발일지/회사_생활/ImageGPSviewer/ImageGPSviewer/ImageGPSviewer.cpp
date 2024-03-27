@@ -204,35 +204,34 @@ void CImageGPSviewerApp::OnAppAbout()
 
 void CImageGPSviewerApp::OnFileOpen()
 {
-	// 현재 디렉토리 가져옴
-	std::filesystem::path current_path = std::filesystem::current_path();
-	CString directory_path = CString(current_path.c_str());
-
-	// jpg열기
+	// jpg 다중 선택 열기
 	CFileDialog j_dlg(TRUE, nullptr, nullptr, OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_ALLOWMULTISELECT, _T("JPEG Files (*.jpg)|*.jpg||"));
-	j_dlg.m_ofn.lpstrInitialDir = directory_path;
 
-	// 다중 선택 열기
 	if (j_dlg.DoModal() != IDOK)
 		return;
 
 	POSITION pos = j_dlg.GetStartPosition();
-	
+
 	while (pos != nullptr)
 	{
 		const CString strPath = j_dlg.GetNextPathName(pos);
-		//Cimg_path = strPath;
 		std::filesystem::path image_path(strPath.GetString());
 		const std::string image_name = image_path.filename().string();
-		
+		dlg_filePath = j_dlg.GetPathName();
+
 		(static_cast<CMainFrame* const>(AfxGetMainWnd())->m_wndFileView.UpdateFileView(image_name));
 
-		//CDocTemplate * pTemplate = new CDocTemplate();
-		//pTemplate->OpenDocumentFile(nullptr)
+		POSITION pos = AfxGetApp()->GetFirstDocTemplatePosition();
+		if (pos == nullptr)
+			return;
+		CDocTemplate* pTemplate = AfxGetApp()->GetNextDocTemplate(pos);
+		if (pTemplate == nullptr)
+			return;
+		
+		CImageGPSviewerDoc* pDocument = static_cast<CImageGPSviewerDoc* const>(pTemplate->OpenDocumentFile(nullptr));
+		pDocument->SetTitle(static_cast<CString>(image_name.c_str()));
 
-		//CString ItemText = CString(image_name.c_str());
-		//ptemp->SetTitle(ItemText);
-		//ptemp->image_path = strPath;
+		pDocument->image_path = strPath;
 	}
 }
 

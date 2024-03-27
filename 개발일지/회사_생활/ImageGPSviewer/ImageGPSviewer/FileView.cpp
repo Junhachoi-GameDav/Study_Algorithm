@@ -44,9 +44,9 @@ BEGIN_MESSAGE_MAP(CFileView, CDockablePane)
 	ON_WM_LBUTTONDOWN()
 	ON_COMMAND(ID_PROPERTIES, OnProperties)
 	ON_COMMAND(ID_OPEN, OnFileOpen)
-	ON_COMMAND(ID_OPEN_WITH, OnFileOpenWith)
+	//ON_COMMAND(ID_OPEN_WITH, OnFileOpenWith)
 	ON_COMMAND(ID_DUMMY_COMPILE, OnDummyCompile)
-	ON_COMMAND(ID_EDIT_CUT, OnEditCut)
+	//ON_COMMAND(ID_EDIT_CUT, OnEditCut)
 	ON_COMMAND(ID_EDIT_COPY, OnEditCopy)
 	ON_COMMAND(ID_EDIT_CLEAR, OnEditClear)
 	ON_WM_PAINT()
@@ -192,6 +192,10 @@ void CFileView::OnProperties()
 
 void CFileView::OnFileOpen()
 {
+	HTREEITEM hSelectedItem = this->m_wndFileView.GetSelectedItem();
+	CString selectedItemText = this->m_wndFileView.GetItemText(hSelectedItem);
+	if (hSelectedItem == nullptr)
+		return;
 
 	POSITION pos = AfxGetApp()->GetFirstDocTemplatePosition();
 	
@@ -204,44 +208,45 @@ void CFileView::OnFileOpen()
 		return;
 
 	CImageGPSviewerDoc* pDocument = static_cast<CImageGPSviewerDoc* const>(pTemplate->OpenDocumentFile(nullptr));
-	HTREEITEM hSelectedItem = this->m_wndFileView.GetSelectedItem();
 
-	if (hSelectedItem == nullptr)
-		return;
-
-	CString selectedItemText = this->m_wndFileView.GetItemText(hSelectedItem);
 	pDocument->SetTitle(selectedItemText);
 
 	CImage img;
-	std::filesystem::path current_path = std::filesystem::current_path();
-	CString directory_path = CString(current_path.c_str());
+	//std::filesystem::path current_path = std::filesystem::current_path();
+	//CImageGPSviewerApp* file_path = static_cast<CImageGPSviewerApp* const>(AfxGetApp());
 
-	pDocument->image_path = static_cast<CString>(directory_path + "\\image\\" + selectedItemText);
+	CImageGPSviewerApp file_path;
+	CImageGPSviewerApp* test = &file_path;
+	
+	
+
+	pDocument->image_path = static_cast<CString>(test->dlg_filePath);
 }
 
-void CFileView::OnFileOpenWith()
-{
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
-}
+//void CFileView::OnFileOpenWith()
+//{
+//	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+//}
 
 void CFileView::OnDummyCompile()
 {
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
 }
 
-void CFileView::OnEditCut()
-{
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
-}
+//void CFileView::OnEditCut()
+//{
+//	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+//}
 
 void CFileView::OnEditCopy()
 {
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	OnFileOpen();
 }
 
 void CFileView::OnEditClear()
 {
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	
+
 }
 
 void CFileView::OnPaint()

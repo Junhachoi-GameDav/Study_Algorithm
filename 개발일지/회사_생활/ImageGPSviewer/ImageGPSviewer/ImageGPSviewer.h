@@ -25,7 +25,7 @@ public:
 	virtual int ExitInstance();
 
 public:
-	CString Cimg_path;
+	CString dlg_filePath;
 
 // 구현입니다.
 	UINT  m_nAppLook;

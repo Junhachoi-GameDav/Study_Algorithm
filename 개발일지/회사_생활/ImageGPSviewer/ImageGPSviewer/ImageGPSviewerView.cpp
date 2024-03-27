@@ -14,6 +14,8 @@
 #include "ImageGPSviewerView.h"
 #include "FileView.h"
 
+#include <opencv2/opencv.hpp>
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -61,15 +63,97 @@ void CImageGPSviewerView::OnDraw(CDC* pDC)
 	if (!pDoc)
 		return;
 
-	pDoc->image_path;
+	CString str_temp(pDoc->image_path);
+	std::string str_img_path(CW2A(str_temp.GetString()));
 
+	cv::Mat img = cv::imread(str_img_path);
+
+	if (img.empty())
+		return;
+
+	CRect Rect;
+	GetClientRect(&Rect);
+
+	float Width = static_cast<float>(Rect.Width());
+	float Height = static_cast<float>(Rect.Height());
+	float Rate = Width / Height;
+	float imgRate = static_cast<float>(img.cols) / img.rows;
+
+	int targetWidth;
+	int targetHeight;
+
+	if (imgRate > Rate)
+	{
+		targetWidth = static_cast<int>(Width);
+		targetHeight = static_cast<int>(targetWidth / imgRate);
+	}
+	else
+	{
+		targetHeight = static_cast<int>(Height);
+		targetWidth = static_cast<int>(targetHeight * imgRate);
+	}
+
+	int x = (Rect.Width() - targetWidth) / 2;
+	int y = (Rect.Height() - targetHeight) / 2;
+
+	// 이미지 크기 조정
+	cv::Mat resizedImg;
+	cv::resize(img, resizedImg, cv::Size(targetWidth, targetHeight)); 
+
+	// MFC 호환을 위해 색상 공간 변경
+	cv::Mat imgBGR;
+	cv::cvtColor(resizedImg, imgBGR, cv::COLOR_BGR2BGRA); 
+
+	BITMAPINFO bitmapInfo;
+	memset(&bitmapInfo, 0, sizeof(bitmapInfo));
+	bitmapInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+	bitmapInfo.bmiHeader.biWidth = imgBGR.cols;
+	bitmapInfo.bmiHeader.biHeight = -imgBGR.rows; // 상단에서 하단으로 그리기
+	bitmapInfo.bmiHeader.biPlanes = 1;
+	bitmapInfo.bmiHeader.biBitCount = 32;
+	bitmapInfo.bmiHeader.biCompression = BI_RGB;
+
+	// OpenCV 이미지를 MFC CDC에 그리기
+	StretchDIBits(pDC->m_hDC, x, y, targetWidth, targetHeight, 0, 0, imgBGR.cols, imgBGR.rows,
+		imgBGR.data, &bitmapInfo, DIB_RGB_COLORS, SRCCOPY);
+
+	/*
 	CImage img;
 	HRESULT hr = img.Load(pDoc->image_path);
 	if (hr != S_OK)
 		return;
-	img.Draw(pDC->m_hDC, 0, 0);
+
+	CRect Rect;
+	GetClientRect(&Rect);
+
+	float Width = static_cast<float>(Rect.Width());
+	float Height = static_cast<float>(Rect.Height());
+	float Rate = Width / Height;
+	float imgRate = static_cast<float>(img.GetWidth()) / img.GetHeight();
+
+	// 이미지와 클라이언트 영역의 비율에 따라 적절히 크기 조정
+	float targetWidth;
+	float targetHeight;
+
+	if (imgRate > Rate)
+	{
+		targetWidth = Width;
+		targetHeight = targetWidth / imgRate;
+	}
+	else
+	{
+		targetHeight = Height;
+		targetWidth = targetHeight * imgRate;
+	}
+
+	// 이미지가 뷰의 중앙에 위치하도록 조정
+	int x = (Rect.Width() - static_cast<int>(targetWidth)) / 2;
+	int y = (Rect.Height() - static_cast<int>(targetHeight)) / 2;
+
+	// 수정된 위치와 크기로 이미지 그리기
+	img.Draw(pDC->m_hDC, x, y, static_cast<int>(targetWidth), static_cast<int>(targetHeight));*/
 	
-	//CClientDC dc(this);
+	//img.Draw(pDC->m_hDC, 0, 0);
 
 	// TODO: 여기에 원시 데이터에 대한 그리기 코드를 추가합니다.
 }
