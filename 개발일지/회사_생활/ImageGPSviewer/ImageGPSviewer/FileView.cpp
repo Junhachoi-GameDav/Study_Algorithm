@@ -192,35 +192,26 @@ void CFileView::OnProperties()
 
 void CFileView::OnFileOpen()
 {
+	// 파일 선택
 	HTREEITEM hSelectedItem = this->m_wndFileView.GetSelectedItem();
 	CString selectedItemText = this->m_wndFileView.GetItemText(hSelectedItem);
 	if (hSelectedItem == nullptr)
 		return;
 
 	POSITION pos = AfxGetApp()->GetFirstDocTemplatePosition();
-	
 	if (pos == nullptr)
 		return;
 
 	CDocTemplate* pTemplate = AfxGetApp()->GetNextDocTemplate(pos);
-
 	if (pTemplate == nullptr)
 		return;
 
 	CImageGPSviewerDoc* pDocument = static_cast<CImageGPSviewerDoc* const>(pTemplate->OpenDocumentFile(nullptr));
-
 	pDocument->SetTitle(selectedItemText);
 
-	CImage img;
-	//std::filesystem::path current_path = std::filesystem::current_path();
-	//CImageGPSviewerApp* file_path = static_cast<CImageGPSviewerApp* const>(AfxGetApp());
-
-	CImageGPSviewerApp file_path;
-	CImageGPSviewerApp* test = &file_path;
-	
-	
-
-	pDocument->image_path = static_cast<CString>(test->dlg_filePath);
+	const std::map<CString, CString>& file_path = (static_cast<CImageGPSviewerApp* const>(AfxGetApp())->dlg_filePaths);
+	const CString file = file_path.at(selectedItemText);
+	pDocument->image_path = static_cast<CString>(file);
 }
 
 //void CFileView::OnFileOpenWith()
@@ -245,8 +236,15 @@ void CFileView::OnEditCopy()
 
 void CFileView::OnEditClear()
 {
-	
+	HTREEITEM hSelectedItem = this->m_wndFileView.GetSelectedItem();
+	CString selectedItemText = this->m_wndFileView.GetItemText(hSelectedItem);
+	if (hSelectedItem == nullptr)
+		return;
 
+	std::map<CString, CString>& file_path = (static_cast<CImageGPSviewerApp* const>(AfxGetApp())->dlg_filePaths);
+	file_path.erase(selectedItemText);
+
+	this->m_wndFileView.DeleteItem(hSelectedItem);
 }
 
 void CFileView::OnPaint()

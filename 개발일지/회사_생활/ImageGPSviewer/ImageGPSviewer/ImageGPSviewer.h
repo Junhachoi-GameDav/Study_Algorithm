@@ -8,6 +8,7 @@
 #endif
 
 #include "resource.h"       // 주 기호입니다.
+#include "pch.h"
 
 // CImageGPSviewerApp:
 // 이 클래스의 구현에 대해서는 ImageGPSviewer.cpp을(를) 참조하세요.
@@ -25,7 +26,8 @@ public:
 	virtual int ExitInstance();
 
 public:
-	CString dlg_filePath;
+	std::map<CString,CString> dlg_filePaths;
+	//std::set<CString> set_dlg_filePaths;
 
 // 구현입니다.
 	UINT  m_nAppLook;

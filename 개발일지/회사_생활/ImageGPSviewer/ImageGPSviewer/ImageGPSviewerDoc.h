@@ -4,7 +4,17 @@
 
 
 #pragma once
+#include "pch.h"
+#include <span>
 
+// Proj
+#include <proj.h>
+
+// opencv
+#include <opencv2/opencv.hpp>
+
+// Exiv2
+#include <exiv2/exiv2.hpp>
 
 class CImageGPSviewerDoc : public CDocument
 {
@@ -17,6 +27,11 @@ public:
 
 // 작업입니다.
 public:
+	double convert_rational_to_decimal(const Exiv2::Rational& rational);
+	double convert_gps_lon_lat(const Exiv2::Value& value);
+	double convert_gps_alt(const Exiv2::Value& value);
+	std::array<double, 3> meta_transform(const std::span<double>& s);
+	std::array<double, 3> read_meta_data(const std::string& img_path);
 
 // 재정의입니다.
 public:
@@ -36,6 +51,12 @@ public:
 #endif
 
 	CString image_path;
+
+public:
+	std::array<double, 3> meta_data;
+	std::array<double, 3> img_meta;
+	cv::Mat_<double> ground_meta;
+
 protected:
 
 // 생성된 메시지 맵 함수

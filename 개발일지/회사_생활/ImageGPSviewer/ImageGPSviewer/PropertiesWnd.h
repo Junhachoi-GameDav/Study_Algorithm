@@ -1,5 +1,6 @@
 ﻿
 #pragma once
+#include "pch.h"
 
 class CPropertiesToolBar : public CMFCToolBar
 {
@@ -37,6 +38,12 @@ protected:
 // 구현입니다.
 public:
 	virtual ~CPropertiesWnd();
+
+public:
+	std::map<CString, int> prop_mp;
+
+public:
+	void OnPropertyChanged(CMFCPropertyGridProperty* pProp);
 
 protected:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);

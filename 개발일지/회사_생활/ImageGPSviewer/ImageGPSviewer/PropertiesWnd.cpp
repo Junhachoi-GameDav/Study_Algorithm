@@ -6,6 +6,10 @@
 #include "Resource.h"
 #include "MainFrm.h"
 #include "ImageGPSviewer.h"
+#include "ImageGPSviewerView.h"
+
+#include <opencv2/opencv.hpp>
+#include <exiv2/exiv2.hpp>
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -23,6 +27,21 @@ CPropertiesWnd::CPropertiesWnd() noexcept
 
 CPropertiesWnd::~CPropertiesWnd()
 {
+}
+
+void CPropertiesWnd::OnPropertyChanged(CMFCPropertyGridProperty* pProp)
+{
+	/*CString propName = pProp->GetName();
+	COleVariant propValue = pProp->GetValue();
+	
+	if (propName == _T("위도"))
+	{
+		CImageGPSviewerView* test = static_cast<CImageGPSviewerView* const>(AfxGetMainWnd());
+		propValue = test->ground_meta.at<double>(0, 0);
+		pProp->SetValue(propValue);
+	}
+	
+	m_wndPropList.UpdateWindow();*/
 }
 
 BEGIN_MESSAGE_MAP(CPropertiesWnd, CDockablePane)
@@ -53,11 +72,11 @@ void CPropertiesWnd::AdjustLayout()
 	CRect rectClient;
 	GetClientRect(rectClient);
 
-	int cyTlb = m_wndToolBar.CalcFixedLayout(FALSE, TRUE).cy;
+	//int cyTlb = m_wndToolBar.CalcFixedLayout(FALSE, TRUE).cy;
 
 	m_wndObjectCombo.SetWindowPos(nullptr, rectClient.left, rectClient.top, rectClient.Width(), m_nComboHeight, SWP_NOACTIVATE | SWP_NOZORDER);
-	m_wndToolBar.SetWindowPos(nullptr, rectClient.left, rectClient.top + m_nComboHeight, rectClient.Width(), cyTlb, SWP_NOACTIVATE | SWP_NOZORDER);
-	m_wndPropList.SetWindowPos(nullptr, rectClient.left, rectClient.top + m_nComboHeight + cyTlb, rectClient.Width(), rectClient.Height() -(m_nComboHeight+cyTlb), SWP_NOACTIVATE | SWP_NOZORDER);
+	//m_wndToolBar.SetWindowPos(nullptr, rectClient.left, rectClient.top + m_nComboHeight, rectClient.Width(), cyTlb, SWP_NOACTIVATE | SWP_NOZORDER);
+	m_wndPropList.SetWindowPos(nullptr, rectClient.left, rectClient.top + m_nComboHeight, rectClient.Width(), rectClient.Height() -(m_nComboHeight), SWP_NOACTIVATE | SWP_NOZORDER);
 }
 
 int CPropertiesWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
@@ -77,7 +96,7 @@ int CPropertiesWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;      // 만들지 못했습니다.
 	}
 
-	m_wndObjectCombo.AddString(_T("애플리케이션"));
+	//m_wndObjectCombo.AddString(_T("애플리케이션"));
 	m_wndObjectCombo.AddString(_T("속성 창"));
 	m_wndObjectCombo.SetCurSel(0);
 
@@ -121,18 +140,64 @@ void CPropertiesWnd::OnExpandAllProperties()
 	m_wndPropList.ExpandAll();
 }
 
-void CPropertiesWnd::OnUpdateExpandAllProperties(CCmdUI* /* pCmdUI */)
+void CPropertiesWnd::OnUpdateExpandAllProperties(CCmdUI* pCmdUI)
 {
+	//CMFCPropertyGridProperty* prop = m_wndPropList.GetProperty
+	//CString& propName =
+
+	for (int i = 0; i < m_wndPropList.GetPropertyCount(); ++i)
+	{
+		CMFCPropertyGridProperty* prop = m_wndPropList.GetProperty(i);
+
+		if (prop == nullptr)
+			break;
+
+		for (int j = 0; j < prop->GetSubItemsCount(); ++j)
+		{
+			CMFCPropertyGridProperty* sub_prop = prop->GetSubItem(j);
+
+			if (sub_prop == nullptr)
+				break;
+			//////////////////////////////////////////////
+			//POSITION template_pos = AfxGetApp()->GetFirstDocTemplatePosition();
+			//if (template_pos == nullptr)
+			//	return;
+			//
+			//CDocTemplate* pTemplate = AfxGetApp()->GetNextDocTemplate(template_pos);
+			//if (pTemplate == nullptr)
+			//	return;
+			//
+			//POSITION doc_pos = pTemplate->GetFirstDocPosition();
+			//CImageGPSviewerDoc* doc = static_cast<CImageGPSviewerDoc*>(pTemplate->GetNextDoc(doc_pos));
+
+			CImageGPSviewerView* view_ground_meta = static_cast<CImageGPSviewerView* const>(AfxGetMainWnd());
+			//auto* doc = view_ground_meta->GetDocument();
+
+			if (view_ground_meta == nullptr)
+				break;
+
+			if (prop_mp.find(sub_prop->GetName()) == prop_mp.end())
+				break;
+			
+			double value = view_ground_meta->ground_meta.at<double>(prop_mp[sub_prop->GetName()], 0);
+			COleVariant propValue(value);
+			sub_prop->SetValue(propValue);
+			
+			//COleVariant propValue = view_ground_meta->ground_meta.at<double>(prop_mp[sub_prop->GetName()], 0);
+			//sub_prop->SetValue(propValue);
+		}
+	}
+	m_wndPropList.UpdateWindow();
 }
 
 void CPropertiesWnd::OnSortProperties()
 {
-	m_wndPropList.SetAlphabeticMode(!m_wndPropList.IsAlphabeticMode());
+	//m_wndPropList.SetAlphabeticMode(!m_wndPropList.IsAlphabeticMode());
 }
 
 void CPropertiesWnd::OnUpdateSortProperties(CCmdUI* pCmdUI)
 {
-	pCmdUI->SetCheck(m_wndPropList.IsAlphabeticMode());
+	//pCmdUI->SetCheck(m_wndPropList.IsAlphabeticMode());
 }
 
 void CPropertiesWnd::OnProperties1()
@@ -159,13 +224,17 @@ void CPropertiesWnd::InitPropList()
 {
 	SetPropListFont();
 
+
 	m_wndPropList.EnableHeaderCtrl(FALSE);
 	m_wndPropList.EnableDescriptionArea();
 	m_wndPropList.SetVSDotNetLook();
 	m_wndPropList.MarkModifiedProperties();
 
+
 	// 지상 좌표
-	CMFCPropertyGridProperty* pRealPos = new CMFCPropertyGridProperty(_T("지상 좌표"));
+
+
+	CMFCPropertyGridProperty* pRealPos = new CMFCPropertyGridProperty(_T("GPS"));
 	pRealPos->AddSubItem(new CMFCPropertyGridProperty(_T("위도"), (_variant_t)0l, _T("")));
 	pRealPos->AddSubItem(new CMFCPropertyGridProperty(_T("경도"), (_variant_t)0l, _T("")));
 	pRealPos->AddSubItem(new CMFCPropertyGridProperty(_T("고도"), (_variant_t)0l, _T("")));
@@ -173,20 +242,20 @@ void CPropertiesWnd::InitPropList()
 	m_wndPropList.AddProperty(pRealPos);
 
 	// 영상 좌표
-	CMFCPropertyGridProperty* pVideoPos = new CMFCPropertyGridProperty(_T("영상 좌표"));
-	pVideoPos->AddSubItem(new CMFCPropertyGridProperty(_T("위도"), (_variant_t)0l, _T("")));
-	pVideoPos->AddSubItem(new CMFCPropertyGridProperty(_T("경도"), (_variant_t)0l, _T("")));
-	pVideoPos->AddSubItem(new CMFCPropertyGridProperty(_T("고도"), (_variant_t)0l, _T("")));
+	/*CMFCPropertyGridProperty* pVideoPos = new CMFCPropertyGridProperty(_T("영상 좌표"));
+	pVideoPos->AddSubItem(new CMFCPropertyGridProperty(_T("X"), (_variant_t)0l, _T("")));
+	pVideoPos->AddSubItem(new CMFCPropertyGridProperty(_T("Y"), (_variant_t)0l, _T("")));*/
+	//pVideoPos->AddSubItem(new CMFCPropertyGridProperty(_T("고도"), (_variant_t)0l, _T("")));
 
-	m_wndPropList.AddProperty(pVideoPos);
+	//m_wndPropList.AddProperty(pVideoPos);
 
 	// 사진 좌표
-	CMFCPropertyGridProperty* pImgPos = new CMFCPropertyGridProperty(_T("영상 좌표"));
-	pImgPos->AddSubItem(new CMFCPropertyGridProperty(_T("위도"), (_variant_t)0l, _T("")));
-	pImgPos->AddSubItem(new CMFCPropertyGridProperty(_T("경도"), (_variant_t)0l, _T("")));
-	pImgPos->AddSubItem(new CMFCPropertyGridProperty(_T("고도"), (_variant_t)0l, _T("")));
+	/*CMFCPropertyGridProperty* pImgPos = new CMFCPropertyGridProperty(_T("사진 좌표"));
+	pImgPos->AddSubItem(new CMFCPropertyGridProperty(_T("X"), (_variant_t)0l, _T("")));
+	pImgPos->AddSubItem(new CMFCPropertyGridProperty(_T("Y"), (_variant_t)0l, _T("")));*/
+	//pImgPos->AddSubItem(new CMFCPropertyGridProperty(_T("고도"), (_variant_t)0l, _T("")));
 
-	m_wndPropList.AddProperty(pImgPos);
+	//m_wndPropList.AddProperty(pImgPos);
 
 	// 이미지 크기
 	CMFCPropertyGridProperty* pSize = new CMFCPropertyGridProperty(_T("이미지 크기"));
@@ -205,79 +274,16 @@ void CPropertiesWnd::InitPropList()
 	pProperty->AddSubItem(new CMFCPropertyGridProperty(_T("폴더 경로"), _T("")));
 
 	m_wndPropList.AddProperty(pProperty);
-	//pGroup1->AddSubItem(new CMFCPropertyGridProperty(_T("크기"), (_variant_t) false, _T("창에 굵은 글꼴이 아닌 글꼴을 지정하고, 컨트롤에 3D 테두리를 지정합니다.")));
-	//
-	//CMFCPropertyGridProperty* pProp = new CMFCPropertyGridProperty(_T("높히"), _T("Dialog Frame"), _T("None, Thin, Resizable 또는 Dialog Frame 중 하나를 지정합니다."));
-	//pProp->AddOption(_T("None"));
-	//pProp->AddOption(_T("Thin"));
-	//pProp->AddOption(_T("Resizable"));
-	//pProp->AddOption(_T("Dialog Frame"));
-	//pProp->AllowEdit(FALSE);
-	//
-	//pGroup1->AddSubItem(pProp);
-	//pGroup1->AddSubItem(new CMFCPropertyGridProperty(_T("캡션"), (_variant_t) _T("정보"), _T("창의 제목 표시줄에 표시되는 텍스트를 지정합니다.")));
-	//
-	//CMFCPropertyGridProperty* pSize = new CMFCPropertyGridProperty(_T("이미지 크기"), 0, TRUE);
-	//
-	//pProp = new CMFCPropertyGridProperty(_T("높이"), (_variant_t) 250l, _T("창의 높이를 지정합니다."));
-	//pProp->EnableSpinControl(TRUE, 50, 300);
-	//pSize->AddSubItem(pProp);
-	//
-	//pProp = new CMFCPropertyGridProperty( _T("너비"), (_variant_t) 150l, _T("창의 너비를 지정합니다."));
-	//pProp->EnableSpinControl(TRUE, 50, 200);
-	//pSize->AddSubItem(pProp);
-	//
-	//
-	//CMFCPropertyGridProperty* pGroup2 = new CMFCPropertyGridProperty(_T("글꼴"));
-	//
-	//LOGFONT lf;
-	//CFont* font = CFont::FromHandle((HFONT) GetStockObject(DEFAULT_GUI_FONT));
-	//font->GetLogFont(&lf);
-	//
-	//_tcscpy_s(lf.lfFaceName, _T("맑은 고딕"));
-	//
-	//pGroup2->AddSubItem(new CMFCPropertyGridFontProperty(_T("글꼴"), lf, CF_EFFECTS | CF_SCREENFONTS, _T("창의 기본 글꼴을 지정합니다.")));
-	//pGroup2->AddSubItem(new CMFCPropertyGridProperty(_T("시스템 글꼴을 사용합니다."), (_variant_t) true, _T("창에서 MS Shell Dlg 글꼴을 사용하도록 지정합니다.")));
-	//
-	//m_wndPropList.AddProperty(pGroup2);
-	//
-	//CMFCPropertyGridProperty* pGroup3 = new CMFCPropertyGridProperty(_T("기타"));
-	//pProp = new CMFCPropertyGridProperty(_T("(이름)"), _T("애플리케이션"));
-	//pProp->Enable(FALSE);
-	//pGroup3->AddSubItem(pProp);
-	//
-	//CMFCPropertyGridColorProperty* pColorProp = new CMFCPropertyGridColorProperty(_T("창 색상"), RGB(210, 192, 254), nullptr, _T("창의 기본 색상을 지정합니다."));
-	//pColorProp->EnableOtherButton(_T("기타..."));
-	//pColorProp->EnableAutomaticButton(_T("기본값"), ::GetSysColor(COLOR_3DFACE));
-	//pGroup3->AddSubItem(pColorProp);
-	//
-	//static const TCHAR szFilter[] = _T("아이콘 파일(*.ico)|*.ico|모든 파일(*.*)|*.*||");
-	//pGroup3->AddSubItem(new CMFCPropertyGridFileProperty(_T("아이콘"), TRUE, _T(""), _T("ico"), 0, szFilter, _T("창 아이콘을 지정합니다.")));
-	//
-	//pGroup3->AddSubItem(new CMFCPropertyGridFileProperty(_T("폴더"), _T("c:\\")));
-	//
-	//m_wndPropList.AddProperty(pGroup3);
-	//
-	//CMFCPropertyGridProperty* pGroup4 = new CMFCPropertyGridProperty(_T("계층"));
-	//
-	//CMFCPropertyGridProperty* pGroup41 = new CMFCPropertyGridProperty(_T("첫번째 하위 수준"));
-	//pGroup4->AddSubItem(pGroup41);
-	//
-	//CMFCPropertyGridProperty* pGroup411 = new CMFCPropertyGridProperty(_T("두 번째 하위 수준"));
-	//pGroup41->AddSubItem(pGroup411);
-	//
-	//pGroup411->AddSubItem(new CMFCPropertyGridProperty(_T("항목 1"), (_variant_t) _T("값 1"), _T("설명입니다.")));
-	//pGroup411->AddSubItem(new CMFCPropertyGridProperty(_T("항목 2"), (_variant_t) _T("값 2"), _T("설명입니다.")));
-	//pGroup411->AddSubItem(new CMFCPropertyGridProperty(_T("항목 3"), (_variant_t) _T("값 3"), _T("설명입니다.")));
-	//
-	//pGroup4->Expand(FALSE);
-	//m_wndPropList.AddProperty(pGroup4);
+	
 }
 
 void CPropertiesWnd::OnSetFocus(CWnd* pOldWnd)
 {
 	CDockablePane::OnSetFocus(pOldWnd);
 	m_wndPropList.SetFocus();
+
+	/*CMFCPropertyGridCtrl pRealPos = m_wndPropList.;
+	OnPropertyChanged(pRealPos);*/
 }
 
 void CPropertiesWnd::OnSettingChange(UINT uFlags, LPCTSTR lpszSection)

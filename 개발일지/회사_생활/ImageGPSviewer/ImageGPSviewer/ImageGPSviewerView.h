@@ -17,6 +17,9 @@ public:
 
 // 작업입니다.
 public:
+	std::array<double, 3> meta_data;
+	std::array<double, 3> img_meta;
+	cv::Mat_<double> ground_meta;
 
 // 재정의입니다.
 public:

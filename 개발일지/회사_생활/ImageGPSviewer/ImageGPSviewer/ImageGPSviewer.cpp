@@ -217,7 +217,7 @@ void CImageGPSviewerApp::OnFileOpen()
 		const CString strPath = j_dlg.GetNextPathName(pos);
 		std::filesystem::path image_path(strPath.GetString());
 		const std::string image_name = image_path.filename().string();
-		dlg_filePath = j_dlg.GetPathName();
+		dlg_filePaths.insert(std::make_pair(static_cast<CString>(image_name.c_str()) ,strPath));
 
 		(static_cast<CMainFrame* const>(AfxGetMainWnd())->m_wndFileView.UpdateFileView(image_name));
 

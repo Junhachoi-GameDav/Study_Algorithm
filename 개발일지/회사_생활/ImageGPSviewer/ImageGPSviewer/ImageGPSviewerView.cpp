@@ -14,6 +14,7 @@
 #include "ImageGPSviewerView.h"
 #include "FileView.h"
 
+// opencv
 #include <opencv2/opencv.hpp>
 
 #ifdef _DEBUG
@@ -71,6 +72,13 @@ void CImageGPSviewerView::OnDraw(CDC* pDC)
 	if (img.empty())
 		return;
 
+	// 메타데이터 받기
+	pDoc->meta_data = pDoc->read_meta_data(str_img_path);
+	pDoc->img_meta = pDoc->meta_transform(pDoc->meta_data);
+	pDoc->ground_meta = (cv::Mat_<double>(3, 1) << pDoc->img_meta[0], pDoc->img_meta[1], pDoc->img_meta[2]);
+
+
+#pragma region 그리기
 	CRect Rect;
 	GetClientRect(&Rect);
 
@@ -116,42 +124,7 @@ void CImageGPSviewerView::OnDraw(CDC* pDC)
 	// OpenCV 이미지를 MFC CDC에 그리기
 	StretchDIBits(pDC->m_hDC, x, y, targetWidth, targetHeight, 0, 0, imgBGR.cols, imgBGR.rows,
 		imgBGR.data, &bitmapInfo, DIB_RGB_COLORS, SRCCOPY);
-
-	/*
-	CImage img;
-	HRESULT hr = img.Load(pDoc->image_path);
-	if (hr != S_OK)
-		return;
-
-	CRect Rect;
-	GetClientRect(&Rect);
-
-	float Width = static_cast<float>(Rect.Width());
-	float Height = static_cast<float>(Rect.Height());
-	float Rate = Width / Height;
-	float imgRate = static_cast<float>(img.GetWidth()) / img.GetHeight();
-
-	// 이미지와 클라이언트 영역의 비율에 따라 적절히 크기 조정
-	float targetWidth;
-	float targetHeight;
-
-	if (imgRate > Rate)
-	{
-		targetWidth = Width;
-		targetHeight = targetWidth / imgRate;
-	}
-	else
-	{
-		targetHeight = Height;
-		targetWidth = targetHeight * imgRate;
-	}
-
-	// 이미지가 뷰의 중앙에 위치하도록 조정
-	int x = (Rect.Width() - static_cast<int>(targetWidth)) / 2;
-	int y = (Rect.Height() - static_cast<int>(targetHeight)) / 2;
-
-	// 수정된 위치와 크기로 이미지 그리기
-	img.Draw(pDC->m_hDC, x, y, static_cast<int>(targetWidth), static_cast<int>(targetHeight));*/
+#pragma endregion
 	
 	//img.Draw(pDC->m_hDC, 0, 0);
 
