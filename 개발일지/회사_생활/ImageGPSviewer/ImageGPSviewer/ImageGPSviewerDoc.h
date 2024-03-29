@@ -50,7 +50,7 @@ public:
 	virtual void Dump(CDumpContext& dc) const;
 #endif
 
-	CString image_path;
+	CString image_path = _T("");
 
 public:
 	std::array<double, 3> meta_data;

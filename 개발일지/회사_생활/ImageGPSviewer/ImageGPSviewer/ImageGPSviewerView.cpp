@@ -40,20 +40,19 @@ END_MESSAGE_MAP()
 CImageGPSviewerView::CImageGPSviewerView() noexcept
 {
 	// TODO: 여기에 생성 코드를 추가합니다.
-
 }
 
-CImageGPSviewerView::~CImageGPSviewerView()
-{
-}
+//CImageGPSviewerView::~CImageGPSviewerView()
+//{
+//}
 
-BOOL CImageGPSviewerView::PreCreateWindow(CREATESTRUCT& cs)
-{
-	// TODO: CREATESTRUCT cs를 수정하여 여기에서
-	//  Window 클래스 또는 스타일을 수정합니다.
-
-	return CView::PreCreateWindow(cs);
-}
+//BOOL CImageGPSviewerView::PreCreateWindow(CREATESTRUCT& cs)
+//{
+//	// TODO: CREATESTRUCT cs를 수정하여 여기에서
+//	//  Window 클래스 또는 스타일을 수정합니다.
+//
+//	return CView::PreCreateWindow(cs);
+//}
 
 // CImageGPSviewerView 그리기
 
@@ -71,12 +70,6 @@ void CImageGPSviewerView::OnDraw(CDC* pDC)
 
 	if (img.empty())
 		return;
-
-	// 메타데이터 받기
-	pDoc->meta_data = pDoc->read_meta_data(str_img_path);
-	pDoc->img_meta = pDoc->meta_transform(pDoc->meta_data);
-	pDoc->ground_meta = (cv::Mat_<double>(3, 1) << pDoc->img_meta[0], pDoc->img_meta[1], pDoc->img_meta[2]);
-
 
 #pragma region 그리기
 	CRect Rect;
@@ -125,38 +118,43 @@ void CImageGPSviewerView::OnDraw(CDC* pDC)
 	StretchDIBits(pDC->m_hDC, x, y, targetWidth, targetHeight, 0, 0, imgBGR.cols, imgBGR.rows,
 		imgBGR.data, &bitmapInfo, DIB_RGB_COLORS, SRCCOPY);
 #pragma endregion
-	
-	//img.Draw(pDC->m_hDC, 0, 0);
 
 	// TODO: 여기에 원시 데이터에 대한 그리기 코드를 추가합니다.
+	
+	// 메타데이터 받기
+	pDoc->meta_data = pDoc->read_meta_data(str_img_path);
+	pDoc->img_meta = pDoc->meta_transform(pDoc->meta_data);
+	pDoc->ground_meta = (cv::Mat_<double>(3, 1) << pDoc->img_meta[0], pDoc->img_meta[1], pDoc->img_meta[2]);
+
+
 }
 
 
 // CImageGPSviewerView 인쇄
 
-
-void CImageGPSviewerView::OnFilePrintPreview()
-{
-#ifndef SHARED_HANDLERS
-	AFXPrintPreview(this);
-#endif
-}
-
-BOOL CImageGPSviewerView::OnPreparePrinting(CPrintInfo* pInfo)
-{
-	// 기본적인 준비
-	return DoPreparePrinting(pInfo);
-}
-
-void CImageGPSviewerView::OnBeginPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
-{
-	// TODO: 인쇄하기 전에 추가 초기화 작업을 추가합니다.
-}
-
-void CImageGPSviewerView::OnEndPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
-{
-	// TODO: 인쇄 후 정리 작업을 추가합니다.
-}
+//
+//void CImageGPSviewerView::OnFilePrintPreview()
+//{
+//#ifndef SHARED_HANDLERS
+//	AFXPrintPreview(this);
+//#endif
+//}
+//
+//BOOL CImageGPSviewerView::OnPreparePrinting(CPrintInfo* pInfo)
+//{
+//	// 기본적인 준비
+//	return DoPreparePrinting(pInfo);
+//}
+//
+//void CImageGPSviewerView::OnBeginPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
+//{
+//	// TODO: 인쇄하기 전에 추가 초기화 작업을 추가합니다.
+//}
+//
+//void CImageGPSviewerView::OnEndPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
+//{
+//	// TODO: 인쇄 후 정리 작업을 추가합니다.
+//}
 
 void CImageGPSviewerView::OnRButtonUp(UINT /* nFlags */, CPoint point)
 {

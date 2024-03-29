@@ -2,14 +2,15 @@
 #include "pch.h"
 #include "framework.h"
 
-#include "PropertiesWnd.h"
-#include "Resource.h"
-#include "MainFrm.h"
 #include "ImageGPSviewer.h"
 #include "ImageGPSviewerView.h"
+#include "ImageGPSviewerDoc.h"
+#include "MainFrm.h"
+#include "PropertiesWnd.h"
+#include "Resource.h"
 
-#include <opencv2/opencv.hpp>
 #include <exiv2/exiv2.hpp>
+#include <opencv2/opencv.hpp>
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -20,14 +21,15 @@ static char THIS_FILE[]=__FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // CResourceViewBar
 
-CPropertiesWnd::CPropertiesWnd() noexcept
+CPropertiesWnd::CPropertiesWnd() noexcept :
+	m_nComboHeight(0)
 {
-	m_nComboHeight = 0;
+	//m_nComboHeight = 0;
 }
 
-CPropertiesWnd::~CPropertiesWnd()
-{
-}
+//CPropertiesWnd::~CPropertiesWnd()
+//{
+//}
 
 void CPropertiesWnd::OnPropertyChanged(CMFCPropertyGridProperty* pProp)
 {
@@ -142,51 +144,54 @@ void CPropertiesWnd::OnExpandAllProperties()
 
 void CPropertiesWnd::OnUpdateExpandAllProperties(CCmdUI* pCmdUI)
 {
-	//CMFCPropertyGridProperty* prop = m_wndPropList.GetProperty
-	//CString& propName =
+	POSITION templatePos = AfxGetApp()->GetFirstDocTemplatePosition();
+	if (templatePos == nullptr)
+		return;
 
-	for (int i = 0; i < m_wndPropList.GetPropertyCount(); ++i)
+	CDocTemplate* pTemplate = AfxGetApp()->GetNextDocTemplate(templatePos);
+	if (pTemplate == nullptr)
+		return;
+	
+	POSITION docPos = pTemplate->GetFirstDocPosition();
+	if (docPos == nullptr)
+		return;
+
+	CImageGPSviewerDoc* pDocument = static_cast<CImageGPSviewerDoc*>(pTemplate->GetNextDoc(docPos));
+	if (pDocument == nullptr)
+		return;
+
+	// GPS
+	CMFCPropertyGridProperty* GPS_prop = m_wndPropList.GetProperty(0);
+	if (GPS_prop == nullptr)
+		return;
+	//const COleVariant gpsinfo[3]
+	//{
+	//	pDocument->ground_meta.at<double>(0, 0),
+	//	pDocument->ground_meta.at<double>(1, 0),
+	//	pDocument->ground_meta.at<double>(2, 0)
+	//};
+	//GPS_prop->GetSubItem(0)->SetValue(gpsinfo[0]);
+	//GPS_prop->GetSubItem(1)->SetValue(gpsinfo[1]);
+	//GPS_prop->GetSubItem(2)->SetValue(gpsinfo[2]);
+	for (int i = 0; i < GPS_prop->GetSubItemsCount(); ++i)
 	{
-		CMFCPropertyGridProperty* prop = m_wndPropList.GetProperty(i);
-
-		if (prop == nullptr)
-			break;
-
-		for (int j = 0; j < prop->GetSubItemsCount(); ++j)
-		{
-			CMFCPropertyGridProperty* sub_prop = prop->GetSubItem(j);
-
-			if (sub_prop == nullptr)
-				break;
-			//////////////////////////////////////////////
-			//POSITION template_pos = AfxGetApp()->GetFirstDocTemplatePosition();
-			//if (template_pos == nullptr)
-			//	return;
-			//
-			//CDocTemplate* pTemplate = AfxGetApp()->GetNextDocTemplate(template_pos);
-			//if (pTemplate == nullptr)
-			//	return;
-			//
-			//POSITION doc_pos = pTemplate->GetFirstDocPosition();
-			//CImageGPSviewerDoc* doc = static_cast<CImageGPSviewerDoc*>(pTemplate->GetNextDoc(doc_pos));
-
-			CImageGPSviewerView* view_ground_meta = static_cast<CImageGPSviewerView* const>(AfxGetMainWnd());
-			//auto* doc = view_ground_meta->GetDocument();
-
-			if (view_ground_meta == nullptr)
-				break;
-
-			if (prop_mp.find(sub_prop->GetName()) == prop_mp.end())
-				break;
-			
-			double value = view_ground_meta->ground_meta.at<double>(prop_mp[sub_prop->GetName()], 0);
-			COleVariant propValue(value);
-			sub_prop->SetValue(propValue);
-			
-			//COleVariant propValue = view_ground_meta->ground_meta.at<double>(prop_mp[sub_prop->GetName()], 0);
-			//sub_prop->SetValue(propValue);
-		}
+		double value = pDocument->ground_meta.at<double>(i, 0);
+		COleVariant propValue(value);
+		GPS_prop->GetSubItem(i)->SetValue(propValue);
 	}
+	
+	// 이미지 크기
+	CMFCPropertyGridProperty* Img_prop = m_wndPropList.GetProperty(1);
+	if (Img_prop == nullptr)
+		return;
+	
+	for (int i = 0; i < Img_prop->GetSubItemsCount(); ++i)
+	{
+		double value = pDocument->ground_meta.at<double>(i, 0);
+		COleVariant propValue(value);
+		GPS_prop->GetSubItem(i)->SetValue(propValue);
+	}
+
 	m_wndPropList.UpdateWindow();
 }
 
@@ -232,12 +237,10 @@ void CPropertiesWnd::InitPropList()
 
 
 	// 지상 좌표
-
-
 	CMFCPropertyGridProperty* pRealPos = new CMFCPropertyGridProperty(_T("GPS"));
-	pRealPos->AddSubItem(new CMFCPropertyGridProperty(_T("위도"), (_variant_t)0l, _T("")));
-	pRealPos->AddSubItem(new CMFCPropertyGridProperty(_T("경도"), (_variant_t)0l, _T("")));
-	pRealPos->AddSubItem(new CMFCPropertyGridProperty(_T("고도"), (_variant_t)0l, _T("")));
+	pRealPos->AddSubItem(new CMFCPropertyGridProperty(_T("위도"), (_variant_t)0.0, _T("")));
+	pRealPos->AddSubItem(new CMFCPropertyGridProperty(_T("경도"), (_variant_t)0.0, _T("")));
+	pRealPos->AddSubItem(new CMFCPropertyGridProperty(_T("고도"), (_variant_t)0.0, _T("")));
 
 	m_wndPropList.AddProperty(pRealPos);
 
@@ -275,6 +278,21 @@ void CPropertiesWnd::InitPropList()
 
 	m_wndPropList.AddProperty(pProperty);
 	
+	for (int i = 0; i < m_wndPropList.GetPropertyCount(); ++i)
+	{
+		CMFCPropertyGridProperty* prop = m_wndPropList.GetProperty(i);
+		if (prop == nullptr)
+			break;
+
+		for (int j = 0; j < prop->GetSubItemsCount(); ++j)
+		{
+			CMFCPropertyGridProperty* sub_prop = prop->GetSubItem(j);
+			if (sub_prop == nullptr)
+				break;
+
+			prop_mp.insert({ sub_prop->GetName(), j });
+		}
+	}
 }
 
 void CPropertiesWnd::OnSetFocus(CWnd* pOldWnd)

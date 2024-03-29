@@ -323,7 +323,10 @@ void CMainFrame::OnApplicationLook(UINT id)
 
 	theApp.m_nAppLook = id;
 
-	switch (theApp.m_nAppLook)
+	CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerVS2008));
+	CDockingManager::SetDockingMode(DT_SMART);
+
+	/*switch (theApp.m_nAppLook)
 	{
 	case ID_VIEW_APPLOOK_WIN_2000:
 		CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManager));
@@ -380,7 +383,7 @@ void CMainFrame::OnApplicationLook(UINT id)
 
 		CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerOffice2007));
 		CDockingManager::SetDockingMode(DT_SMART);
-	}
+	}*/
 
 	//m_wndOutput.UpdateFonts();
 	RedrawWindow(nullptr, nullptr, RDW_ALLCHILDREN | RDW_INVALIDATE | RDW_UPDATENOW | RDW_FRAME | RDW_ERASE);

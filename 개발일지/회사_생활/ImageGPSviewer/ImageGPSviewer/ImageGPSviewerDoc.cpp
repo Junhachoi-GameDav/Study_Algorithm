@@ -20,7 +20,7 @@
 
 // CImageGPSviewerDoc
 
-IMPLEMENT_DYNCREATE(CImageGPSviewerDoc, CDocument)
+ IMPLEMENT_DYNCREATE(CImageGPSviewerDoc, CDocument)
 
 BEGIN_MESSAGE_MAP(CImageGPSviewerDoc, CDocument)
 END_MESSAGE_MAP()

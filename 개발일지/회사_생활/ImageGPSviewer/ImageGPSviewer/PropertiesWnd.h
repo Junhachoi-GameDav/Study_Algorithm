@@ -37,7 +37,7 @@ protected:
 
 // 구현입니다.
 public:
-	virtual ~CPropertiesWnd();
+	virtual ~CPropertiesWnd() = default;
 
 public:
 	std::map<CString, int> prop_mp;
