@@ -136,6 +136,7 @@ std::array<double, 3> CImageGPSviewerDoc::read_meta_data(const std::string& img_
 	return cur_value;
 }
 
+
 BOOL CImageGPSviewerDoc::OnNewDocument()
 {
 	if (!CDocument::OnNewDocument())

@@ -13,6 +13,8 @@
 #include "ImageGPSviewerDoc.h"
 #include "ImageGPSviewerView.h"
 #include "FileView.h"
+#include "PropertiesWnd.h"
+#include "MainFrm.h"
 
 // opencv
 #include <opencv2/opencv.hpp>
@@ -28,11 +30,12 @@ IMPLEMENT_DYNCREATE(CImageGPSviewerView, CView)
 
 BEGIN_MESSAGE_MAP(CImageGPSviewerView, CView)
 	// 표준 인쇄 명령입니다.
-	ON_COMMAND(ID_FILE_PRINT, &CView::OnFilePrint)
-	ON_COMMAND(ID_FILE_PRINT_DIRECT, &CView::OnFilePrint)
-	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CImageGPSviewerView::OnFilePrintPreview)
+	//ON_COMMAND(ID_FILE_PRINT, &CView::OnFilePrint)
+	//ON_COMMAND(ID_FILE_PRINT_DIRECT, &CView::OnFilePrint)
+	//ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CImageGPSviewerView::OnFilePrintPreview)
 	ON_WM_CONTEXTMENU()
 	ON_WM_RBUTTONUP()
+	ON_WM_MOUSEMOVE()
 END_MESSAGE_MAP()
 
 // CImageGPSviewerView 생성/소멸
@@ -125,8 +128,30 @@ void CImageGPSviewerView::OnDraw(CDC* pDC)
 	pDoc->meta_data = pDoc->read_meta_data(str_img_path);
 	pDoc->img_meta = pDoc->meta_transform(pDoc->meta_data);
 	pDoc->ground_meta = (cv::Mat_<double>(3, 1) << pDoc->img_meta[0], pDoc->img_meta[1], pDoc->img_meta[2]);
+	pDoc->img_width = img.cols;
+	pDoc->img_height = img.rows;
 
+	CMainFrame* pMainFrame = static_cast<CMainFrame*>(AfxGetMainWnd());
+	if (pMainFrame == nullptr)
+		return;
 
+	// 마우스 좌표(영상)
+	pMainFrame->m_wndProperties.is_view_changed = false;
+}
+
+void CImageGPSviewerView::OnMouseMove(UINT nFlags, CPoint point)
+{
+	m_pos = point;
+	CMainFrame* pMainFrame = static_cast<CMainFrame*>(AfxGetMainWnd());
+	if (pMainFrame == nullptr)
+		return;
+
+	// 마우스 좌표(영상)
+	pMainFrame->m_wndProperties.mouse_pos_x = point.x;// static_cast<long>((m_pos.x - x) * (img.cols / static_cast<float>(targetWidth)));
+	pMainFrame->m_wndProperties.mouse_pos_y = point.y;// static_cast<long>((m_pos.y - y) * (img.rows / static_cast<float>(targetHeight)));
+	pMainFrame->m_wndProperties.UpdateWindow();
+	//Invalidate();
+	CView::OnMouseMove(nFlags, point);
 }
 
 

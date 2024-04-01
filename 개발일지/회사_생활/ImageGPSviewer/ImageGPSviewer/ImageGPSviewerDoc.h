@@ -56,6 +56,8 @@ public:
 	std::array<double, 3> meta_data;
 	std::array<double, 3> img_meta;
 	cv::Mat_<double> ground_meta;
+	long img_width;
+	long img_height;
 
 protected:
 

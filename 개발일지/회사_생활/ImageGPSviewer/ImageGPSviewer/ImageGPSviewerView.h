@@ -16,10 +16,11 @@ public:
 	CImageGPSviewerDoc* GetDocument() const;
 
 // 
-
+	CPoint m_pos;
 // 재정의입니다.
 public:
 	virtual void OnDraw(CDC* pDC);  // 이 뷰를 그리기 위해 재정의되었습니다.
+	void OnMouseMove(UINT nFlags, CPoint point);
 	//virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 protected:
 	//virtual BOOL OnPreparePrinting(CPrintInfo* pInfo);

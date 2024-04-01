@@ -28,7 +28,7 @@ BEGIN_MESSAGE_MAP(CImageGPSviewerApp, CWinAppEx)
 	ON_COMMAND(ID_FILE_NEW, &CImageGPSviewerApp::OnFileNew)
 	ON_COMMAND(ID_FILE_OPEN, &CImageGPSviewerApp::OnFileOpen)
 	// 표준 인쇄 설정 명령입니다.
-	ON_COMMAND(ID_FILE_PRINT_SETUP, &CImageGPSviewerApp::OnFilePrintSetup)
+	//ON_COMMAND(ID_FILE_PRINT_SETUP, &CImageGPSviewerApp::OnFilePrintSetup)
 END_MESSAGE_MAP()
 
 

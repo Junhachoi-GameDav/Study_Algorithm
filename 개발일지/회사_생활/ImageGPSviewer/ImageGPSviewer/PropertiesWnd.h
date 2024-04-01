@@ -40,7 +40,9 @@ public:
 	virtual ~CPropertiesWnd() = default;
 
 public:
-	std::map<CString, int> prop_mp;
+	long mouse_pos_x;
+	long mouse_pos_y;
+	bool is_view_changed = false;
 
 public:
 	void OnPropertyChanged(CMFCPropertyGridProperty* pProp);

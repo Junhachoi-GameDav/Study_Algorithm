@@ -144,55 +144,70 @@ void CPropertiesWnd::OnExpandAllProperties()
 
 void CPropertiesWnd::OnUpdateExpandAllProperties(CCmdUI* pCmdUI)
 {
-	POSITION templatePos = AfxGetApp()->GetFirstDocTemplatePosition();
-	if (templatePos == nullptr)
+	// 영상 좌표
+	CMFCPropertyGridProperty* video_prop = m_wndPropList.GetProperty(0);
+	const COleVariant video_info[2]
+	{
+		mouse_pos_x,
+		mouse_pos_y
+	};
+	video_prop->GetSubItem(0)->SetValue(video_info[0]);
+	video_prop->GetSubItem(1)->SetValue(video_info[1]);
+
+	if (is_view_changed)
 		return;
 
-	CDocTemplate* pTemplate = AfxGetApp()->GetNextDocTemplate(templatePos);
-	if (pTemplate == nullptr)
-		return;
-	
-	POSITION docPos = pTemplate->GetFirstDocPosition();
-	if (docPos == nullptr)
+	CMDIFrameWnd* pMainFrame = static_cast<CMDIFrameWnd*>(AfxGetMainWnd()->GetActiveWindow());
+	if (pMainFrame == nullptr)
 		return;
 
-	CImageGPSviewerDoc* pDocument = static_cast<CImageGPSviewerDoc*>(pTemplate->GetNextDoc(docPos));
+	CMDIChildWnd* pChild = pMainFrame->MDIGetActive();
+	if (pChild == nullptr)
+		return;
+
+	CView* pView = pChild->GetActiveView();
+	if (pView == nullptr)
+		return;
+
+	CImageGPSviewerDoc* pDocument = static_cast<CImageGPSviewerDoc*>(pView->GetDocument());
 	if (pDocument == nullptr)
 		return;
 
 	// GPS
-	CMFCPropertyGridProperty* GPS_prop = m_wndPropList.GetProperty(0);
+	CMFCPropertyGridProperty* GPS_prop = m_wndPropList.GetProperty(2);
 	if (GPS_prop == nullptr)
 		return;
-	//const COleVariant gpsinfo[3]
-	//{
-	//	pDocument->ground_meta.at<double>(0, 0),
-	//	pDocument->ground_meta.at<double>(1, 0),
-	//	pDocument->ground_meta.at<double>(2, 0)
-	//};
-	//GPS_prop->GetSubItem(0)->SetValue(gpsinfo[0]);
-	//GPS_prop->GetSubItem(1)->SetValue(gpsinfo[1]);
-	//GPS_prop->GetSubItem(2)->SetValue(gpsinfo[2]);
-	for (int i = 0; i < GPS_prop->GetSubItemsCount(); ++i)
-	{
-		double value = pDocument->ground_meta.at<double>(i, 0);
-		COleVariant propValue(value);
-		GPS_prop->GetSubItem(i)->SetValue(propValue);
-	}
-	
-	// 이미지 크기
-	CMFCPropertyGridProperty* Img_prop = m_wndPropList.GetProperty(1);
-	if (Img_prop == nullptr)
-		return;
-	
-	for (int i = 0; i < Img_prop->GetSubItemsCount(); ++i)
-	{
-		double value = pDocument->ground_meta.at<double>(i, 0);
-		COleVariant propValue(value);
-		GPS_prop->GetSubItem(i)->SetValue(propValue);
-	}
 
-	m_wndPropList.UpdateWindow();
+	const COleVariant gpsinfo[3]
+	{
+		pDocument->ground_meta.at<double>(0, 0),
+		pDocument->ground_meta.at<double>(1, 0),
+		pDocument->ground_meta.at<double>(2, 0)
+	};
+	GPS_prop->GetSubItem(0)->SetValue(gpsinfo[0]);
+	GPS_prop->GetSubItem(1)->SetValue(gpsinfo[1]);
+	GPS_prop->GetSubItem(2)->SetValue(gpsinfo[2]);
+
+	// 이미지
+	CMFCPropertyGridProperty* img_prop = m_wndPropList.GetProperty(3);
+	if (img_prop == nullptr)
+		return;
+
+	const COleVariant img_info[5]
+	{
+		(_variant_t)pDocument->img_width,
+		(_variant_t)pDocument->img_height,
+		(_variant_t)pDocument->GetTitle(),
+		_T(".jpg"),
+		(_variant_t)pDocument->image_path
+	};
+	img_prop->GetSubItem(0)->SetValue(img_info[0]);
+	img_prop->GetSubItem(1)->SetValue(img_info[1]);
+	img_prop->GetSubItem(2)->SetValue(img_info[2]);
+	img_prop->GetSubItem(3)->SetValue(img_info[3]);
+	img_prop->GetSubItem(4)->SetValue(img_info[4]);
+
+	is_view_changed = true;
 }
 
 void CPropertiesWnd::OnSortProperties()
@@ -229,14 +244,28 @@ void CPropertiesWnd::InitPropList()
 {
 	SetPropListFont();
 
-
 	m_wndPropList.EnableHeaderCtrl(FALSE);
 	m_wndPropList.EnableDescriptionArea();
 	m_wndPropList.SetVSDotNetLook();
 	m_wndPropList.MarkModifiedProperties();
 
+	// 영상 좌표
+	CMFCPropertyGridProperty* pVideoPos = new CMFCPropertyGridProperty(_T("영상 좌표"));
+	pVideoPos->AddSubItem(new CMFCPropertyGridProperty(_T("X"), (_variant_t)0l, _T("")));
+	pVideoPos->AddSubItem(new CMFCPropertyGridProperty(_T("Y"), (_variant_t)0l, _T("")));
+	//pVideoPos->AddSubItem(new CMFCPropertyGridProperty(_T("고도"), (_variant_t)0l, _T("")));
 
-	// 지상 좌표
+	m_wndPropList.AddProperty(pVideoPos);
+
+	// 사진 좌표
+	CMFCPropertyGridProperty* pImgPos = new CMFCPropertyGridProperty(_T("사진 좌표"));
+	pImgPos->AddSubItem(new CMFCPropertyGridProperty(_T("X"), (_variant_t)0l, _T("")));
+	pImgPos->AddSubItem(new CMFCPropertyGridProperty(_T("Y"), (_variant_t)0l, _T("")));
+	//pImgPos->AddSubItem(new CMFCPropertyGridProperty(_T("고도"), (_variant_t)0l, _T("")));
+
+	m_wndPropList.AddProperty(pImgPos);
+
+	// GPS
 	CMFCPropertyGridProperty* pRealPos = new CMFCPropertyGridProperty(_T("GPS"));
 	pRealPos->AddSubItem(new CMFCPropertyGridProperty(_T("위도"), (_variant_t)0.0, _T("")));
 	pRealPos->AddSubItem(new CMFCPropertyGridProperty(_T("경도"), (_variant_t)0.0, _T("")));
@@ -244,55 +273,23 @@ void CPropertiesWnd::InitPropList()
 
 	m_wndPropList.AddProperty(pRealPos);
 
-	// 영상 좌표
-	/*CMFCPropertyGridProperty* pVideoPos = new CMFCPropertyGridProperty(_T("영상 좌표"));
-	pVideoPos->AddSubItem(new CMFCPropertyGridProperty(_T("X"), (_variant_t)0l, _T("")));
-	pVideoPos->AddSubItem(new CMFCPropertyGridProperty(_T("Y"), (_variant_t)0l, _T("")));*/
-	//pVideoPos->AddSubItem(new CMFCPropertyGridProperty(_T("고도"), (_variant_t)0l, _T("")));
-
-	//m_wndPropList.AddProperty(pVideoPos);
-
-	// 사진 좌표
-	/*CMFCPropertyGridProperty* pImgPos = new CMFCPropertyGridProperty(_T("사진 좌표"));
-	pImgPos->AddSubItem(new CMFCPropertyGridProperty(_T("X"), (_variant_t)0l, _T("")));
-	pImgPos->AddSubItem(new CMFCPropertyGridProperty(_T("Y"), (_variant_t)0l, _T("")));*/
-	//pImgPos->AddSubItem(new CMFCPropertyGridProperty(_T("고도"), (_variant_t)0l, _T("")));
-
-	//m_wndPropList.AddProperty(pImgPos);
-
-	// 이미지 크기
+	// 이미지
 	CMFCPropertyGridProperty* pSize = new CMFCPropertyGridProperty(_T("이미지 크기"));
 	pSize->AddSubItem(new CMFCPropertyGridProperty(_T("너비"), (_variant_t)0l, _T("")));
 	pSize->AddSubItem(new CMFCPropertyGridProperty(_T("높이"), (_variant_t)0l, _T("")));
-	pSize->AddSubItem(new CMFCPropertyGridProperty(_T("수평 해상도"), (_variant_t)0l, _T("")));
-	pSize->AddSubItem(new CMFCPropertyGridProperty(_T("수직 해상도"), (_variant_t)0l, _T("")));
-	pSize->AddSubItem(new CMFCPropertyGridProperty(_T("비트 수준"), (_variant_t)0l, _T("")));
+	pSize->AddSubItem(new CMFCPropertyGridProperty(_T("파일 이름"), _T("")));
+	pSize->AddSubItem(new CMFCPropertyGridProperty(_T("확장자"), _T("")));
+	pSize->AddSubItem(new CMFCPropertyGridProperty(_T("폴더 경로"), _T("")));
 	
 	m_wndPropList.AddProperty(pSize);
 	
-	// 이미지 속성
-	CMFCPropertyGridProperty* pProperty = new CMFCPropertyGridProperty(_T("이미지 속성"));
-	pProperty->AddSubItem(new CMFCPropertyGridProperty(_T("파일 이름"), _T("")));
-	pProperty->AddSubItem(new CMFCPropertyGridProperty(_T("확장자"), _T("")));
-	pProperty->AddSubItem(new CMFCPropertyGridProperty(_T("폴더 경로"), _T("")));
+	//// 이미지 속성
+	//CMFCPropertyGridProperty* pProperty = new CMFCPropertyGridProperty(_T("이미지 속성"));
+	//pProperty->AddSubItem(new CMFCPropertyGridProperty(_T("파일 이름"), _T("")));
+	//pProperty->AddSubItem(new CMFCPropertyGridProperty(_T("확장자"), _T("")));
+	//pProperty->AddSubItem(new CMFCPropertyGridProperty(_T("폴더 경로"), _T("")));
 
-	m_wndPropList.AddProperty(pProperty);
-	
-	for (int i = 0; i < m_wndPropList.GetPropertyCount(); ++i)
-	{
-		CMFCPropertyGridProperty* prop = m_wndPropList.GetProperty(i);
-		if (prop == nullptr)
-			break;
-
-		for (int j = 0; j < prop->GetSubItemsCount(); ++j)
-		{
-			CMFCPropertyGridProperty* sub_prop = prop->GetSubItem(j);
-			if (sub_prop == nullptr)
-				break;
-
-			prop_mp.insert({ sub_prop->GetName(), j });
-		}
-	}
+	//m_wndPropList.AddProperty(pProperty);
 }
 
 void CPropertiesWnd::OnSetFocus(CWnd* pOldWnd)
