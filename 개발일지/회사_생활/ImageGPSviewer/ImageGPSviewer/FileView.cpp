@@ -268,25 +268,8 @@ void CFileView::OnSetFocus(CWnd* pOldWnd)
 
 void CFileView::OnLButtonDown(UINT nFlags, CPoint point)
 {
+
 	CDockablePane::OnLButtonDown(nFlags, point);
-
-	this->m_wndFileView;
-	const unsigned int size = m_wndFileView.GetCount();
-	/*for (int i = 0; i < size; ++i)
-	{
-		m_wndFileView;
-	}*/
-
-	CImage img;
-	img.Create(640, 480, 8);
-
-	CImageGPSviewerView* pView = dynamic_cast<CImageGPSviewerView*>(AfxGetMainWnd());
-	//pView->OnDraw();
-	
-	CClientDC dc(pView);
-	img.Draw(dc, 0, 0);
-
-	//pView->OnLButtonDown(nFlags, point);
 }
 
 void CFileView::OnLButtonDblClk(UINT nFlags, CPoint point)

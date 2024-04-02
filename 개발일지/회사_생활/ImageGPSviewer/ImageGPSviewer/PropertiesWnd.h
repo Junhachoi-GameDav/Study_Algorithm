@@ -40,8 +40,10 @@ public:
 	virtual ~CPropertiesWnd() = default;
 
 public:
-	long mouse_pos_x;
-	long mouse_pos_y;
+	long mouse_video_pos_x = 0;
+	long mouse_video_pos_y = 0;
+	long mouse_img_pos_x = 0;
+	long mouse_img_pos_y = 0;
 	bool is_view_changed = false;
 
 public:

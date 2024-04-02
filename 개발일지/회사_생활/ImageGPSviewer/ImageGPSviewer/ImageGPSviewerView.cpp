@@ -36,6 +36,7 @@ BEGIN_MESSAGE_MAP(CImageGPSviewerView, CView)
 	ON_WM_CONTEXTMENU()
 	ON_WM_RBUTTONUP()
 	ON_WM_MOUSEMOVE()
+	ON_WM_MOUSELEAVE()
 END_MESSAGE_MAP()
 
 // CImageGPSviewerView 생성/소멸
@@ -69,7 +70,7 @@ void CImageGPSviewerView::OnDraw(CDC* pDC)
 	CString str_temp(pDoc->image_path);
 	std::string str_img_path(CW2A(str_temp.GetString()));
 
-	cv::Mat img = cv::imread(str_img_path);
+	img = cv::imread(str_img_path);
 
 	if (img.empty())
 		return;
@@ -83,8 +84,8 @@ void CImageGPSviewerView::OnDraw(CDC* pDC)
 	float Rate = Width / Height;
 	float imgRate = static_cast<float>(img.cols) / img.rows;
 
-	int targetWidth;
-	int targetHeight;
+	targetWidth;
+	targetHeight;
 
 	if (imgRate > Rate)
 	{
@@ -97,8 +98,8 @@ void CImageGPSviewerView::OnDraw(CDC* pDC)
 		targetWidth = static_cast<int>(targetHeight * imgRate);
 	}
 
-	int x = (Rect.Width() - targetWidth) / 2;
-	int y = (Rect.Height() - targetHeight) / 2;
+	result_x = (Rect.Width() - targetWidth) / 2;
+	result_y = (Rect.Height() - targetHeight) / 2;
 
 	// 이미지 크기 조정
 	cv::Mat resizedImg;
@@ -118,7 +119,7 @@ void CImageGPSviewerView::OnDraw(CDC* pDC)
 	bitmapInfo.bmiHeader.biCompression = BI_RGB;
 
 	// OpenCV 이미지를 MFC CDC에 그리기
-	StretchDIBits(pDC->m_hDC, x, y, targetWidth, targetHeight, 0, 0, imgBGR.cols, imgBGR.rows,
+	StretchDIBits(pDC->m_hDC, result_x, result_y, targetWidth, targetHeight, 0, 0, imgBGR.cols, imgBGR.rows,
 		imgBGR.data, &bitmapInfo, DIB_RGB_COLORS, SRCCOPY);
 #pragma endregion
 
@@ -131,27 +132,86 @@ void CImageGPSviewerView::OnDraw(CDC* pDC)
 	pDoc->img_width = img.cols;
 	pDoc->img_height = img.rows;
 
+
+
+
 	CMainFrame* pMainFrame = static_cast<CMainFrame*>(AfxGetMainWnd());
 	if (pMainFrame == nullptr)
 		return;
 
-	// 마우스 좌표(영상)
 	pMainFrame->m_wndProperties.is_view_changed = false;
 }
 
 void CImageGPSviewerView::OnMouseMove(UINT nFlags, CPoint point)
 {
-	m_pos = point;
 	CMainFrame* pMainFrame = static_cast<CMainFrame*>(AfxGetMainWnd());
 	if (pMainFrame == nullptr)
 		return;
 
+	// 마우스 이벤트 추적
+	TRACKMOUSEEVENT tme;
+	tme.cbSize = sizeof(TRACKMOUSEEVENT);
+	tme.dwFlags = TME_LEAVE;
+	tme.hwndTrack = this->m_hWnd;
+	TrackMouseEvent(&tme);
+
+	long& mouse_video_x = pMainFrame->m_wndProperties.mouse_video_pos_x;
+	long& mouse_video_y = pMainFrame->m_wndProperties.mouse_video_pos_y;
+
 	// 마우스 좌표(영상)
-	pMainFrame->m_wndProperties.mouse_pos_x = point.x;// static_cast<long>((m_pos.x - x) * (img.cols / static_cast<float>(targetWidth)));
-	pMainFrame->m_wndProperties.mouse_pos_y = point.y;// static_cast<long>((m_pos.y - y) * (img.rows / static_cast<float>(targetHeight)));
+	if (point.x >= result_x && point.x <= result_x + targetWidth)
+		mouse_video_x = static_cast<long>((point.x - result_x) * (img.cols / static_cast<float>(targetWidth))); //point.x;
+	else
+		mouse_video_x = 0;
+
+	if (point.y >= result_y && point.y <= result_y + targetHeight)
+		mouse_video_y = static_cast<long>((point.y - result_y) * (img.rows / static_cast<float>(targetHeight))); //point.y;
+	else
+		mouse_video_y = 0;
+
+	// 마우스 좌표(사진)
+	constexpr double focal_length = 4.8;
+	constexpr double pixel_size = 0.0007;
+	constexpr double focal_length_in_pixel = focal_length / pixel_size;
+
+	long& mouse_img_x = pMainFrame->m_wndProperties.mouse_img_pos_x;
+	long& mouse_img_y = pMainFrame->m_wndProperties.mouse_img_pos_y;
+	
+	const cv::Mat vision_to_photo = (cv::Mat_<double>(3, 3) <<
+		1.0, 0.0, -(img.cols / 2),
+		0.0, -1.0, (img.rows / 2),
+		0.0, 0.0, -focal_length_in_pixel);
+
+	cv::Mat_<double> pos = (cv::Mat_<double>(3, 1) <<
+		static_cast<double>(mouse_video_x),
+		static_cast<double>(mouse_video_y),
+		1.0);
+
+	const cv::Mat photo_points = vision_to_photo * pos;
+
+	mouse_img_x = static_cast<long>(photo_points.at<double>(0, 0));
+	mouse_img_y = static_cast<long>(photo_points.at<double>(1, 0));
+
+
 	pMainFrame->m_wndProperties.UpdateWindow();
 	//Invalidate();
 	CView::OnMouseMove(nFlags, point);
+}
+
+void CImageGPSviewerView::OnMouseLeave()
+{
+	CMainFrame* pMainFrame = static_cast<CMainFrame*>(AfxGetMainWnd());
+	if (pMainFrame == nullptr)
+		return;
+
+	pMainFrame->m_wndProperties.mouse_video_pos_x = 0;
+	pMainFrame->m_wndProperties.mouse_video_pos_y = 0;
+	pMainFrame->m_wndProperties.mouse_img_pos_x = 0;
+	pMainFrame->m_wndProperties.mouse_img_pos_y = 0;
+
+	pMainFrame->m_wndProperties.UpdateWindow();
+
+	CView::OnMouseLeave();
 }
 
 

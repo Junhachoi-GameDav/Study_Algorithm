@@ -33,17 +33,7 @@ CPropertiesWnd::CPropertiesWnd() noexcept :
 
 void CPropertiesWnd::OnPropertyChanged(CMFCPropertyGridProperty* pProp)
 {
-	/*CString propName = pProp->GetName();
-	COleVariant propValue = pProp->GetValue();
 	
-	if (propName == _T("위도"))
-	{
-		CImageGPSviewerView* test = static_cast<CImageGPSviewerView* const>(AfxGetMainWnd());
-		propValue = test->ground_meta.at<double>(0, 0);
-		pProp->SetValue(propValue);
-	}
-	
-	m_wndPropList.UpdateWindow();*/
 }
 
 BEGIN_MESSAGE_MAP(CPropertiesWnd, CDockablePane)
@@ -148,11 +138,33 @@ void CPropertiesWnd::OnUpdateExpandAllProperties(CCmdUI* pCmdUI)
 	CMFCPropertyGridProperty* video_prop = m_wndPropList.GetProperty(0);
 	const COleVariant video_info[2]
 	{
-		mouse_pos_x,
-		mouse_pos_y
+		mouse_video_pos_x,
+		mouse_video_pos_y
 	};
 	video_prop->GetSubItem(0)->SetValue(video_info[0]);
 	video_prop->GetSubItem(1)->SetValue(video_info[1]);
+
+	// 사진 좌표
+	CMFCPropertyGridProperty* img_pos_prop = m_wndPropList.GetProperty(1);
+	const COleVariant img_pos_info[2]
+	{
+		mouse_img_pos_x,
+		mouse_img_pos_y
+	};
+	img_pos_prop->GetSubItem(0)->SetValue(img_pos_info[0]);
+	img_pos_prop->GetSubItem(1)->SetValue(img_pos_info[1]);
+
+	// 지상 좌표
+	CMFCPropertyGridProperty* real_pos_prop = m_wndPropList.GetProperty(2);
+	const COleVariant real_pos_info[3]
+	{
+		0.0,
+		0.0,
+		0.0
+	};
+	real_pos_prop->GetSubItem(0)->SetValue(real_pos_info[0]);
+	real_pos_prop->GetSubItem(1)->SetValue(real_pos_info[1]);
+	real_pos_prop->GetSubItem(2)->SetValue(real_pos_info[2]);
 
 	if (is_view_changed)
 		return;
@@ -174,22 +186,37 @@ void CPropertiesWnd::OnUpdateExpandAllProperties(CCmdUI* pCmdUI)
 		return;
 
 	// GPS
-	CMFCPropertyGridProperty* GPS_prop = m_wndPropList.GetProperty(2);
+	CMFCPropertyGridProperty* GPS_prop = m_wndPropList.GetProperty(4);
 	if (GPS_prop == nullptr)
 		return;
 
-	const COleVariant gpsinfo[3]
+	const COleVariant gpsinfo_5186[3]
 	{
 		pDocument->ground_meta.at<double>(0, 0),
 		pDocument->ground_meta.at<double>(1, 0),
 		pDocument->ground_meta.at<double>(2, 0)
 	};
-	GPS_prop->GetSubItem(0)->SetValue(gpsinfo[0]);
-	GPS_prop->GetSubItem(1)->SetValue(gpsinfo[1]);
-	GPS_prop->GetSubItem(2)->SetValue(gpsinfo[2]);
+	const COleVariant gpsinfo_4326[3]
+	{
+		COleVariant(static_cast<CString>(pDocument->GPS_data[0].c_str())),
+		COleVariant(static_cast<CString>(pDocument->GPS_data[1].c_str())),
+		COleVariant(static_cast<CString>(pDocument->GPS_data[2].c_str()))
+	};
+	if (GPS_prop->GetSubItem(0)->GetValue() == _T("4326"))
+	{
+		GPS_prop->GetSubItem(1)->SetValue(gpsinfo_4326[0]);
+		GPS_prop->GetSubItem(2)->SetValue(gpsinfo_4326[1]);
+		GPS_prop->GetSubItem(3)->SetValue(gpsinfo_4326[2]);
+	}
+	else if (GPS_prop->GetSubItem(0)->GetValue() == _T("5186"))
+	{
+		GPS_prop->GetSubItem(1)->SetValue(gpsinfo_5186[0]);
+		GPS_prop->GetSubItem(2)->SetValue(gpsinfo_5186[1]);
+		GPS_prop->GetSubItem(3)->SetValue(gpsinfo_5186[2]);
+	}
 
 	// 이미지
-	CMFCPropertyGridProperty* img_prop = m_wndPropList.GetProperty(3);
+	CMFCPropertyGridProperty* img_prop = m_wndPropList.GetProperty(5);
 	if (img_prop == nullptr)
 		return;
 
@@ -265,13 +292,38 @@ void CPropertiesWnd::InitPropList()
 
 	m_wndPropList.AddProperty(pImgPos);
 
-	// GPS
-	CMFCPropertyGridProperty* pRealPos = new CMFCPropertyGridProperty(_T("GPS"));
+	// 지상 좌표
+	CMFCPropertyGridProperty* pRealPos = new CMFCPropertyGridProperty(_T("지상 좌표"));
 	pRealPos->AddSubItem(new CMFCPropertyGridProperty(_T("위도"), (_variant_t)0.0, _T("")));
 	pRealPos->AddSubItem(new CMFCPropertyGridProperty(_T("경도"), (_variant_t)0.0, _T("")));
 	pRealPos->AddSubItem(new CMFCPropertyGridProperty(_T("고도"), (_variant_t)0.0, _T("")));
 
 	m_wndPropList.AddProperty(pRealPos);
+
+	// 빈 칸
+	CMFCPropertyGridProperty* pSeparator = new CMFCPropertyGridProperty(_T(" "), (_variant_t)_T(""), _T("이 부분은 시각적으로 구분하기 위한 공간입니다."));
+	pSeparator->Enable(FALSE); // 비활성화
+	m_wndPropList.AddProperty(pSeparator);
+	// 빈 칸
+
+
+	// 밑에 더블형과 문자열이 충돌중이니까 고쳐라
+	// GPS
+	CMFCPropertyGridProperty* pGpsPos = new CMFCPropertyGridProperty(_T("GPS"));
+	
+	CMFCPropertyGridProperty* pProp = new CMFCPropertyGridProperty(_T("EPSG"), _T("4326"), _T(""));
+	pProp->AddOption(_T("4326"));
+	pProp->AddOption(_T("5186"));
+	pProp->AllowEdit(FALSE);
+
+	pGpsPos->AddSubItem(pProp);
+	pGpsPos->AddSubItem(new CMFCPropertyGridProperty(_T("위도"), (_variant_t)0.0, _T("")));
+	pGpsPos->AddSubItem(new CMFCPropertyGridProperty(_T("경도"), (_variant_t)0.0, _T("")));
+	pGpsPos->AddSubItem(new CMFCPropertyGridProperty(_T("고도"), (_variant_t)0.0, _T("")));
+
+
+
+	m_wndPropList.AddProperty(pGpsPos);
 
 	// 이미지
 	CMFCPropertyGridProperty* pSize = new CMFCPropertyGridProperty(_T("이미지 크기"));
@@ -282,14 +334,6 @@ void CPropertiesWnd::InitPropList()
 	pSize->AddSubItem(new CMFCPropertyGridProperty(_T("폴더 경로"), _T("")));
 	
 	m_wndPropList.AddProperty(pSize);
-	
-	//// 이미지 속성
-	//CMFCPropertyGridProperty* pProperty = new CMFCPropertyGridProperty(_T("이미지 속성"));
-	//pProperty->AddSubItem(new CMFCPropertyGridProperty(_T("파일 이름"), _T("")));
-	//pProperty->AddSubItem(new CMFCPropertyGridProperty(_T("확장자"), _T("")));
-	//pProperty->AddSubItem(new CMFCPropertyGridProperty(_T("폴더 경로"), _T("")));
-
-	//m_wndPropList.AddProperty(pProperty);
 }
 
 void CPropertiesWnd::OnSetFocus(CWnd* pOldWnd)

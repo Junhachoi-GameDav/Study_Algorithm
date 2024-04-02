@@ -53,6 +53,7 @@ public:
 	CString image_path = _T("");
 
 public:
+	std::map<int , std::string> GPS_data;
 	std::array<double, 3> meta_data;
 	std::array<double, 3> img_meta;
 	cv::Mat_<double> ground_meta;
