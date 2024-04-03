@@ -122,7 +122,6 @@ std::array<double, 3> CImageGPSviewerDoc::read_meta_data(const std::string& img_
 		if (data.tagName() == "GPSLatitude" || data.tagName() == "GPSLongitude")
 		{
 			const Exiv2::Value& value = data.value();
-			GPS_data.insert({num, value.toString()});
 			cur_value[num] = convert_gps_lon_lat(value);
 			num++;
 			continue;
@@ -131,7 +130,6 @@ std::array<double, 3> CImageGPSviewerDoc::read_meta_data(const std::string& img_
 		{
 			const Exiv2::Value& value = data.value();
 			cur_value[num] = convert_gps_alt(value);
-			GPS_data.insert({ num, value.toString() });
 		}
 	}
 

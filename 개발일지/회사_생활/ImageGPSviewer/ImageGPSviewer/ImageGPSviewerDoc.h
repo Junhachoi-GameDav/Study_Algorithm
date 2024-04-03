@@ -53,12 +53,14 @@ public:
 	CString image_path = _T("");
 
 public:
-	std::map<int , std::string> GPS_data;
 	std::array<double, 3> meta_data;
 	std::array<double, 3> img_meta;
-	cv::Mat_<double> ground_meta;
+	cv::Mat_<double> ground_meta{ 0,0,0 };
 	long img_width;
 	long img_height;
+	CArray<CPoint, CPoint> m_points;
+	int dot_size = 3;
+	CRect previous_Ellipse;
 
 protected:
 

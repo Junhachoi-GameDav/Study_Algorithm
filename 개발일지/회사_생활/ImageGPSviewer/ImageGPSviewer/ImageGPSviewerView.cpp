@@ -35,6 +35,8 @@ BEGIN_MESSAGE_MAP(CImageGPSviewerView, CView)
 	//ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CImageGPSviewerView::OnFilePrintPreview)
 	ON_WM_CONTEXTMENU()
 	ON_WM_RBUTTONUP()
+	ON_WM_LBUTTONDOWN()
+	ON_WM_LBUTTONUP()
 	ON_WM_MOUSEMOVE()
 	ON_WM_MOUSELEAVE()
 END_MESSAGE_MAP()
@@ -121,9 +123,8 @@ void CImageGPSviewerView::OnDraw(CDC* pDC)
 	// OpenCV 이미지를 MFC CDC에 그리기
 	StretchDIBits(pDC->m_hDC, result_x, result_y, targetWidth, targetHeight, 0, 0, imgBGR.cols, imgBGR.rows,
 		imgBGR.data, &bitmapInfo, DIB_RGB_COLORS, SRCCOPY);
-#pragma endregion
 
-	// TODO: 여기에 원시 데이터에 대한 그리기 코드를 추가합니다.
+#pragma endregion
 	
 	// 메타데이터 받기
 	pDoc->meta_data = pDoc->read_meta_data(str_img_path);
@@ -131,9 +132,6 @@ void CImageGPSviewerView::OnDraw(CDC* pDC)
 	pDoc->ground_meta = (cv::Mat_<double>(3, 1) << pDoc->img_meta[0], pDoc->img_meta[1], pDoc->img_meta[2]);
 	pDoc->img_width = img.cols;
 	pDoc->img_height = img.rows;
-
-
-
 
 	CMainFrame* pMainFrame = static_cast<CMainFrame*>(AfxGetMainWnd());
 	if (pMainFrame == nullptr)
@@ -148,6 +146,11 @@ void CImageGPSviewerView::OnMouseMove(UINT nFlags, CPoint point)
 	if (pMainFrame == nullptr)
 		return;
 
+	CImageGPSviewerDoc* pDoc = GetDocument();
+	ASSERT_VALID(pDoc);
+	if (!pDoc)
+		return;
+
 	// 마우스 이벤트 추적
 	TRACKMOUSEEVENT tme;
 	tme.cbSize = sizeof(TRACKMOUSEEVENT);
@@ -155,24 +158,31 @@ void CImageGPSviewerView::OnMouseMove(UINT nFlags, CPoint point)
 	tme.hwndTrack = this->m_hWnd;
 	TrackMouseEvent(&tme);
 
+#pragma region 마우스 좌표(영상)
+	// 마우스 좌표(영상)
 	long& mouse_video_x = pMainFrame->m_wndProperties.mouse_video_pos_x;
 	long& mouse_video_y = pMainFrame->m_wndProperties.mouse_video_pos_y;
-
-	// 마우스 좌표(영상)
-	if (point.x >= result_x && point.x <= result_x + targetWidth)
-		mouse_video_x = static_cast<long>((point.x - result_x) * (img.cols / static_cast<float>(targetWidth))); //point.x;
-	else
+	
+	if (!(point.x >= result_x && point.x <= result_x + targetWidth))
 		mouse_video_x = 0;
-
-	if (point.y >= result_y && point.y <= result_y + targetHeight)
-		mouse_video_y = static_cast<long>((point.y - result_y) * (img.rows / static_cast<float>(targetHeight))); //point.y;
-	else
+	
+	mouse_video_x = static_cast<long>((point.x - result_x) * (img.cols / static_cast<float>(targetWidth))); //point.x;
+	
+	if (!(point.y >= result_y && point.y <= result_y + targetHeight))
 		mouse_video_y = 0;
 
+	mouse_video_y = static_cast<long>((point.y - result_y) * (img.rows / static_cast<float>(targetHeight))); //point.y;
+
+#pragma endregion
+
+#pragma region 마우스 좌표(사진)
 	// 마우스 좌표(사진)
 	constexpr double focal_length = 4.8;
 	constexpr double pixel_size = 0.0007;
-	constexpr double focal_length_in_pixel = focal_length / pixel_size;
+	double f_length = pMainFrame->m_wndProperties.focal_length;
+	double p_size = pMainFrame->m_wndProperties.pixel_size;
+	const double focal_length_in_pixel = f_length / p_size;
+	//const double focal_length_in_pixel = focal_length / pixel_size;
 
 	long& mouse_img_x = pMainFrame->m_wndProperties.mouse_img_pos_x;
 	long& mouse_img_y = pMainFrame->m_wndProperties.mouse_img_pos_y;
@@ -192,9 +202,40 @@ void CImageGPSviewerView::OnMouseMove(UINT nFlags, CPoint point)
 	mouse_img_x = static_cast<long>(photo_points.at<double>(0, 0));
 	mouse_img_y = static_cast<long>(photo_points.at<double>(1, 0));
 
+#pragma endregion
+
+#pragma region 마우스 좌표(지상)
+	// 마우스 좌표(지상)
+	double& mouse_real_x = pMainFrame->m_wndProperties.mouse_real_pos_x;
+	double& mouse_real_y = pMainFrame->m_wndProperties.mouse_real_pos_y;
+	double& mouse_real_z = pMainFrame->m_wndProperties.mouse_real_pos_z;
+	
+	// 람다
+	double& Altitude = pMainFrame->m_wndProperties.set_altitude;
+	//constexpr double Altitude = 20;
+	double lambda = photo_points.at<double>(2, 0) / (Altitude - pDoc->ground_meta.at<double>(2, 0));
+
+	cv::Mat real_pos = photo_points / lambda;
+
+	real_pos += pDoc->ground_meta;
+
+	mouse_real_x = real_pos.at<double>(0, 0);
+	mouse_real_y = real_pos.at<double>(1, 0);
+	mouse_real_z = pDoc->ground_meta.at<double>(2, 0) -real_pos.at<double>(2, 0);
+
+#pragma endregion
+
+	if (pDoc->previous_Ellipse.PtInRect(point))
+	{
+		ClientToScreen(&point);
+		theApp.GetContextMenuManager()->ShowPopupMenu(IDR_POPUP_EDIT, point.x, point.y, this, FALSE);
+	}
+	//::PostMessage(this->m_hWnd, WM_LBUTTONDOWN, MK_LBUTTON, MAKELPARAM(-1, -1));
+	
 
 	pMainFrame->m_wndProperties.UpdateWindow();
-	//Invalidate();
+	pMainFrame->m_wndProperties.is_mouse_out = false;
+
 	CView::OnMouseMove(nFlags, point);
 }
 
@@ -208,12 +249,60 @@ void CImageGPSviewerView::OnMouseLeave()
 	pMainFrame->m_wndProperties.mouse_video_pos_y = 0;
 	pMainFrame->m_wndProperties.mouse_img_pos_x = 0;
 	pMainFrame->m_wndProperties.mouse_img_pos_y = 0;
+	pMainFrame->m_wndProperties.mouse_real_pos_x = 0;
+	pMainFrame->m_wndProperties.mouse_real_pos_y = 0;
+	pMainFrame->m_wndProperties.mouse_real_pos_z = 0;
 
 	pMainFrame->m_wndProperties.UpdateWindow();
-
+	pMainFrame->m_wndProperties.is_mouse_out = true;
 	CView::OnMouseLeave();
 }
 
+void CImageGPSviewerView::OnLButtonDown(UINT nFlags, CPoint point)
+{
+	CImageGPSviewerDoc* pDoc = GetDocument();
+	ASSERT_VALID(pDoc);
+	if (!pDoc)
+		return;
+	
+	pDoc->m_points.Add(point);
+	CDC* pDC = GetDC();
+
+	for (int i = 0; i < pDoc->m_points.GetSize(); i++)
+	{
+		CPoint pt = pDoc->m_points[i];
+		pDC->Ellipse(
+			pt.x - pDoc->dot_size, 
+			pt.y - pDoc->dot_size, 
+			pt.x + pDoc->dot_size, 
+			pt.y + pDoc->dot_size);
+		CRect ellipseRect(
+			pt.x - pDoc->dot_size * 2, 
+			pt.y - pDoc->dot_size * 2, 
+			pt.x + pDoc->dot_size * 2, 
+			pt.y + pDoc->dot_size * 2);
+		pDoc->previous_Ellipse = ellipseRect;
+	}
+
+	ReleaseDC(pDC);
+	CView::OnLButtonDown(nFlags, point);
+}
+
+//void CImageGPSviewerView::OnLButtonUp(UINT nFlags, CPoint point)
+//{
+//	CImageGPSviewerDoc* pDoc = GetDocument();
+//	ASSERT_VALID(pDoc);
+//	if (!pDoc)
+//		return;
+//
+//	pDoc->is_Dragging = false;
+//	CDC* pDC = GetDC();
+//	pDC->MoveTo(pDoc->previous_pt);  // 이전 위치로 이동
+//	pDC->LineTo(point);         // 마지막 점까지 선 그리기
+//	ReleaseDC(pDC);
+//
+//	CView::OnLButtonUp(nFlags, point);
+//}
 
 // CImageGPSviewerView 인쇄
 

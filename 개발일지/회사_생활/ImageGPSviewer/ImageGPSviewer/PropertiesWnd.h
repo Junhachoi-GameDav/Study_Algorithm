@@ -42,13 +42,24 @@ public:
 public:
 	long mouse_video_pos_x = 0;
 	long mouse_video_pos_y = 0;
+
+	double focal_length = 0;
+	double pixel_size = 0;
 	long mouse_img_pos_x = 0;
 	long mouse_img_pos_y = 0;
+
+	double mouse_real_pos_x = 0;
+	double mouse_real_pos_y = 0;
+	double mouse_real_pos_z = 0;
+	double set_altitude = 0;
+
 	bool is_view_changed = false;
+	bool is_mouse_out;
+	CRect m_ellipseRect;
 
 public:
 	void OnPropertyChanged(CMFCPropertyGridProperty* pProp);
-
+	
 protected:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
