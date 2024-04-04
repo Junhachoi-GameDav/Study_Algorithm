@@ -139,34 +139,34 @@ void CPropertiesWnd::OnUpdateExpandAllProperties(CCmdUI* pCmdUI)
 	CMFCPropertyGridProperty* video_prop = m_wndPropList.GetProperty(0);
 	const COleVariant video_info[2]
 	{
-		mouse_video_pos_x,
-		mouse_video_pos_y
+		COleVariant(CComBSTR(std::to_string(mouse_video_pos_x).c_str())),
+		COleVariant(CComBSTR(std::to_string(mouse_video_pos_y).c_str())),
 	};
-	video_prop->GetSubItem(0)->SetValue(video_info[0]);
-	video_prop->GetSubItem(1)->SetValue(video_info[1]);
+	video_prop->GetSubItem(0)->SetValue(mouse_video_pos_x != 0 ? video_info[0] : _T("out of range"));
+	video_prop->GetSubItem(1)->SetValue(mouse_video_pos_x != 0 ? video_info[1] : _T("out of range"));
 
 	// 사진 좌표
 	CMFCPropertyGridProperty* img_pos_prop = m_wndPropList.GetProperty(1);
 	const COleVariant img_pos_info[2]
 	{
-		mouse_img_pos_x,
-		mouse_img_pos_y
+		COleVariant(CComBSTR(std::to_string(mouse_img_pos_x).c_str())),
+		COleVariant(CComBSTR(std::to_string(mouse_img_pos_y).c_str())),
 	};
-	img_pos_prop->GetSubItem(0)->SetValue(img_pos_info[0]);
-	img_pos_prop->GetSubItem(1)->SetValue(img_pos_info[1]);
+	img_pos_prop->GetSubItem(0)->SetValue(mouse_video_pos_x != 0 ? img_pos_info[0] : _T("out of range"));
+	img_pos_prop->GetSubItem(1)->SetValue(mouse_video_pos_x != 0 ? img_pos_info[1] : _T("out of range"));
 
 	// 지상 좌표
 	CMFCPropertyGridProperty* real_pos_prop = m_wndPropList.GetProperty(2);
 	const COleVariant real_pos_info[3]
 	{
-		mouse_real_pos_x,
-		mouse_real_pos_y,
-		mouse_real_pos_z,
+		COleVariant(CComBSTR(std::to_string(mouse_real_pos_x).c_str())),
+		COleVariant(CComBSTR(std::to_string(mouse_real_pos_y).c_str())),
+		COleVariant(CComBSTR(std::to_string(mouse_real_pos_z).c_str()))
 	};
-	real_pos_prop->GetSubItem(0)->SetValue(real_pos_info[0]);
-	real_pos_prop->GetSubItem(1)->SetValue(real_pos_info[1]);
-	real_pos_prop->GetSubItem(2)->SetValue(real_pos_info[2]);
-	if (!is_mouse_out)
+	real_pos_prop->GetSubItem(0)->SetValue(mouse_video_pos_x != 0 ? real_pos_info[0] : _T("out of range"));
+	real_pos_prop->GetSubItem(1)->SetValue(mouse_video_pos_x != 0 ? real_pos_info[1] : _T("out of range"));
+	real_pos_prop->GetSubItem(2)->SetValue(mouse_video_pos_x != 0 ? real_pos_info[2] : _T("out of range"));
+	if (!is_mouse_view_out)
 	{
 		COleVariant varValue = real_pos_prop->GetSubItem(3)->GetValue();
 		VARIANT destVal;
@@ -176,7 +176,7 @@ void CPropertiesWnd::OnUpdateExpandAllProperties(CCmdUI* pCmdUI)
 		VariantClear(&destVal);
 	}
 
-	if (is_view_changed && !is_mouse_out)
+	if (is_view_changed && !is_mouse_view_out)
 		return;
 
 	CMDIFrameWnd* pMainFrame = static_cast<CMDIFrameWnd*>(AfxGetMainWnd()->GetActiveWindow());
@@ -312,8 +312,8 @@ void CPropertiesWnd::InitPropList()
 
 	// 영상 좌표
 	CMFCPropertyGridProperty* pVideoPos = new CMFCPropertyGridProperty(_T("영상 좌표(*마우스 기준)"));
-	pVideoPos->AddSubItem(new CMFCPropertyGridProperty(_T("X"), (_variant_t)0l, _T("")));
-	pVideoPos->AddSubItem(new CMFCPropertyGridProperty(_T("Y"), (_variant_t)0l, _T("")));
+	pVideoPos->AddSubItem(new CMFCPropertyGridProperty(_T("X"), _T(""), _T("")));
+	pVideoPos->AddSubItem(new CMFCPropertyGridProperty(_T("Y"), _T(""), _T("")));
 	pVideoPos->GetSubItem(0)->AllowEdit(FALSE);
 	pVideoPos->GetSubItem(1)->AllowEdit(FALSE);
 	//pVideoPos->AddSubItem(new CMFCPropertyGridProperty(_T("고도"), (_variant_t)0l, _T("")));
@@ -322,8 +322,8 @@ void CPropertiesWnd::InitPropList()
 
 	// 사진 좌표
 	CMFCPropertyGridProperty* pImgPos = new CMFCPropertyGridProperty(_T("사진 좌표(*마우스 기준)"));
-	pImgPos->AddSubItem(new CMFCPropertyGridProperty(_T("X"), (_variant_t)0l, _T("")));
-	pImgPos->AddSubItem(new CMFCPropertyGridProperty(_T("Y"), (_variant_t)0l, _T("")));
+	pImgPos->AddSubItem(new CMFCPropertyGridProperty(_T("X"), _T(""), _T("")));
+	pImgPos->AddSubItem(new CMFCPropertyGridProperty(_T("Y"), _T(""), _T("")));
 	pImgPos->GetSubItem(0)->AllowEdit(FALSE);
 	pImgPos->GetSubItem(1)->AllowEdit(FALSE);
 
@@ -333,9 +333,9 @@ void CPropertiesWnd::InitPropList()
 
 	// 지상 좌표
 	CMFCPropertyGridProperty* pRealPos = new CMFCPropertyGridProperty(_T("지상 좌표(*마우스 기준)"));
-	pRealPos->AddSubItem(new CMFCPropertyGridProperty(_T("X"), (_variant_t)0.0, _T("")));
-	pRealPos->AddSubItem(new CMFCPropertyGridProperty(_T("Y"), (_variant_t)0.0, _T("")));
-	pRealPos->AddSubItem(new CMFCPropertyGridProperty(_T("Z"), (_variant_t)0.0, _T("")));
+	pRealPos->AddSubItem(new CMFCPropertyGridProperty(_T("X"), _T(""), _T("")));
+	pRealPos->AddSubItem(new CMFCPropertyGridProperty(_T("Y"), _T(""), _T("")));
+	pRealPos->AddSubItem(new CMFCPropertyGridProperty(_T("Z"), _T(""), _T("")));
 	pRealPos->AddSubItem(new CMFCPropertyGridProperty(_T("* 고정 고도 설정"), (_variant_t)0.0, _T("")));
 	pRealPos->GetSubItem(0)->AllowEdit(FALSE);
 	pRealPos->GetSubItem(1)->AllowEdit(FALSE);

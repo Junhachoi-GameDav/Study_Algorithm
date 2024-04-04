@@ -39,6 +39,7 @@ BEGIN_MESSAGE_MAP(CImageGPSviewerView, CView)
 	ON_WM_LBUTTONUP()
 	ON_WM_MOUSEMOVE()
 	ON_WM_MOUSELEAVE()
+	ON_COMMAND(ID_32782, &CImageGPSviewerView::OnDeletePoint)
 END_MESSAGE_MAP()
 
 // CImageGPSviewerView 생성/소멸
@@ -163,15 +164,18 @@ void CImageGPSviewerView::OnMouseMove(UINT nFlags, CPoint point)
 	long& mouse_video_x = pMainFrame->m_wndProperties.mouse_video_pos_x;
 	long& mouse_video_y = pMainFrame->m_wndProperties.mouse_video_pos_y;
 	
-	if (!(point.x >= result_x && point.x <= result_x + targetWidth))
+	if ((point.x >= result_x && point.x <= result_x + targetWidth))
+		mouse_video_x = static_cast<long>((point.x - result_x) * (img.cols / static_cast<float>(targetWidth))); //point.x;
+	else
 		mouse_video_x = 0;
 	
-	mouse_video_x = static_cast<long>((point.x - result_x) * (img.cols / static_cast<float>(targetWidth))); //point.x;
-	
-	if (!(point.y >= result_y && point.y <= result_y + targetHeight))
+	if ((point.y >= result_y && point.y <= result_y + targetHeight) && mouse_video_x > 0 )
+		mouse_video_y = static_cast<long>((point.y - result_y) * (img.rows / static_cast<float>(targetHeight))); //point.y;
+	else
+	{
 		mouse_video_y = 0;
-
-	mouse_video_y = static_cast<long>((point.y - result_y) * (img.rows / static_cast<float>(targetHeight))); //point.y;
+		mouse_video_x = 0;
+	}
 
 #pragma endregion
 
@@ -225,16 +229,48 @@ void CImageGPSviewerView::OnMouseMove(UINT nFlags, CPoint point)
 
 #pragma endregion
 
-	if (pDoc->previous_Ellipse.PtInRect(point))
+#pragma region 마우스 호버링
+	// 마우스 호버링
+	if (pDoc->m_points.GetSize() != 0)
 	{
-		ClientToScreen(&point);
-		theApp.GetContextMenuManager()->ShowPopupMenu(IDR_POPUP_EDIT, point.x, point.y, this, FALSE);
+		int closestPointIndex = -1;
+		double minDistance = DBL_MAX;
+
+		for (int i = 0; i < pDoc->m_points.GetSize(); i++)
+		{
+			CPoint pt = pDoc->m_points[i];
+			double distance = sqrt(pow(pt.x - point.x, 2) + pow(pt.y - point.y, 2));
+
+			if (distance < minDistance)
+			{
+				minDistance = distance;
+				closestPointIndex = i;
+			}
+		}
+
+		if (closestPointIndex != -1)
+		{
+			CPoint pt = pDoc->m_points[closestPointIndex];
+			CRect rect(pt.x - pDoc->dot_size, pt.y - pDoc->dot_size, pt.x + pDoc->dot_size, pt.y + pDoc->dot_size);
+			pDoc->previous_Ellipse = rect;
+
+			if (pDoc->previous_Ellipse.PtInRect(point))
+			{
+				pMainFrame->m_wndProperties.is_mouse_point_out = false;
+				ClientToScreen(&pt);
+				OnContextMenu(this, pt);
+			}
+			else
+				pMainFrame->m_wndProperties.is_mouse_point_out = true;
+		}
 	}
-	//::PostMessage(this->m_hWnd, WM_LBUTTONDOWN, MK_LBUTTON, MAKELPARAM(-1, -1));
-	
+
+#pragma endregion
+
+
 
 	pMainFrame->m_wndProperties.UpdateWindow();
-	pMainFrame->m_wndProperties.is_mouse_out = false;
+	pMainFrame->m_wndProperties.is_mouse_view_out = false;
 
 	CView::OnMouseMove(nFlags, point);
 }
@@ -245,64 +281,65 @@ void CImageGPSviewerView::OnMouseLeave()
 	if (pMainFrame == nullptr)
 		return;
 
-	pMainFrame->m_wndProperties.mouse_video_pos_x = 0;
-	pMainFrame->m_wndProperties.mouse_video_pos_y = 0;
-	pMainFrame->m_wndProperties.mouse_img_pos_x = 0;
-	pMainFrame->m_wndProperties.mouse_img_pos_y = 0;
-	pMainFrame->m_wndProperties.mouse_real_pos_x = 0;
-	pMainFrame->m_wndProperties.mouse_real_pos_y = 0;
-	pMainFrame->m_wndProperties.mouse_real_pos_z = 0;
+	if(pMainFrame->m_wndProperties.is_mouse_point_out)
+	{
+		pMainFrame->m_wndProperties.mouse_video_pos_x = 0;
+		pMainFrame->m_wndProperties.mouse_video_pos_y = 0;
+		pMainFrame->m_wndProperties.mouse_img_pos_x = 0;
+		pMainFrame->m_wndProperties.mouse_img_pos_y = 0;
+		pMainFrame->m_wndProperties.mouse_real_pos_x = 0;
+		pMainFrame->m_wndProperties.mouse_real_pos_y = 0;
+		pMainFrame->m_wndProperties.mouse_real_pos_z = 0;
+	}
 
 	pMainFrame->m_wndProperties.UpdateWindow();
-	pMainFrame->m_wndProperties.is_mouse_out = true;
+	pMainFrame->m_wndProperties.is_mouse_view_out = true;
 	CView::OnMouseLeave();
 }
 
-void CImageGPSviewerView::OnLButtonDown(UINT nFlags, CPoint point)
-{
-	CImageGPSviewerDoc* pDoc = GetDocument();
-	ASSERT_VALID(pDoc);
-	if (!pDoc)
-		return;
-	
-	pDoc->m_points.Add(point);
-	CDC* pDC = GetDC();
-
-	for (int i = 0; i < pDoc->m_points.GetSize(); i++)
-	{
-		CPoint pt = pDoc->m_points[i];
-		pDC->Ellipse(
-			pt.x - pDoc->dot_size, 
-			pt.y - pDoc->dot_size, 
-			pt.x + pDoc->dot_size, 
-			pt.y + pDoc->dot_size);
-		CRect ellipseRect(
-			pt.x - pDoc->dot_size * 2, 
-			pt.y - pDoc->dot_size * 2, 
-			pt.x + pDoc->dot_size * 2, 
-			pt.y + pDoc->dot_size * 2);
-		pDoc->previous_Ellipse = ellipseRect;
-	}
-
-	ReleaseDC(pDC);
-	CView::OnLButtonDown(nFlags, point);
-}
-
-//void CImageGPSviewerView::OnLButtonUp(UINT nFlags, CPoint point)
+//void CImageGPSviewerView::OnLButtonDown(UINT nFlags, CPoint point)
 //{
 //	CImageGPSviewerDoc* pDoc = GetDocument();
 //	ASSERT_VALID(pDoc);
 //	if (!pDoc)
 //		return;
+//	
+//	CMainFrame* pMainFrame = static_cast<CMainFrame*>(AfxGetMainWnd());
+//	if (pMainFrame == nullptr)
+//		return;
 //
-//	pDoc->is_Dragging = false;
+//	if (pMainFrame->m_wndProperties.mouse_video_pos_x == 0 || pMainFrame->m_wndProperties.mouse_video_pos_y == 0)
+//		return;
+//
+//	pDoc->m_points.Add(point);
 //	CDC* pDC = GetDC();
-//	pDC->MoveTo(pDoc->previous_pt);  // 이전 위치로 이동
-//	pDC->LineTo(point);         // 마지막 점까지 선 그리기
-//	ReleaseDC(pDC);
 //
-//	CView::OnLButtonUp(nFlags, point);
+//	CBrush brush(RGB(0, 255, 0));
+//	CBrush* pOldBrush = pDC->SelectObject(&brush);
+//
+//	for (int i = 0; i < pDoc->m_points.GetSize(); i++)
+//	{
+//		CPoint pt = pDoc->m_points[i];
+//		pDC->Ellipse(
+//			pt.x - pDoc->dot_size, 
+//			pt.y - pDoc->dot_size, 
+//			pt.x + pDoc->dot_size, 
+//			pt.y + pDoc->dot_size);
+//		CRect ellipseRect(
+//			pt.x - pDoc->dot_size, 
+//			pt.y - pDoc->dot_size, 
+//			pt.x + pDoc->dot_size, 
+//			pt.y + pDoc->dot_size);
+//		pDoc->previous_Ellipse = ellipseRect;
+//	}
+//
+//	pMainFrame->m_wndProperties.is_mouse_point_out = false;
+//	ClientToScreen(&point);
+//	OnContextMenu(this, point);
+//	ReleaseDC(pDC);
+//	CView::OnLButtonDown(nFlags, point);
 //}
+
 
 // CImageGPSviewerView 인쇄
 
@@ -330,10 +367,47 @@ void CImageGPSviewerView::OnLButtonDown(UINT nFlags, CPoint point)
 //	// TODO: 인쇄 후 정리 작업을 추가합니다.
 //}
 
-void CImageGPSviewerView::OnRButtonUp(UINT /* nFlags */, CPoint point)
+void CImageGPSviewerView::OnRButtonUp(UINT nFlags , CPoint point)
 {
+	CImageGPSviewerDoc* pDoc = GetDocument();
+	ASSERT_VALID(pDoc);
+	if (!pDoc)
+		return;
+
+	CMainFrame* pMainFrame = static_cast<CMainFrame*>(AfxGetMainWnd());
+	if (pMainFrame == nullptr)
+		return;
+
+	if (pMainFrame->m_wndProperties.mouse_video_pos_x == 0 || pMainFrame->m_wndProperties.mouse_video_pos_y == 0)
+		return;
+
+	pDoc->m_points.Add(point);
+	CDC* pDC = GetDC();
+
+	CBrush brush(RGB(0, 255, 0));
+	CBrush* pOldBrush = pDC->SelectObject(&brush);
+
+	for (int i = 0; i < pDoc->m_points.GetSize(); i++)
+	{
+		CPoint pt = pDoc->m_points[i];
+		pDC->Ellipse(
+			pt.x - pDoc->dot_size,
+			pt.y - pDoc->dot_size,
+			pt.x + pDoc->dot_size,
+			pt.y + pDoc->dot_size);
+		CRect ellipseRect(
+			pt.x - pDoc->dot_size,
+			pt.y - pDoc->dot_size,
+			pt.x + pDoc->dot_size,
+			pt.y + pDoc->dot_size);
+		pDoc->previous_Ellipse = ellipseRect;
+	}
+
+	pMainFrame->m_wndProperties.is_mouse_point_out = false;
 	ClientToScreen(&point);
 	OnContextMenu(this, point);
+	ReleaseDC(pDC);
+	CView::OnRButtonUp(nFlags, point);
 }
 
 void CImageGPSviewerView::OnContextMenu(CWnd* /* pWnd */, CPoint point)
@@ -342,7 +416,6 @@ void CImageGPSviewerView::OnContextMenu(CWnd* /* pWnd */, CPoint point)
 	theApp.GetContextMenuManager()->ShowPopupMenu(IDR_POPUP_EDIT, point.x, point.y, this, TRUE);
 #endif
 }
-
 
 // CImageGPSviewerView 진단
 
@@ -366,3 +439,34 @@ CImageGPSviewerDoc* CImageGPSviewerView::GetDocument() const // 디버그되지 
 
 
 // CImageGPSviewerView 메시지 처리기
+
+
+void CImageGPSviewerView::OnDeletePoint()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	CImageGPSviewerDoc* pDoc = GetDocument();
+	ASSERT_VALID(pDoc);
+	if (!pDoc)
+		return;
+
+	CMainFrame* pMainFrame = static_cast<CMainFrame*>(AfxGetMainWnd());
+	if (pMainFrame == nullptr)
+		return;
+
+	CDC* pDC = GetDC();
+
+	for (int i = 0; i < pDoc->m_points.GetSize(); i++)
+	{
+		CPoint pt = pDoc->m_points[i];
+		CRect rect(pt.x - pDoc->dot_size, pt.y - pDoc->dot_size, pt.x + pDoc->dot_size, pt.y + pDoc->dot_size);
+
+		if (rect.PtInRect(pDoc->previous_Ellipse.CenterPoint()))
+		{
+			pDoc->m_points.RemoveAt(i);
+			InvalidateRect(rect, FALSE);
+			break;
+		}
+	}
+	ReleaseDC(pDC);
+	UpdateWindow();
+}

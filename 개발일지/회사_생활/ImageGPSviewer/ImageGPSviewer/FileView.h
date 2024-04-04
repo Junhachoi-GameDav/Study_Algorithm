@@ -24,6 +24,8 @@ public:
 
 	void AdjustLayout();
 	void OnChangeVisualStyle();
+	
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 
 // 특성입니다.
 public:
@@ -51,7 +53,7 @@ protected:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
-	afx_msg void OnProperties();
+	//afx_msg void OnProperties();
 	//afx_msg void OnFileOpen();
 	//afx_msg void OnFileOpenWith();
 	afx_msg void OnDummyCompile();
@@ -60,8 +62,8 @@ protected:
 	afx_msg void OnEditClear();
 	afx_msg void OnPaint();
 	afx_msg void OnSetFocus(CWnd* pOldWnd);
-	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
-	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
+	//afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+	//afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
 	DECLARE_MESSAGE_MAP()
 };
 

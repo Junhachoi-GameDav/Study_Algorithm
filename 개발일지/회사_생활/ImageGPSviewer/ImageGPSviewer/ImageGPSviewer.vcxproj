@@ -220,6 +220,7 @@
     <ResourceCompile Include="ImageGPSviewer.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="C:\Users\user\Downloads\free-icon-topography-13429573.png" />
     <Image Include="res\classview.bmp" />
     <Image Include="res\classview_hc.bmp" />
     <Image Include="res\class_view.ico" />
@@ -230,6 +231,7 @@
     <Image Include="res\fileview_hc.bmp" />
     <Image Include="res\file_view.ico" />
     <Image Include="res\file_view_hc.ico" />
+    <Image Include="res\free-icon-topography-13429573.ico" />
     <Image Include="res\ImageGPSviewer.ico" />
     <Image Include="res\ImageGPSviewerDoc.ico" />
     <Image Include="res\menuimages.bmp" />

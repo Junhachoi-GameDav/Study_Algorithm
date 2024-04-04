@@ -20,7 +20,7 @@ public:
 	virtual void OnDraw(CDC* pDC);  // 이 뷰를 그리기 위해 재정의되었습니다.
 	void OnMouseMove(UINT nFlags, CPoint point);
 	void OnMouseLeave();
-	void OnLButtonDown(UINT nFlags, CPoint point);
+	//void OnLButtonDown(UINT nFlags, CPoint point);
 	//void OnLButtonUp(UINT nFlags, CPoint point);
 	
 	//virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
@@ -52,6 +52,7 @@ protected:
 	//afx_msg void OnFilePrintPreview();
 	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
 	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
+	afx_msg void OnDeletePoint();
 	DECLARE_MESSAGE_MAP()
 };
 

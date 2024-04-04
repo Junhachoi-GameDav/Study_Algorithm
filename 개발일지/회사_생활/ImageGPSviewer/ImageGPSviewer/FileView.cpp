@@ -42,7 +42,8 @@ BEGIN_MESSAGE_MAP(CFileView, CDockablePane)
 	ON_WM_SIZE()
 	ON_WM_CONTEXTMENU()
 	ON_WM_LBUTTONDOWN()
-	ON_COMMAND(ID_PROPERTIES, OnProperties)
+	//ON_WM_LBUTTONUP()
+	//ON_COMMAND(ID_PROPERTIES, OnProperties)
 	ON_COMMAND(ID_OPEN, OnFileOpen)
 	//ON_COMMAND(ID_OPEN_WITH, OnFileOpenWith)
 	ON_COMMAND(ID_DUMMY_COMPILE, OnDummyCompile)
@@ -183,12 +184,12 @@ void CFileView::AdjustLayout()
 	m_wndToolBar.SetWindowPos(nullptr, rectClient.left, rectClient.top, rectClient.Width(), cyTlb, SWP_NOACTIVATE | SWP_NOZORDER);
 	m_wndFileView.SetWindowPos(nullptr, rectClient.left + 1, rectClient.top + cyTlb + 1, rectClient.Width() - 2, rectClient.Height() - cyTlb - 2, SWP_NOACTIVATE | SWP_NOZORDER);
 }
-
-void CFileView::OnProperties()
-{
-	AfxMessageBox(_T("속성...."));
-
-}
+//
+//void CFileView::OnProperties()
+//{
+//	//AfxMessageBox(_T("속성...."));
+//
+//}
 
 void CFileView::OnFileOpen()
 {
@@ -265,17 +266,13 @@ void CFileView::OnSetFocus(CWnd* pOldWnd)
 
 	m_wndFileView.SetFocus();
 }
+//
+//void CFileView::OnLButtonDown(UINT nFlags, CPoint point)
+//{
+//
+//	CDockablePane::OnLButtonDown(nFlags, point);
+//}
 
-void CFileView::OnLButtonDown(UINT nFlags, CPoint point)
-{
-
-	CDockablePane::OnLButtonDown(nFlags, point);
-}
-
-void CFileView::OnLButtonDblClk(UINT nFlags, CPoint point)
-{
-
-}
 
 void CFileView::OnChangeVisualStyle()
 {
@@ -305,6 +302,27 @@ void CFileView::OnChangeVisualStyle()
 	m_FileViewImages.Add(&bmp, RGB(255, 0, 255));
 
 	m_wndFileView.SetImageList(&m_FileViewImages, TVSIL_NORMAL);
+}
+
+BOOL CFileView::PreTranslateMessage(MSG* pMsg)
+{
+	if (pMsg->message != WM_LBUTTONDOWN)
+		return CDockablePane::PreTranslateMessage(pMsg);
+	
+	CPoint mouse_point(GET_X_LPARAM(pMsg->lParam), GET_Y_LPARAM(pMsg->lParam));
+
+	this->m_wndFileView.ScreenToClient(&mouse_point);
+
+	UINT flags = 0;
+	HTREEITEM hTreeItem = this->m_wndFileView.HitTest(mouse_point, &flags);
+
+	if (hTreeItem != nullptr && (flags & TVHT_ONITEM))
+	{
+		m_wndFileView.SelectItem(hTreeItem);
+		OnFileOpen();
+	}
+
+	return CDockablePane::PreTranslateMessage(pMsg);
 }
 
 

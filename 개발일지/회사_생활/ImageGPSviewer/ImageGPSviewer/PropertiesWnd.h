@@ -54,8 +54,10 @@ public:
 	double set_altitude = 0;
 
 	bool is_view_changed = false;
-	bool is_mouse_out;
+	bool is_mouse_view_out;
+	
 	CRect m_ellipseRect;
+	bool is_mouse_point_out = true;
 
 public:
 	void OnPropertyChanged(CMFCPropertyGridProperty* pProp);
