@@ -53,6 +53,12 @@ public:
 	double mouse_real_pos_z = 0;
 	double set_altitude = 0;
 
+	double pre_mouse_real_pos_x = 0;
+	double pre_mouse_real_pos_y = 0;
+	double cur_mouse_real_pos_x = 0;
+	double cur_mouse_real_pos_y = 0;
+	double azimuth = 0;
+
 	bool is_view_changed = false;
 	bool is_mouse_view_out;
 	

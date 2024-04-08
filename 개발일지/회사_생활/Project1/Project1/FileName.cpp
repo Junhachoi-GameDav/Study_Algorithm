@@ -223,6 +223,30 @@ cv::Mat make_rotation_matrix(double roll, double pitch, double yaw)
 
 #pragma endregion
 
+#pragma region 방위각 계산
+/** calculate_azimuth
+* @brief		- 방위각( A to B )를 구한다.
+* @param	- Ax, Ay, Bx, By
+* @return	- azimuth
+*/
+double calculate_azimuth(double x1, double y1, double x2, double y2)
+{
+	const double PI = 3.14159265358979323846;
+
+	double deltaX = x2 - x1;
+	double deltaY = y2 - y1;
+	double azimuth = atan2(deltaY, deltaX);
+	azimuth = azimuth * (180 / PI);
+	azimuth = 90 - azimuth; // 북을  0도로
+
+	if (azimuth < 0)
+		azimuth += 360.0;
+
+	return azimuth;
+}
+
+#pragma endregion
+
 int main()
 {
 	// 웹 소켓 연결

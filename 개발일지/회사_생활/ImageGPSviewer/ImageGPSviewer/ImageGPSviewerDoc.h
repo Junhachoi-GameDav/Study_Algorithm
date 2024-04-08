@@ -32,6 +32,7 @@ public:
 	double convert_gps_alt(const Exiv2::Value& value);
 	std::array<double, 3> meta_transform(const std::span<double>& s);
 	std::array<double, 3> read_meta_data(const std::string& img_path);
+	double calculate_azimuth(double x1, double y1, double x2, double y2);
 
 // 재정의입니다.
 public:
@@ -61,6 +62,8 @@ public:
 	CArray<CPoint, CPoint> m_points;
 	int dot_size = 3;
 	CRect previous_Ellipse;
+	CRect azimuth_A;
+	CRect azimuth_B;
 
 protected:
 

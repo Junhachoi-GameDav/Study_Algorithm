@@ -176,6 +176,22 @@ void CPropertiesWnd::OnUpdateExpandAllProperties(CCmdUI* pCmdUI)
 		VariantClear(&destVal);
 	}
 
+	// 방위각
+	CMFCPropertyGridProperty* azimuth_prop = m_wndPropList.GetProperty(3);
+	const COleVariant azimuth_info[5]
+	{
+		COleVariant(CComBSTR(std::to_string(pre_mouse_real_pos_x).c_str())),
+		COleVariant(CComBSTR(std::to_string(pre_mouse_real_pos_y).c_str())),
+		COleVariant(CComBSTR(std::to_string(cur_mouse_real_pos_x).c_str())),
+		COleVariant(CComBSTR(std::to_string(cur_mouse_real_pos_y).c_str())),
+		COleVariant(CComBSTR(std::to_string(azimuth).c_str()))
+	};
+	azimuth_prop->GetSubItem(0)->SetValue(mouse_video_pos_x != 0 ? azimuth_info[0] : _T("out of range"));
+	azimuth_prop->GetSubItem(1)->SetValue(mouse_video_pos_x != 0 ? azimuth_info[1] : _T("out of range"));
+	azimuth_prop->GetSubItem(2)->SetValue(mouse_video_pos_x != 0 ? azimuth_info[2] : _T("out of range"));
+	azimuth_prop->GetSubItem(3)->SetValue(mouse_video_pos_x != 0 ? azimuth_info[3] : _T("out of range"));
+	azimuth_prop->GetSubItem(4)->SetValue(mouse_video_pos_x != 0 ? azimuth_info[4] : _T("out of range"));
+
 	if (is_view_changed && !is_mouse_view_out)
 		return;
 
@@ -196,7 +212,7 @@ void CPropertiesWnd::OnUpdateExpandAllProperties(CCmdUI* pCmdUI)
 		return;
 
 	// GPS
-	CMFCPropertyGridProperty* GPS_prop = m_wndPropList.GetProperty(4);
+	CMFCPropertyGridProperty* GPS_prop = m_wndPropList.GetProperty(5);
 	if (GPS_prop == nullptr)
 		return;
 
@@ -232,7 +248,7 @@ void CPropertiesWnd::OnUpdateExpandAllProperties(CCmdUI* pCmdUI)
 	}
 
 	// 이미지
-	CMFCPropertyGridProperty* img_prop = m_wndPropList.GetProperty(5);
+	CMFCPropertyGridProperty* img_prop = m_wndPropList.GetProperty(6);
 	if (img_prop == nullptr)
 		return;
 
@@ -342,6 +358,21 @@ void CPropertiesWnd::InitPropList()
 	pRealPos->GetSubItem(2)->AllowEdit(FALSE);
 
 	m_wndPropList.AddProperty(pRealPos);
+
+	// 방위각
+	CMFCPropertyGridProperty* pAzimuth = new CMFCPropertyGridProperty(_T("방위각( A to B )"));
+	pAzimuth->AddSubItem(new CMFCPropertyGridProperty(_T("Ax"), _T(""), _T("")));
+	pAzimuth->AddSubItem(new CMFCPropertyGridProperty(_T("Ay"), _T(""), _T("")));
+	pAzimuth->AddSubItem(new CMFCPropertyGridProperty(_T("Bx"), _T(""), _T("")));
+	pAzimuth->AddSubItem(new CMFCPropertyGridProperty(_T("By"), _T(""), _T("")));
+	pAzimuth->AddSubItem(new CMFCPropertyGridProperty(_T("각(도)"), _T(""), _T("")));
+	pAzimuth->GetSubItem(0)->AllowEdit(FALSE);
+	pAzimuth->GetSubItem(1)->AllowEdit(FALSE);
+	pAzimuth->GetSubItem(2)->AllowEdit(FALSE);
+	pAzimuth->GetSubItem(3)->AllowEdit(FALSE);
+	pAzimuth->GetSubItem(4)->AllowEdit(FALSE);
+
+	m_wndPropList.AddProperty(pAzimuth);
 
 	// 빈 칸
 	CMFCPropertyGridProperty* pSeparator = new CMFCPropertyGridProperty(_T(" "), (_variant_t)_T(""), _T("이 부분은 시각적으로 구분하기 위한 공간입니다."));

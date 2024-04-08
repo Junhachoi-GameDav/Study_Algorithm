@@ -53,6 +53,8 @@ protected:
 	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
 	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
 	afx_msg void OnDeletePoint();
+	afx_msg void OnSetAzimuthBase();
+	afx_msg void OnSetAzimuthTarget();
 	DECLARE_MESSAGE_MAP()
 };
 

@@ -40,6 +40,8 @@ BEGIN_MESSAGE_MAP(CImageGPSviewerView, CView)
 	ON_WM_MOUSEMOVE()
 	ON_WM_MOUSELEAVE()
 	ON_COMMAND(ID_32782, &CImageGPSviewerView::OnDeletePoint)
+	ON_COMMAND(ID_32787, &CImageGPSviewerView::OnSetAzimuthBase)
+	ON_COMMAND(ID_32772, &CImageGPSviewerView::OnSetAzimuthTarget)
 END_MESSAGE_MAP()
 
 // CImageGPSviewerView 생성/소멸
@@ -267,8 +269,6 @@ void CImageGPSviewerView::OnMouseMove(UINT nFlags, CPoint point)
 
 #pragma endregion
 
-
-
 	pMainFrame->m_wndProperties.UpdateWindow();
 	pMainFrame->m_wndProperties.is_mouse_view_out = false;
 
@@ -469,4 +469,82 @@ void CImageGPSviewerView::OnDeletePoint()
 	}
 	ReleaseDC(pDC);
 	UpdateWindow();
+}
+
+
+void CImageGPSviewerView::OnSetAzimuthBase()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	CImageGPSviewerDoc* pDoc = GetDocument();
+	ASSERT_VALID(pDoc);
+	if (!pDoc)
+		return;
+
+	CMainFrame* pMainFrame = static_cast<CMainFrame*>(AfxGetMainWnd());
+	if (pMainFrame == nullptr)
+		return;
+
+	pDoc->azimuth_A = pDoc->previous_Ellipse;
+	pMainFrame->m_wndProperties.pre_mouse_real_pos_x = pMainFrame->m_wndProperties.mouse_real_pos_x;
+	pMainFrame->m_wndProperties.pre_mouse_real_pos_y = pMainFrame->m_wndProperties.mouse_real_pos_y;
+}
+
+
+void CImageGPSviewerView::OnSetAzimuthTarget()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	CImageGPSviewerDoc* pDoc = GetDocument();
+	ASSERT_VALID(pDoc);
+	if (!pDoc)
+		return;
+
+	CMainFrame* pMainFrame = static_cast<CMainFrame*>(AfxGetMainWnd());
+	if (pMainFrame == nullptr)
+		return;
+
+	pDoc->azimuth_B = pDoc->previous_Ellipse;
+
+	if (pDoc->azimuth_A == nullptr)
+		return;
+
+	double Ax = pMainFrame->m_wndProperties.pre_mouse_real_pos_x;
+	double Ay = pMainFrame->m_wndProperties.pre_mouse_real_pos_y;
+	pMainFrame->m_wndProperties.cur_mouse_real_pos_x = pMainFrame->m_wndProperties.mouse_real_pos_x;
+	pMainFrame->m_wndProperties.cur_mouse_real_pos_y = pMainFrame->m_wndProperties.mouse_real_pos_y;
+	double Bx = pMainFrame->m_wndProperties.cur_mouse_real_pos_x;
+	double By = pMainFrame->m_wndProperties.cur_mouse_real_pos_y;
+
+	pMainFrame->m_wndProperties.azimuth = pDoc->calculate_azimuth(Ax, Ay, Bx, By);
+	
+	CDC* pDC = GetDC();
+	CPoint centerA(pDoc->azimuth_A.CenterPoint());
+	CPoint centerB(pDoc->azimuth_B.CenterPoint());
+
+	pDC->MoveTo(centerA);
+	pDC->LineTo(centerB);
+	
+	ReleaseDC(pDC);
+
+	//cv::Ptr<cv::SIFT> detector = cv::SIFT::create();
+	////cv::ORB;
+	////cv::AKAZE;
+	//
+	//cv::Mat image1 = cv::imread();
+	//cv::Mat image2 = cv::imread();
+
+	//std::vector<cv::KeyPoint> keypoint1;
+	//std::vector<cv::KeyPoint> keypoint2;
+	//cv::Mat des1;
+	//cv::Mat des2;
+
+	//detector->detectAndCompute(image1, cv::noArray(), keypoint1, des1);
+	//detector->detectAndCompute(image2, cv::noArray(), keypoint2, des2);
+
+	//cv::Ptr<cv::BFMatcher> matcher = cv::BFMatcher::create(cv::NormTypes::NORM_L2, true);
+	////cv::FlannBasedMatcher;
+	//std::vector<cv::DMatch> matched;
+	//matcher->match(des1, des2, matched);
+
+	//cv::Mat result;
+	//cv::drawMatches(image1, keypoint1, image2, keypoint2, matched, result);
 }
