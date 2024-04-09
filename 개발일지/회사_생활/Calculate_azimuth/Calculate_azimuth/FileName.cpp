@@ -2,7 +2,6 @@
 #include <iostream>
 #include <filesystem>
 #include <span>
-#include <cmath>
 #include <regex>
 
 // opencv
@@ -184,52 +183,215 @@ double calculate_azimuth(double x1, double y1, double x2, double y2)
 int main()
 {
 	const std::filesystem::path cur_path = std::filesystem::current_path();
-	const std::filesystem::path img_path = cur_path / "Image20231207-061900" / "IMG_03_0000000062_L.jpg";
+	const std::filesystem::path img_path = cur_path / "Image20231207-061900" / "IMG_03_0000000005_L.jpg";
+	//const std::filesystem::path img_path0 = cur_path / "Image20231207-061900" / "IMG_03_0000000062_L.jpg";
+	//const std::filesystem::path img_path1 = cur_path / "Image20231207-061900" / "IMG_03_0000000001_L.jpg";
 
 	std::regex re("_(\\d+)_L\\.jpg$");
 	std::smatch match;
 
 	std::string filename = img_path.filename().string();
+	
+	cv::Mat baseRotation = cv::Mat::eye(3, 3, CV_64F);
+	std::vector<cv::Mat> Rotations;
 
-	std::vector<std::pair<double, double>, std::pair<double, double>> real_pos_vec;
+	if (!std::regex_search(filename, match, re) || match.size() < 1)
+		return 0;
 
-	if (std::regex_search(filename, match, re) && match.size() > 1)
+	std::string numStr = match.str(1);
+	int numLength = numStr.length();
+
+	for (int i = 1; i <= std::stoi(numStr); ++i)
 	{
-		std::string numStr = match.str(1);
-		int numLength = numStr.length();
-		for (int i = 0; i <= std::stoi(numStr); ++i)
-		{
-			std::stringstream ss;
-			ss << std::setw(numLength) << std::setfill('0') << i;
+		std::stringstream ss;
+		ss << std::setw(numLength) << std::setfill('0') << i - 1;
+		std::string cur_filename = std::regex_replace(filename, re, "_" + ss.str() + "_L.jpg");
+		ss.str("");
+		ss.clear();
+		ss << std::setw(numLength) << std::setfill('0') << i;
+		std::string next_filename = std::regex_replace(filename, re, "_" + ss.str() + "_L.jpg");
 
-			// 새로운 파일 이름 생성
-			std::string new_filename = std::regex_replace(filename, re, "_" + ss.str() + "_L.jpg");
-			std::filesystem::path new_path = img_path.parent_path() / new_filename;
-			
-			cv::Mat image = cv::imread(img_path.string());
+		std::filesystem::path cur_path = img_path.parent_path() / cur_filename;
+		std::filesystem::path next_path = img_path.parent_path() / next_filename;
 
-			std::array<double, 3> meta_data = read_meta_data(new_path.string());
-			const std::array<double, 3> img_meta = transform(meta_data);
-			const cv::Mat_<double> ground_meta = (cv::Mat_<double>(3, 1) << img_meta[0], img_meta[1], img_meta[2]);
+		cv::Ptr<cv::ORB> detector = cv::ORB::create(2000);
 
-			const cv::Mat_<double> img_pos = change_video_to_img(image);
+		cv::Mat cur_image = cv::imread(cur_path.string());
+		cv::Mat next_image = cv::imread(next_path.string());
 
-			constexpr double Altitude = 20;
-			double lambda = img_pos.at<double>(2, 0) / (Altitude - ground_meta.at<double>(2, 0));
+		if (cur_image.empty() || next_image.empty())
+			return -1;
 
-			cv::Mat real_pos = img_pos / lambda;
-			real_pos += ground_meta;
+		std::vector<cv::KeyPoint> keypoint1;
+		std::vector<cv::KeyPoint> keypoint2;
+		cv::Mat des1;
+		cv::Mat des2;
 
-			cv::Mat previous_real_pos = real_pos;
-			real_pos_vec.push_back({{ real_pos.at<double>(0, 0), real_pos.at<double>(1, 0) },{ previous_real_pos.at<double>(0,0),previous_real_pos.at<double>(1,0) } });
-			std::cout << "\n";
+		detector->detectAndCompute(cur_image, cv::noArray(), keypoint1, des1);
+		detector->detectAndCompute(next_image, cv::noArray(), keypoint2, des2);
+
+		cv::Mat detect1;
+		cv::Mat detect2;
+
+		cv::Ptr<cv::BFMatcher> matcher = cv::BFMatcher::create(cv::NormTypes::NORM_HAMMING, true);
+
+		std::vector<cv::DMatch> matched;
+		matcher->match(des1, des2, matched);
+
+		// Essential
+		std::vector<cv::Point2f> points1, points2;
+		for (auto& match : matched) {
+			points1.push_back(keypoint1[match.queryIdx].pt);
+			points2.push_back(keypoint2[match.trainIdx].pt);
 		}
-	}
 
-	for (auto it : real_pos_vec)
+		cv::Mat mask;
+		constexpr double focal = 4.8;
+		cv::Point2f photo_mid(cur_image.cols / 2, cur_image.rows / 2);
+		cv::Mat Essential_result = cv::findEssentialMat(points1, points2, focal, photo_mid, cv::RANSAC, 0.999, 1.0, mask);
+
+		// 회전값(행렬)
+		cv::Mat Rotation;
+		cv::Mat Translation;
+		cv::recoverPose(Essential_result, points1, points2, Rotation, Translation, focal, photo_mid, mask);
+
+		// 누적된 회전
+		baseRotation = baseRotation * Rotation;
+		Rotations.push_back(baseRotation);
+
+		std::cout << std::format("#{}\n {} -> {} = \n",i , i - 1, i) << baseRotation << "\n";
+	}
+	/*
+	std::regex re("_(\\d+)_L\\.jpg$");
+	std::smatch match;
+
+	std::string filename = img_path.filename().string();
+	std::vector<std::pair<double, double>> real_pos_vec;
+
+	if (!std::regex_search(filename, match, re) || match.size() < 1)
+		return 0;
+
+	std::string numStr = match.str(1);
+	int numLength = numStr.length();
+	for (int i = 0; i <= std::stoi(numStr); ++i)
 	{
-		double test = calculate_azimuth(it.)
+		std::stringstream ss;
+		ss << std::setw(numLength) << std::setfill('0') << i;
+
+		// 새로운 파일 이름 생성
+		std::string new_filename = std::regex_replace(filename, re, "_" + ss.str() + "_L.jpg");
+		std::filesystem::path new_path = img_path.parent_path() / new_filename;
+
+		cv::Mat image = cv::imread(img_path.string());
+
+		std::array<double, 3> meta_data = read_meta_data(new_path.string());
+		const std::array<double, 3> img_meta = transform(meta_data);
+		const cv::Mat_<double> ground_meta = (cv::Mat_<double>(3, 1) << img_meta[0], img_meta[1], img_meta[2]);
+
+		const cv::Mat_<double> img_pos = change_video_to_img(image);
+
+		constexpr double Altitude = 20;
+		double lambda = img_pos.at<double>(2, 0) / (Altitude - ground_meta.at<double>(2, 0));
+
+		cv::Mat real_pos = img_pos / lambda;
+		real_pos += ground_meta;
+
+		real_pos_vec.push_back({ real_pos.at<double>(0, 0), real_pos.at<double>(1, 0) } );
 	}
 
+	for (size_t i = 1; i < real_pos_vec.size(); ++i)
+	{
+		auto& current = real_pos_vec[i];
+		auto& previous = real_pos_vec[i - 1];
+
+		auto result = 
+			calculate_azimuth
+			(
+				current.first, 
+				current.second, 
+				previous.first, 
+				previous.second
+			);
+		std::cout << "#" << i << "\n";
+		std::cout << std::format("{}  {} \n", previous.first, current.first);
+		std::cout << std::format("{}  {} = {}\n", previous.second, current.second, result) << "\n";
+	}
+	*/
+	/*
+	cv::Ptr<cv::ORB> detector = cv::ORB::create(2000);
+	//cv::ORB;
+	// cv::SIFT;
+	//cv::AKAZE;
+	
+	cv::Mat image1 = cv::imread(img_path0.string());
+	cv::Mat image2 = cv::imread(img_path1.string());
+
+	if (image1.empty() || image2.empty())
+		return -1;
+
+	std::vector<cv::KeyPoint> keypoint1;
+	std::vector<cv::KeyPoint> keypoint2;
+	cv::Mat des1;
+	cv::Mat des2;
+
+	detector->detectAndCompute(image1, cv::noArray(), keypoint1, des1);
+	detector->detectAndCompute(image2, cv::noArray(), keypoint2, des2);
+	
+	cv::Mat detect1;
+	cv::Mat detect2;
+	cv::drawKeypoints(image1, keypoint1, detect1);
+	cv::resize(detect1, detect1, detect1.size() / 4);
+	cv::imshow("detect 1 result", detect1);
+	cv::waitKey(0);
+	cv::drawKeypoints(image2, keypoint2, detect2);
+	cv::resize(detect2, detect2, detect2.size() / 4);
+	cv::imshow("detect 2 result", detect2);
+	cv::waitKey(0);
+	
+	cv::Ptr<cv::BFMatcher> matcher = cv::BFMatcher::create(cv::NormTypes::NORM_HAMMING, true);
+	//cv::Ptr<cv::FlannBasedMatcher> matcher = cv::FlannBasedMatcher::create();
+
+	std::vector<cv::DMatch> matched;
+	//std::vector<std::vector<cv::DMatch>> matched;
+	matcher->match(des1, des2, matched);
+
+	cv::Mat result;
+
+	// Fundamental
+	std::vector<cv::Point2f> points1, points2;
+	for (auto& match : matched) {
+		points1.push_back(keypoint1[match.queryIdx].pt);
+		points2.push_back(keypoint2[match.trainIdx].pt);
+	}
+
+	cv::Mat mask;
+	//cv::Mat filtered_result = cv::findFundamentalMat(points1, points2, cv::FM_RANSAC, 3, 0.99, mask);
+	
+	// Essential
+	constexpr double focal = 4.8;
+	cv::Point2f photo_mid(image1.cols / 2, image1.rows / 2);
+	cv::Mat Essential_result = cv::findEssentialMat(points1, points2, focal, photo_mid, cv::RANSAC, 0.999, 1.0, mask);
+
+	// 회전값(행렬)
+	cv::Mat Rotation;
+	cv::Mat Translation;
+	auto test = cv::recoverPose(Essential_result, points1, points2, Rotation, Translation, focal, photo_mid, mask);
+
+	cv::drawMatches(image1, keypoint1, image2, keypoint2, matched, Essential_result);
+	cv::resize(Essential_result, Essential_result, Essential_result.size() / 4);
+	cv::imshow("matched result", Essential_result);
+	cv::waitKey(0);
+
+	//std::cout << Rotation << "\n";
+	//std::cout << Translation << "\n";
+
+	// 회전 행렬 각도로 변환
+	cv::Mat mat_vec;
+	//cv::Rodrigues(Rotation, mat_vec);
+	//double radian = cv::norm(mat_vec);
+	//double degree = radian * 180.0 / CV_PI;
+
+	//std::cout << degree << "\n";
+	*/
 	return 0;
 }
