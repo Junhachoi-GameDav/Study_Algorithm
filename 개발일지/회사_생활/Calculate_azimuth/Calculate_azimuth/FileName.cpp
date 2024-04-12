@@ -3,6 +3,7 @@
 #include <filesystem>
 #include <span>
 #include <regex>
+#include <format>
 
 // opencv
 #include <opencv2/opencv.hpp>
@@ -17,6 +18,7 @@
 #include <oneapi/tbb/parallel_for.h>
 #include <oneapi/tbb/parallel_for_each.h>
 #include <oneapi/tbb/concurrent_vector.h>
+#include <oneapi/tbb/task_group.h>
 
 #pragma region 위/경도 좌표를 EPSG:5186으로 변환 -> Proj 사용
 
@@ -184,19 +186,110 @@ double calculate_azimuth(double x1, double y1, double x2, double y2)
 
 #pragma endregion
 
+#pragma region 회전값 변환-> opencv 사용
+
+/** make_rotation_matrix
+* @brief		- 회전행렬 변환
+* @param	- 3대3 행렬 baseRotation, enum Rot_case
+* @return	- Rx * Ry * Rz = R 순서 바꾸는것으로 결과값 다름
+*/
+enum class Rot_case
+{
+	XYZ,
+	YXZ,
+	YZX,
+	ZYX,
+	XZY,
+	ZXY,
+	END
+};
+cv::Mat make_rotation_matrix(cv::Mat& baseRotation, Rot_case& rot_case)
+{
+	// 라디안으로 변환
+	double pitch = -asin(baseRotation.at<double>(2, 0));
+	double roll = atan2(baseRotation.at<double>(2, 1), baseRotation.at<double>(2, 2));
+	double yaw = atan2(baseRotation.at<double>(1, 0), baseRotation.at<double>(0, 0));
+
+	// 각 축에 대한 회전 행렬 생성
+	const cv::Mat Rx = (cv::Mat_<double>(3, 3) <<
+		1, 0, 0,
+		0, cos(roll), -sin(roll),
+		0, sin(roll), cos(roll));
+
+	const cv::Mat Ry = (cv::Mat_<double>(3, 3) <<
+		cos(pitch), 0, sin(pitch),
+		0, 1, 0,
+		-sin(pitch), 0, cos(pitch));
+
+	const cv::Mat Rz = (cv::Mat_<double>(3, 3) <<
+		cos(yaw), -sin(yaw), 0,
+		sin(yaw), cos(yaw), 0,
+		0, 0, 1);
+
+	cv::Mat R;
+	switch (rot_case) {
+	case Rot_case::XYZ:
+		std::cout << "XYZ rotation" << '\n';
+		R = Rx * Ry * Rz;
+		break;
+	case Rot_case::YXZ:
+		std::cout << "YXZ rotation" << '\n';
+		R = Ry * Rx * Rz;
+		break;
+	case Rot_case::YZX:
+		std::cout << "YZX rotation" << '\n';
+		R = Ry * Rz * Rx;
+		break;
+	case Rot_case::ZYX:
+		std::cout << "ZYX rotation" << '\n';
+		R = Rz * Ry * Rx;
+		break;
+	case Rot_case::XZY:
+		std::cout << "XZY rotation" << '\n';
+		R = Rx * Rz * Ry;
+		break;
+	case Rot_case::ZXY:
+		std::cout << "ZXY rotation" << '\n';
+		R = Rz * Rx * Ry;
+		break;
+	}
+	return R;
+}
+
+/** make_Euler_angles
+* @brief		- 회전행렬(각도) 변환
+* @param	- 변환된 R행렬
+* @return	- roll x, pitch y, yaw z (double)
+*/
+std::tuple<double, double, double> make_Euler_angles(cv::Mat& R)
+{
+	double pitch = -asin(R.at<double>(2, 0));
+	double roll = atan2(R.at<double>(2, 1), R.at<double>(2, 2));
+	double yaw = atan2(R.at<double>(1, 0), R.at<double>(0, 0));
+
+	double roll_degrees = roll * 180.0 / CV_PI;
+	double pitch_degrees = pitch * 180.0 / CV_PI;
+	double yaw_degrees = yaw * 180.0 / CV_PI;
+
+	return { roll_degrees, pitch_degrees, yaw_degrees };
+}
+
+#pragma endregion
 
 int main()
 {
 	namespace fs = ::std::filesystem;
 
 	const std::filesystem::path cur_path = std::filesystem::current_path();
-	const std::filesystem::path img_path = cur_path / "Image20231207-061900" / "IMG_03_0000000005_L.jpg";
-	//const std::filesystem::path img_path0 = cur_path / "Image20231207-061900" / "IMG_03_0000000062_L.jpg";
-	//const std::filesystem::path img_path1 = cur_path / "Image20231207-061900" / "IMG_03_0000000001_L.jpg";
-
-	tbb::concurrent_vector<std::tuple<size_t, cv::Mat>> image_paths;
+	//const std::filesystem::path img_path = cur_path / "Image20231207-061900" / "IMG_03_0000000005_L.jpg";
+	
+	cv::Ptr<cv::ORB> detector = cv::ORB::create(2000);
+	
+	tbb::concurrent_vector<std::tuple<size_t, cv::Mat, std::vector<cv::KeyPoint>, cv::Mat>> image_paths;
 	std::regex re("_(\\d+)_L\\.jpg$");
-	tbb::parallel_for_each(fs::directory_iterator(cur_path / "Image20231207-061900"), fs::directory_iterator({}), [&image_paths, &re](const fs::path& path)->void
+
+	tbb::parallel_for_each(fs::directory_iterator(cur_path / "Image20231207-061900"), fs::directory_iterator({}),
+	[&image_paths, &re, &detector](const fs::path& path)->void
 	{
 		if (path.extension() != ".jpg")
 			return;
@@ -207,263 +300,134 @@ int main()
 			return;
 
 		cv::Mat image = cv::imread(path.generic_string());
-		image_paths.emplace_back(std::forward_as_tuple(std::stoull(match[1].str()), image));
+		std::vector<cv::KeyPoint> keypoint;
+		cv::Mat des;
+		detector->detectAndCompute(image, cv::noArray(), keypoint, des);
+		image_paths.emplace_back(std::forward_as_tuple(std::stoull(match[1].str()), image, keypoint, des));
+		
+		if (keypoint.empty())
+			return;
 	});
 	
 	std::sort(image_paths.begin(), image_paths.end(), [](const decltype(image_paths)::const_reference lhs, const decltype(image_paths)::const_reference rhs)->bool
 	{
-		const auto& [index_lhs, image_lhs] = lhs;
-		const auto& [index_rhs, image_rhs] = rhs;
+		const auto& [index_lhs, image_lhs, kp_lhs, des_lhs] = lhs;
+		const auto& [index_rhs, image_rhs, kp_rhs, des_rhs] = rhs;
 
 		return index_lhs < index_rhs;
 	});
-	cv::Ptr<cv::ORB> detector = cv::ORB::create(2000);
-	tbb::concurrent_vector<std::vector<cv::DMatch>> matched_results(image_paths.size() - 1);
-	std::vector<cv::Point2f> points1, points2;
-	cv::Mat des1;
-	cv::Mat des2;
-	tbb::parallel_for(0ULL, image_paths.size() - 1ULL, [&image_paths , &matched_results, &detector, &points1, &points2, &des1, &des2](size_t i)->void
-	{
-		const auto& [index_current, image_current] = image_paths[i];
-		const auto& [index_next, image_next] = image_paths[i + 1];
 
-		std::vector<cv::DMatch> matches;
+	//cv::Ptr<cv::ORB> detector = cv::ORB::create(2000);
+	//tbb::concurrent_vector<std::vector<cv::DMatch>> matched_results(image_paths.size() - 1);
+	tbb::concurrent_vector<std::pair<size_t, cv::Mat>> Rotations;
+	tbb::parallel_for(0ULL, image_paths.size() - 1ULL, [&image_paths, &detector, &Rotations](size_t i)->void
+	{
+		const auto& [index_current, image_current, keypoint_current, des_current] = image_paths[i];
+		const auto& [index_next, image_next, keypoint_next, des_next] = image_paths[i + 1];
 
 		cv::Ptr<cv::BFMatcher> matcher = cv::BFMatcher::create(cv::NormTypes::NORM_HAMMING, true);
-		matcher->match(des1, des2, matches);
 
-		for (const auto& match : matches) {
-			points1.push_back(keypoint2[match.queryIdx].pt);
-			points2.push_back(keypoint2[match.trainIdx].pt);
+		std::vector<cv::DMatch> matched;
+		matcher->match(des_current, des_next, matched);
+
+		// Essential
+		std::vector<cv::Point2f> points1, points2;
+		for (auto& match : matched) {
+			points1.push_back(keypoint_current[match.queryIdx].pt);
+			points2.push_back(keypoint_next[match.trainIdx].pt);
 		}
-
-		matched_results[i] = matches;
-	});
-
-
-		detector->detectAndCompute(image_current, cv::noArray(), keypoint1, des1);
-		detector->detectAndCompute(image_next, cv::noArray(), keypoint2, des2);
-
-	for (int i = 0; i < matched_results.size(); i++)
-	{
-		const auto& [index_current, image_current] = image_paths[i];
 
 		cv::Mat mask;
 		constexpr double focal = 4.8;
 		cv::Point2f photo_mid(image_current.cols / 2, image_current.rows / 2);
 		cv::Mat Essential_result = cv::findEssentialMat(points1, points2, focal, photo_mid, cv::RANSAC, 0.999, 1.0, mask);
 
+		// 회전값(행렬)
 		cv::Mat Rotation;
 		cv::Mat Translation;
 		cv::recoverPose(Essential_result, points1, points2, Rotation, Translation, focal, photo_mid, mask);
 
-		cv::Mat baseRotation = cv::Mat::eye(3, 3, CV_64F);
-		std::vector<cv::Mat> Rotations;
-
-		baseRotation = baseRotation * Rotation;
-		Rotations.push_back(baseRotation);
-
-		std::cout << std::format("#{}\n {} -> {} = \n", i, i, i + 1) << baseRotation << "\n";
-	}
-
-
-	/*if (!std::regex_search(filename, match, re) || match.size() < 1)
-		return 0;*/
-	
-	//std::string numStr = match.str(1);
-	//int numLength = numStr.length();
-
-	//for (int i = 1; i <= std::stoi(numStr); ++i)
-	{
-		/*std::stringstream ss;
-		ss << std::setw(numLength) << std::setfill('0') << i - 1;
-		std::string cur_filename = std::regex_replace(filename, re, "_" + ss.str() + "_L.jpg");
-		ss.str("");
-		ss.clear();
-		ss << std::setw(numLength) << std::setfill('0') << i;
-		std::string next_filename = std::regex_replace(filename, re, "_" + ss.str() + "_L.jpg");*/
-
-		//std::filesystem::path cur_path = img_path.parent_path() / cur_filename;
-		//std::filesystem::path next_path = img_path.parent_path() / next_filename;
-
-		//cv::Ptr<cv::ORB> detector = cv::ORB::create(2000);
-		//
-		//cv::Mat cur_image = cv::imread(cur_path.string());
-		//cv::Mat next_image = cv::imread(next_path.string());
-		//
-		//if (cur_image.empty() || next_image.empty())
-		//	return -1;
-		//
-		//std::vector<cv::KeyPoint> keypoint1;
-		//std::vector<cv::KeyPoint> keypoint2;
-		//cv::Mat des1;
-		//cv::Mat des2;
-		//
-		//detector->detectAndCompute(cur_image, cv::noArray(), keypoint1, des1);
-		//detector->detectAndCompute(next_image, cv::noArray(), keypoint2, des2);
-		//
-		//cv::Mat detect1;
-		//cv::Mat detect2;
-
-		//cv::Ptr<cv::BFMatcher> matcher = cv::BFMatcher::create(cv::NormTypes::NORM_HAMMING, true);
-
-		//std::vector<cv::DMatch> matched;
-		//matcher->match(des1, des2, matched);
-
-		// Essential
-		//std::vector<cv::Point2f> points1, points2;
-		//for (auto& match : matched) {
-		//	points1.push_back(keypoint1[match.queryIdx].pt);
-		//	points2.push_back(keypoint2[match.trainIdx].pt);
-		//}
-
-		//cv::Mat mask;
-		//constexpr double focal = 4.8;
-		//cv::Point2f photo_mid(cur_image.cols / 2, cur_image.rows / 2);
-		//cv::Mat Essential_result = cv::findEssentialMat(points1, points2, focal, photo_mid, cv::RANSAC, 0.999, 1.0, mask);
-
-		//// 회전값(행렬)
-		//cv::Mat Rotation;
-		//cv::Mat Translation;
-		//cv::recoverPose(Essential_result, points1, points2, Rotation, Translation, focal, photo_mid, mask);
-
-		//// 누적된 회전
+		// 누적된 회전
 		//baseRotation = baseRotation * Rotation;
-		//Rotations.push_back(baseRotation);
+		Rotations.push_back({i, Rotation});
 
-		//std::cout << std::format("#{}\n {} -> {} = \n",i , i - 1, i) << baseRotation << "\n";
-	}
-	/*
-	std::regex re("_(\\d+)_L\\.jpg$");
-	std::smatch match;
+		std::cout << std::format("#{}\n {} -> {} = \n", i, i, i + 1) << Rotation << "\n";
+	});
 
-	std::string filename = img_path.filename().string();
-	std::vector<std::pair<double, double>> real_pos_vec;
-
-	if (!std::regex_search(filename, match, re) || match.size() < 1)
-		return 0;
-
-	std::string numStr = match.str(1);
-	int numLength = numStr.length();
-	for (int i = 0; i <= std::stoi(numStr); ++i)
+	std::sort(Rotations.begin(), Rotations.end(), [](const std::pair<size_t, cv::Mat>& a, const std::pair<size_t, cv::Mat>& b)
 	{
-		std::stringstream ss;
-		ss << std::setw(numLength) << std::setfill('0') << i;
-
-		// 새로운 파일 이름 생성
-		std::string new_filename = std::regex_replace(filename, re, "_" + ss.str() + "_L.jpg");
-		std::filesystem::path new_path = img_path.parent_path() / new_filename;
-
-		cv::Mat image = cv::imread(img_path.string());
-
-		std::array<double, 3> meta_data = read_meta_data(new_path.string());
-		const std::array<double, 3> img_meta = transform(meta_data);
-		const cv::Mat_<double> ground_meta = (cv::Mat_<double>(3, 1) << img_meta[0], img_meta[1], img_meta[2]);
-
-		const cv::Mat_<double> img_pos = change_video_to_img(image);
-
-		constexpr double Altitude = 20;
-		double lambda = img_pos.at<double>(2, 0) / (Altitude - ground_meta.at<double>(2, 0));
-
-		cv::Mat real_pos = img_pos / lambda;
-		real_pos += ground_meta;
-
-		real_pos_vec.push_back({ real_pos.at<double>(0, 0), real_pos.at<double>(1, 0) } );
-	}
-
-	for (size_t i = 1; i < real_pos_vec.size(); ++i)
+		return a.first < b.first;
+	});
+	std::vector<std::pair<size_t, cv::Mat>> Rotation_result(Rotations.begin(), Rotations.end());
+	
+	cv::Mat baseRotation = cv::Mat::eye(3, 3, CV_64F);
+	for (auto& rot : Rotation_result)
 	{
-		auto& current = real_pos_vec[i];
-		auto& previous = real_pos_vec[i - 1];
+		baseRotation = baseRotation * rot.second;
+		cv::Mat cur_img = std::get<1>(image_paths.at(rot.first));
 
-		auto result = 
-			calculate_azimuth
-			(
-				current.first, 
-				current.second, 
-				previous.first, 
-				previous.second
-			);
-		std::cout << "#" << i << "\n";
-		std::cout << std::format("{}  {} \n", previous.first, current.first);
-		std::cout << std::format("{}  {} = {}\n", previous.second, current.second, result) << "\n";
+		std::cout << '\n' << "----------------------------------" << '\n';
+		std::cout << "#R" << rot.first + 1 << '\n' << baseRotation << "'\n\n";
+		//auto test = make_rotation_matrix(baseRotation, Rot_case::YXZ);
+		auto rot_idx = static_cast<Rot_case>(0); //yxz;
+		auto rot_matrix = make_rotation_matrix(baseRotation, rot_idx);
+		auto [roll, pitch, yaw] = make_Euler_angles(rot_matrix);
+
+		const int img_width = cur_img.cols;
+		const int img_height = cur_img.rows;
+
+		// 모서리
+		cv::Mat corners = (cv::Mat_<double>(3, 4) <<
+			0.0, img_width, 0.0, img_width,
+			0.0, 0.0, img_height, img_height,
+			1.0, 1.0, 1.0, 1.0);
+
+		constexpr double focal_length = 4.8;
+		constexpr double pixel_size = 0.0007;
+		constexpr double focal_length_in_pixel = focal_length / pixel_size;
+
+		const cv::Mat vision_to_photo = (cv::Mat_<double>(3, 3) <<
+			1.0, 0.0, -(img_width / 2),
+			0.0, -1.0, (img_height / 2),
+			0.0, 0.0, -focal_length_in_pixel);
+
+		const cv::Mat rot_photo_corners = baseRotation * vision_to_photo * corners;
+
+		rot_photo_corners.row(2) /= -focal_length_in_pixel;
+		for (int i = 0; i < 4; ++i)
+			rot_photo_corners.col(i) /= static_cast<double* const>(static_cast<void* const>(rot_photo_corners.data))[i + 8];
+
+		rot_photo_corners.row(1) = -rot_photo_corners.row(1);
+		
+		// 음수를 양수로 전환
+		cv::Point2d minmax_x;
+		cv::Point2d minmax_y;
+		cv::minMaxIdx(rot_photo_corners.row(0), &minmax_x.x, &minmax_x.y);
+		rot_photo_corners.row(0) -= minmax_x.x;
+		cv::minMaxIdx(rot_photo_corners.row(1), &minmax_y.x, &minmax_y.y);
+		rot_photo_corners.row(1) -= minmax_y.x;
+
+		// 호모그래피로 투시 변환
+		cv::Mat homography = cv::findHomography(corners.t(), rot_photo_corners.t(), cv::noArray(), cv::RANSAC, 0.0);
+		cv::Size warped_size(static_cast<int>(std::floor(minmax_x.y - minmax_x.x)), static_cast<int>(std::floor(minmax_y.y - minmax_y.x)));
+
+		// 이미지 출력
+		cv::Mat next_img;
+		cv::warpPerspective(cur_img, next_img, homography, warped_size);
+
+		//std::get<1>(image_paths.at(0)).release();
+
+		/*for (int i = static_cast<int>(Rot_case::XYZ); i < static_cast<int>(Rot_case::END); i++)
+		{
+			auto rot_idx = static_cast<Rot_case>(i);
+			auto rot_matrix = make_rotation_matrix(baseRotation, rot_idx);
+			auto [roll, pitch, yaw] = make_Euler_angles(rot_matrix);
+
+			std::cout << std::format("roll : {:.8f}\npitch : {:.8f}\nyaw : {:.8f}\n", roll, pitch, yaw);
+			std::cout << rot_matrix << "\n\n";
+		}*/
+
 	}
-	*/
-	/*
-	cv::Ptr<cv::ORB> detector = cv::ORB::create(2000);
-	//cv::ORB;
-	// cv::SIFT;
-	//cv::AKAZE;
-	
-	cv::Mat image1 = cv::imread(img_path0.string());
-	cv::Mat image2 = cv::imread(img_path1.string());
 
-	if (image1.empty() || image2.empty())
-		return -1;
-
-	std::vector<cv::KeyPoint> keypoint1;
-	std::vector<cv::KeyPoint> keypoint2;
-	cv::Mat des1;
-	cv::Mat des2;
-
-	detector->detectAndCompute(image1, cv::noArray(), keypoint1, des1);
-	detector->detectAndCompute(image2, cv::noArray(), keypoint2, des2);
-	
-	cv::Mat detect1;
-	cv::Mat detect2;
-	cv::drawKeypoints(image1, keypoint1, detect1);
-	cv::resize(detect1, detect1, detect1.size() / 4);
-	cv::imshow("detect 1 result", detect1);
-	cv::waitKey(0);
-	cv::drawKeypoints(image2, keypoint2, detect2);
-	cv::resize(detect2, detect2, detect2.size() / 4);
-	cv::imshow("detect 2 result", detect2);
-	cv::waitKey(0);
-	
-	cv::Ptr<cv::BFMatcher> matcher = cv::BFMatcher::create(cv::NormTypes::NORM_HAMMING, true);
-	//cv::Ptr<cv::FlannBasedMatcher> matcher = cv::FlannBasedMatcher::create();
-
-	std::vector<cv::DMatch> matched;
-	//std::vector<std::vector<cv::DMatch>> matched;
-	matcher->match(des1, des2, matched);
-
-	cv::Mat result;
-
-	// Fundamental
-	std::vector<cv::Point2f> points1, points2;
-	for (auto& match : matched) {
-		points1.push_back(keypoint1[match.queryIdx].pt);
-		points2.push_back(keypoint2[match.trainIdx].pt);
-	}
-
-	cv::Mat mask;
-	//cv::Mat filtered_result = cv::findFundamentalMat(points1, points2, cv::FM_RANSAC, 3, 0.99, mask);
-	
-	// Essential
-	constexpr double focal = 4.8;
-	cv::Point2f photo_mid(image1.cols / 2, image1.rows / 2);
-	cv::Mat Essential_result = cv::findEssentialMat(points1, points2, focal, photo_mid, cv::RANSAC, 0.999, 1.0, mask);
-
-	// 회전값(행렬)
-	cv::Mat Rotation;
-	cv::Mat Translation;
-	auto test = cv::recoverPose(Essential_result, points1, points2, Rotation, Translation, focal, photo_mid, mask);
-
-	cv::drawMatches(image1, keypoint1, image2, keypoint2, matched, Essential_result);
-	cv::resize(Essential_result, Essential_result, Essential_result.size() / 4);
-	cv::imshow("matched result", Essential_result);
-	cv::waitKey(0);
-
-	//std::cout << Rotation << "\n";
-	//std::cout << Translation << "\n";
-
-	// 회전 행렬 각도로 변환
-	cv::Mat mat_vec;
-	//cv::Rodrigues(Rotation, mat_vec);
-	//double radian = cv::norm(mat_vec);
-	//double degree = radian * 180.0 / CV_PI;
-
-	//std::cout << degree << "\n";
-	*/
 	return 0;
 }
