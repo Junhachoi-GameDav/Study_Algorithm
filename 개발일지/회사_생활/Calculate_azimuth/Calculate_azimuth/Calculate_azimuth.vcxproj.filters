@@ -18,8 +18,10 @@
     <ClCompile Include="FileName.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="save_code.cpp">
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="save_code.cpp">
       <Filter>소스 파일</Filter>
-    </ClCompile>
+    </None>
   </ItemGroup>
 </Project>

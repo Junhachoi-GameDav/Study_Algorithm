@@ -20,6 +20,10 @@
 #include <oneapi/tbb/concurrent_vector.h>
 #include <oneapi/tbb/task_group.h>
 
+// pcl
+#include <pcl/point_types.h>
+//#include <pcl/visualization/pcl_visualizer.h>
+
 #pragma region 위/경도 좌표를 EPSG:5186으로 변환 -> Proj 사용
 
 /** transform
@@ -283,7 +287,7 @@ int main()
 	const std::filesystem::path cur_path = std::filesystem::current_path();
 	//const std::filesystem::path img_path = cur_path / "Image20231207-061900" / "IMG_03_0000000005_L.jpg";
 	
-	cv::Ptr<cv::ORB> detector = cv::ORB::create(2000);
+	cv::Ptr<cv::ORB> detector = cv::ORB::create(10000);
 	
 	tbb::concurrent_vector<std::tuple<size_t, cv::Mat, std::vector<cv::KeyPoint>, cv::Mat>> image_paths;
 	std::regex re("_(\\d+)_L\\.jpg$");
@@ -319,8 +323,8 @@ int main()
 
 	//cv::Ptr<cv::ORB> detector = cv::ORB::create(2000);
 	//tbb::concurrent_vector<std::vector<cv::DMatch>> matched_results(image_paths.size() - 1);
-	tbb::concurrent_vector<std::pair<size_t, cv::Mat>> Rotations;
-	tbb::parallel_for(0ULL, image_paths.size() - 1ULL, [&image_paths, &detector, &Rotations](size_t i)->void
+	tbb::concurrent_vector<std::tuple<size_t, cv::Mat, cv::Mat, cv::Mat>> Rot_Tran_Proj(image_paths.size());
+	tbb::parallel_for(0ULL, image_paths.size() - 1ULL, [&image_paths, &detector, &Rot_Tran_Proj](size_t i)->void
 	{
 		const auto& [index_current, image_current, keypoint_current, des_current] = image_paths[i];
 		const auto& [index_next, image_next, keypoint_next, des_next] = image_paths[i + 1];
@@ -329,49 +333,93 @@ int main()
 
 		std::vector<cv::DMatch> matched;
 		matcher->match(des_current, des_next, matched);
+		//matcher->match(des_current, des_current, matched);
 
 		// Essential
 		std::vector<cv::Point2f> points1, points2;
 		for (auto& match : matched) {
 			points1.push_back(keypoint_current[match.queryIdx].pt);
 			points2.push_back(keypoint_next[match.trainIdx].pt);
+			//points2.push_back(keypoint_current[match.trainIdx].pt);
 		}
-
+		
 		cv::Mat mask;
 		constexpr double focal = 4.8;
-		cv::Point2f photo_mid(image_current.cols / 2, image_current.rows / 2);
-		cv::Mat Essential_result = cv::findEssentialMat(points1, points2, focal, photo_mid, cv::RANSAC, 0.999, 1.0, mask);
+		cv::Point2f img_center(image_current.cols / 2, image_current.rows / 2);
+		cv::Mat Essential_result = cv::findEssentialMat(points1, points2, focal, img_center, cv::RANSAC, 0.999, 1.0, mask);
+		//cv::Mat Essential_result = cv::findEssentialMat(points1, points1, focal, img_center, cv::RANSAC, 0.999, 1.0, mask);
+
+		cv::Mat K = (cv::Mat_<double>(3, 3) <<
+			focal, 0.0, 0.0,
+			0.0, focal, 0.0,
+			0.0, 0.0, 1.0);
+
+		cv::Mat def_projection = (cv::Mat_<double>(3, 4) <<
+			1.0, 0.0, 0.0, 0.0,
+			0.0, 1.0, 0.0, 0.0,
+			0.0, 0.0, 1.0, 0.0 );
+		//std::vector<cv::Point2f> def_points;
 
 		// 회전값(행렬)
 		cv::Mat Rotation;
 		cv::Mat Translation;
-		cv::recoverPose(Essential_result, points1, points2, Rotation, Translation, focal, photo_mid, mask);
 
-		// 누적된 회전
-		//baseRotation = baseRotation * Rotation;
-		Rotations.push_back({i, Rotation});
+		cv::recoverPose(Essential_result, points1, points2, Rotation, Translation, focal, img_center, mask);
+		//cv::recoverPose(Essential_result, points1, points1, Rotation, Translation, focal, img_center, mask);
+		
+		cv::Mat Rt;
+		cv::hconcat(Rotation, Translation, Rt); // 회전 행렬과 이동 벡터를 수평으로 연결
 
+		// 투영 행렬(Projective Matrix) 
+		cv::Mat Projection = K * Rt;
+
+		// 3차원 변환
+		cv::Mat result;
+		//cv::triangulatePoints(def_projection, Projection, points1, points2, result);
+		//cv::convertPointsFromHomogeneous(result.t(), result);
+
+		decltype(matched) matched_filtered;
+		for (int i = 0; i < mask.rows; ++i)
+		{
+			if (mask.data[i] == 0)
+				continue;
+
+			matched_filtered.emplace_back(matched[i]);
+		}
+
+		cv::drawMatches(image_current, keypoint_current, image_next, keypoint_next, matched_filtered, result);
+		//cv::drawMatches(image_current, keypoint_current, image_current, keypoint_current, matched_filtered, result);
+		cv::resize(result, result, result.size() / 4);
+		cv::imshow("matched result", result);
+		cv::waitKey(0);
+		
+		Rot_Tran_Proj[i] = {i, Rotation, Translation, Projection};
+		
 		std::cout << std::format("#{}\n {} -> {} = \n", i, i, i + 1) << Rotation << "\n";
+		std::cout << Translation << '\n';
+		std::cout << Projection << '\n';
 	});
 
-	std::sort(Rotations.begin(), Rotations.end(), [](const std::pair<size_t, cv::Mat>& a, const std::pair<size_t, cv::Mat>& b)
+	std::sort(Rot_Tran_Proj.begin(), Rot_Tran_Proj.end(), [](const std::tuple<size_t, cv::Mat, cv::Mat, cv::Mat>& a, const std::tuple<size_t, cv::Mat, cv::Mat, cv::Mat>& b)
 	{
-		return a.first < b.first;
+			return std::get<0>(a) < std::get<0>(b);
 	});
-	std::vector<std::pair<size_t, cv::Mat>> Rotation_result(Rotations.begin(), Rotations.end());
+	std::vector<std::tuple<size_t, cv::Mat, cv::Mat, cv::Mat>> Rot_Tran_Proj_result(Rot_Tran_Proj.begin(), Rot_Tran_Proj.end());
 	
 	cv::Mat baseRotation = cv::Mat::eye(3, 3, CV_64F);
-	for (auto& rot : Rotation_result)
+	std::vector<cv::Mat> images;
+	for (auto& rot_tran_proj : Rot_Tran_Proj_result)
 	{
-		baseRotation = baseRotation * rot.second;
-		cv::Mat cur_img = std::get<1>(image_paths.at(rot.first));
+		baseRotation = baseRotation * std::get<1>(rot_tran_proj);
+		cv::Mat cur_img = std::get<1>(image_paths.at(std::get<0>(rot_tran_proj)));
 
 		std::cout << '\n' << "----------------------------------" << '\n';
-		std::cout << "#R" << rot.first + 1 << '\n' << baseRotation << "'\n\n";
+		std::cout << "#R" << std::get<0>(rot_tran_proj) + 1 << '\n' << baseRotation << "'\n\n";
 		//auto test = make_rotation_matrix(baseRotation, Rot_case::YXZ);
 		auto rot_idx = static_cast<Rot_case>(0); //yxz;
 		auto rot_matrix = make_rotation_matrix(baseRotation, rot_idx);
 		auto [roll, pitch, yaw] = make_Euler_angles(rot_matrix);
+		std::cout << std::format("roll : {:.8f}\npitch : {:.8f}\nyaw : {:.8f}\n", roll, pitch, yaw);
 
 		const int img_width = cur_img.cols;
 		const int img_height = cur_img.rows;
@@ -414,7 +462,7 @@ int main()
 		// 이미지 출력
 		cv::Mat next_img;
 		cv::warpPerspective(cur_img, next_img, homography, warped_size);
-
+		images.push_back(next_img);
 		//std::get<1>(image_paths.at(0)).release();
 
 		/*for (int i = static_cast<int>(Rot_case::XYZ); i < static_cast<int>(Rot_case::END); i++)
@@ -428,6 +476,6 @@ int main()
 		}*/
 
 	}
-
+	std::cout << "test";
 	return 0;
 }
