@@ -330,26 +330,26 @@ int main()
 	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud;
 	tbb::parallel_for(0ULL, image_paths.size() - 1ULL, [&image_paths, &detector, &Rot_Tran_Proj, &cloud](size_t i)->void
 		{
-			const auto& [index_current, image_current, keypoint_current, des_current] = image_paths[i];
-			const auto& [index_next, image_next, keypoint_next, des_next] = image_paths[i + 1];
+			const auto& [index_0, image_0, keypoint_0, des_0] = image_paths[i];
+			const auto& [index_1, image_1, keypoint_1, des_1] = image_paths[i + 1];
 
 			cv::Ptr<cv::BFMatcher> matcher = cv::BFMatcher::create(cv::NormTypes::NORM_HAMMING, true);
 
 			std::vector<cv::DMatch> matched;
-			matcher->match(des_current, des_next, matched);
+			matcher->match(des_1, des_0, matched);
 			//matcher->match(des_current, des_current, matched);
 
 			// Essential
 			std::vector<cv::Point2f> points1, points2;
 			for (auto& match : matched) {
-				points1.push_back(keypoint_current[match.queryIdx].pt);
-				points2.push_back(keypoint_next[match.trainIdx].pt);
+				points1.push_back(keypoint_0[match.trainIdx].pt);
+				points2.push_back(keypoint_1[match.queryIdx].pt);
 			}
 
 			cv::Mat mask;
 			constexpr double focal = 4.8;
-			cv::Point2f img_center(image_current.cols / 2, image_current.rows / 2);
-			cv::Mat Essential_result = cv::findEssentialMat(points1, points2, focal, img_center, cv::RANSAC, 0.999, 1.0, mask);
+			cv::Point2f img_center(image_0.cols / 2, image_0.rows / 2);
+			cv::Mat Essential_result = cv::findEssentialMat(points2, points1, focal, img_center, cv::RANSAC, 0.999, 1.0, mask);
 
 			cv::Mat K = (cv::Mat_<double>(3, 3) <<
 				focal, 0.0, 0.0,
@@ -368,7 +368,7 @@ int main()
 			cv::Mat Rotation;
 			cv::Mat Translation;
 
-			cv::recoverPose(Essential_result, points1, points2, Rotation, Translation, focal, img_center, mask);
+			cv::recoverPose(Essential_result, points2, points1, Rotation, Translation, focal, img_center, mask);
 
 			cv::Mat Rt;
 			cv::hconcat(Rotation, Translation, Rt); // 회전 행렬과 이동 벡터를 수평으로 연결
@@ -378,11 +378,11 @@ int main()
 
 			// 3차원 변환
 			cv::Mat points_4d;
-			cv::triangulatePoints(def_projMat, Projection, points1, points2, points_4d);
+			cv::triangulatePoints(Projection, def_projMat, points2, points1, points_4d);
 
 			cv::Mat points_3d;
 			cv::convertPointsFromHomogeneous(points_4d.t(), points_3d);
-			
+
 			pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZRGB>);
 			for (int i = 0; i < points_3d.rows; i++)
 			{
@@ -410,7 +410,7 @@ int main()
 			//	std::this_thread::sleep_for(std::chrono::milliseconds(100));
 			//}
 
-			const std::filesystem::path PCD_save_path = std::filesystem::current_path() / "Image20231207-061900" / std::format("pointcloud_{}.pcd", i);
+			const std::filesystem::path PCD_save_path = std::filesystem::current_path() / "Image20231207-061900" / std::format("pointcloud_{}.ply", i);
 			//pcl::io::savePCDFileBinary(PCD_save_path.string(), *cloud);
 			//pcl::io::savePCDFile(PCD_save_path.string(), *cloud);
 			pcl::PLYWriter writer;
@@ -425,11 +425,12 @@ int main()
 				matched_filtered.emplace_back(matched[i]);
 			}
 
-			//cv::drawMatches(image_current, keypoint_current, image_next, keypoint_next, matched_filtered, result);
-			////cv::drawMatches(image_current, keypoint_current, image_current, keypoint_current, matched_filtered, result);
-			//cv::resize(result, result, result.size() / 4);
-			//cv::imshow("matched result", result);
-			//cv::waitKey(0);
+			cv::Mat result;
+			cv::drawMatches(image_1, keypoint_1, image_0, keypoint_0, matched_filtered, result);
+			//cv::drawMatches(image_current, keypoint_current, image_current, keypoint_current, matched_filtered, result);
+			cv::resize(result, result, result.size() / 4);
+			cv::imshow("matched result", result);
+			cv::waitKey(0);
 			//
 			Rot_Tran_Proj.push_back({ i, Rotation, Translation, Projection });
 
