@@ -284,6 +284,12 @@ std::tuple<double, double, double> make_Euler_angles(cv::Mat& R)
 
 int main()
 {
+	/** 번들 조정 앞단 (수정해야할 사항)
+	* 프로젝션 p = k * rt, 이것을 반복적으로 구할때 기준점(idx = 0)을 두고 구해야함 즉 이미지_0 -> 이미지_1 .... 이미지_0 -> 이미지 62 이런식으로 만들어야함
+	* 그러나 현재 코드는 이미지_0 -> 이미지_1 .... 이미지_61 -> 이미지62 이렇게 되어있으니 수정할 것
+	* 그후에 번들 조정 (오차 최적화 기법) 할 것
+	*/
+
 	namespace fs = ::std::filesystem;
 
 	const std::filesystem::path cur_path = std::filesystem::current_path();
@@ -322,13 +328,6 @@ int main()
 
 			return index_lhs < index_rhs;
 		});
-
-
-	/** 번들 조정 앞단 (수정해야할 사항)
-	* 프로젝션 p = k * rt, 이것을 반복적으로 구할때 기준점(idx = 0)을 두고 구해야함 즉 이미지_0 -> 이미지_1 .... 이미지_0 -> 이미지 62 이런식으로 만들어야함
-	* 그러나 현재 코드는 이미지_0 -> 이미지_1 .... 이미지_61 -> 이미지62 이렇게 되어있으니 수정할 것
-	* 그후에 번들 조정 (오차 최적화 기법) 할 것
-	*/
 
 	//cv::Ptr<cv::ORB> detector = cv::ORB::create(2000);
 	//tbb::concurrent_vector<std::vector<cv::DMatch>> matched_results(image_paths.size() - 1);
