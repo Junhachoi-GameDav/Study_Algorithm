@@ -323,6 +323,13 @@ int main()
 			return index_lhs < index_rhs;
 		});
 
+
+	/** 번들 조정 앞단 (수정해야할 사항)
+	* 프로젝션 p = k * rt, 이것을 반복적으로 구할때 기준점(idx = 0)을 두고 구해야함 즉 이미지_0 -> 이미지_1 .... 이미지_0 -> 이미지 62 이런식으로 만들어야함
+	* 그러나 현재 코드는 이미지_0 -> 이미지_1 .... 이미지_61 -> 이미지62 이렇게 되어있으니 수정할 것
+	* 그후에 번들 조정 (오차 최적화 기법) 할 것
+	*/
+
 	//cv::Ptr<cv::ORB> detector = cv::ORB::create(2000);
 	//tbb::concurrent_vector<std::vector<cv::DMatch>> matched_results(image_paths.size() - 1);
 	tbb::concurrent_vector<std::tuple<size_t, cv::Mat, cv::Mat, cv::Mat>> Rot_Tran_Proj;
@@ -399,11 +406,11 @@ int main()
 
 			//pcl::visualization::PCLVisualizer viewer("3D Viewer");
 			//viewer.setBackgroundColor(0, 0, 0);
-			//viewer.addPointCloud<pcl::PointXYZ>(cloud, "sample cloud");
+			//viewer.addPointCloud<pcl::PointXYZRGB>(cloud, "sample cloud");
 			//viewer.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 1, "sample cloud");
 			//viewer.addCoordinateSystem(1.0);
 			//viewer.initCameraParameters();
-			//
+			
 			//while (!viewer.wasStopped())
 			//{
 			//	viewer.spinOnce(100);
