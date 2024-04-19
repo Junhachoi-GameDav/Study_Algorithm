@@ -284,12 +284,6 @@ std::tuple<double, double, double> make_Euler_angles(cv::Mat& R)
 
 int main()
 {
-	/** 번들 조정 앞단 (수정해야할 사항)
-	* 프로젝션 p = k * rt, 이것을 반복적으로 구할때 기준점(idx = 0)을 두고 구해야함 즉 이미지_0 -> 이미지_1 .... 이미지_0 -> 이미지 62 이런식으로 만들어야함
-	* 그러나 현재 코드는 이미지_0 -> 이미지_1 .... 이미지_61 -> 이미지62 이렇게 되어있으니 수정할 것
-	* 그후에 번들 조정 (오차 최적화 기법) 할 것
-	*/
-
 	namespace fs = ::std::filesystem;
 
 	const std::filesystem::path cur_path = std::filesystem::current_path();
@@ -329,14 +323,10 @@ int main()
 			return index_lhs < index_rhs;
 		});
 
-	//cv::Ptr<cv::ORB> detector = cv::ORB::create(2000);
-	//tbb::concurrent_vector<std::vector<cv::DMatch>> matched_results(image_paths.size() - 1);
 	tbb::concurrent_vector<std::tuple<size_t, cv::Mat, cv::Mat, cv::Mat>> Rot_Tran_Proj;
-	//tbb::concurrent_vector<pcl::PointCloud<pcl::PointXYZ>> clouds;
-	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud;
-	tbb::parallel_for(0ULL, image_paths.size() - 1ULL, [&image_paths, &detector, &Rot_Tran_Proj, &cloud](size_t i)->void
+	tbb::parallel_for(0ULL, image_paths.size() - 1ULL, [&image_paths, &detector, &Rot_Tran_Proj](size_t i)->void
 		{
-			const auto& [index_0, image_0, keypoint_0, des_0] = image_paths[i];
+			const auto& [index_0, image_0, keypoint_0, des_0] = image_paths[0];
 			const auto& [index_1, image_1, keypoint_1, des_1] = image_paths[i + 1];
 
 			cv::Ptr<cv::BFMatcher> matcher = cv::BFMatcher::create(cv::NormTypes::NORM_HAMMING, true);
@@ -357,6 +347,12 @@ int main()
 			cv::Point2f img_center(image_0.cols / 2, image_0.rows / 2);
 			cv::Mat Essential_result = cv::findEssentialMat(points2, points1, focal, img_center, cv::RANSAC, 0.999, 1.0, mask);
 
+			// 회전값(행렬) & projections
+			cv::Mat Rotation;
+			cv::Mat Translation;
+
+			cv::recoverPose(Essential_result, points2, points1, Rotation, Translation, focal, img_center, mask);
+
 			cv::Mat K = (cv::Mat_<double>(3, 3) <<
 				focal, 0.0, 0.0,
 				0.0, focal, 0.0,
@@ -368,18 +364,10 @@ int main()
 				0.0, 0.0, 1.0, 0.0);
 
 			cv::Mat def_projMat = K * def_projection;
-			//std::vector<cv::Point2f> def_points;
-
-			// 회전값(행렬)
-			cv::Mat Rotation;
-			cv::Mat Translation;
-
-			cv::recoverPose(Essential_result, points2, points1, Rotation, Translation, focal, img_center, mask);
 
 			cv::Mat Rt;
-			cv::hconcat(Rotation, Translation, Rt); // 회전 행렬과 이동 벡터를 수평으로 연결
+			cv::hconcat(Rotation, Translation, Rt);
 
-			// 투영 행렬(Projective Matrix) 
 			cv::Mat Projection = K * Rt;
 
 			// 3차원 변환
@@ -403,25 +391,24 @@ int main()
 				cloud->points.push_back(point);
 			}
 
-			//pcl::visualization::PCLVisualizer viewer("3D Viewer");
-			//viewer.setBackgroundColor(0, 0, 0);
-			//viewer.addPointCloud<pcl::PointXYZRGB>(cloud, "sample cloud");
-			//viewer.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 1, "sample cloud");
-			//viewer.addCoordinateSystem(1.0);
-			//viewer.initCameraParameters();
+			pcl::visualization::PCLVisualizer viewer("3D Viewer");
+			viewer.setBackgroundColor(0, 0, 0);
+			viewer.addPointCloud<pcl::PointXYZRGB>(cloud, "sample cloud");
+			viewer.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 1, "sample cloud");
+			viewer.addCoordinateSystem(1.0);
+			viewer.initCameraParameters();
 			
-			//while (!viewer.wasStopped())
-			//{
-			//	viewer.spinOnce(100);
-			//	std::this_thread::sleep_for(std::chrono::milliseconds(100));
-			//}
+			while (!viewer.wasStopped())
+			{
+				viewer.spinOnce(100);
+				std::this_thread::sleep_for(std::chrono::milliseconds(100));
+			}
 
 			const std::filesystem::path PCD_save_path = std::filesystem::current_path() / "Image20231207-061900" / std::format("pointcloud_{}.ply", i);
-			//pcl::io::savePCDFileBinary(PCD_save_path.string(), *cloud);
-			//pcl::io::savePCDFile(PCD_save_path.string(), *cloud);
+			
 			pcl::PLYWriter writer;
 			writer.write(PCD_save_path.string(), *cloud);
-			//pcl::io::savePCDFileASCII(PCD_save_path.string(), *cloud);
+			
 			decltype(matched) matched_filtered;
 			for (int i = 0; i < mask.rows; ++i)
 			{
@@ -431,12 +418,11 @@ int main()
 				matched_filtered.emplace_back(matched[i]);
 			}
 
-			cv::Mat result;
-			cv::drawMatches(image_1, keypoint_1, image_0, keypoint_0, matched_filtered, result);
-			//cv::drawMatches(image_current, keypoint_current, image_current, keypoint_current, matched_filtered, result);
-			cv::resize(result, result, result.size() / 4);
-			cv::imshow("matched result", result);
-			cv::waitKey(0);
+			//cv::Mat result;
+			//cv::drawMatches(image_1, keypoint_1, image_0, keypoint_0, matched_filtered, result);
+			//cv::resize(result, result, result.size() / 4);
+			//cv::imshow("matched result", result);
+			//cv::waitKey(0);
 			//
 			Rot_Tran_Proj.push_back({ i, Rotation, Translation, Projection });
 
@@ -450,16 +436,6 @@ int main()
 			return std::get<0>(a) < std::get<0>(b);
 		});
 	std::vector<std::tuple<size_t, cv::Mat, cv::Mat, cv::Mat>> Rot_Tran_Proj_result(Rot_Tran_Proj.begin(), Rot_Tran_Proj.end());
-
-	/*pcl::visualization::PCLVisualizer viewer("3D Viewer");
-	viewer.setBackgroundColor(0, 0, 0);
-	viewer.addPointCloud<pcl::PointXYZ>(clouds[0], "sample cloud");
-	viewer.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 1, "sample cloud");
-
-	while (!viewer.wasStopped())
-	{
-		viewer.spinOnce(100);
-	}*/
 
 	cv::Mat baseRotation = cv::Mat::eye(3, 3, CV_64F);
 	std::vector<cv::Mat> images;
