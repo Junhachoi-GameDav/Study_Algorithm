@@ -1,0 +1,29 @@
+c++ attributes 
+
+https://jacking75.github.io/cpp_modern_cpp_attribute/ 이사람꺼에 잘 정리되어있음
+
+그냥 [[ 명령어 ]] 이렇게 하면 속성값을 넣을수가있ㅇ,ㅁ 
+
+[[noreturn]] void exit()
+{
+	//이런식
+}
+
+
+Attribute specifier sequence(since C++11)
+ C++ C++ language Declarations Attributes 
+Introduces implementation-defined attributes for types, objects, code, etc.
+
+Syntax
+[[ attribute-list ]]		(since C++11)
+[[ using attribute-namespace : attribute-list ]]		(since C++17)
+where attribute-list is a comma-separated sequence of zero or more attribute ﻿s (possibly ending with an ellipsis ... indicating a pack expansion)
+
+identifier	(1)	
+attribute-namespace :: identifier	(2)	
+identifier ( argument-list ﻿(optional) )	(3)	
+attribute-namespace :: identifier ( argument-list ﻿(optional) )	(4)	
+
+1) Simple attribute, such as [[noreturn]].
+2) Attribute with a namespace, such as [[gnu::unused]].
+3) Attribute with arguments, such as [[deprecated("because")]].
