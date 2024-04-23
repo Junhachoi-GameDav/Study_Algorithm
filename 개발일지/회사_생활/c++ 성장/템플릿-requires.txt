@@ -1,0 +1,36 @@
+https://ence2.github.io/2021/01/c-20-%EB%A6%AC%EC%84%9C%EC%B9%98-requires-%EC%A0%88-concept6/
+
+템플릿 인자가 가져야 하는 조건을 표기하는 문법
+
+조건을 만족하는 경우에만 템플릿 사용
+
+Concept 뿐 아니라 type traits 등도 사용 가능
+
+신규 키워드 : concept, requires
+
+신규 헤더 : concepts
+
+예)
+template<typename _Ty>
+	requires (std::is_move_constructible_v<_Ty> and !std::is_fundamental_v<_Ty>)
+
+template<typename T> requires true // 이 위치 OK
+void f1(T a)
+{}
+
+template<typename T> 
+void f2(T a) requires true // 이 위치도 OK
+{}
+
+
+concept이란 requirements의 명명된 집합이며 다음과 같은 형태를 취합니다.
+
+예)
+template<typename T>
+concept Integral = std::is_integral_v<T> && true; // 요구 조건 제약사항 concepts 생성
+
+template<typename T> requires Integral<T>
+void foo(T a)
+{
+
+}

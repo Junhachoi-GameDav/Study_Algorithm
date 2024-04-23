@@ -1,0 +1,22 @@
+템플릿
+https://kukuta.tistory.com/427 (레퍼렌스 콜랩싱 reference collapsing) 이런것도 있다.
+
+
+템플릿은 컴파일러가 정의 내려야만 통과가 된다. 그렇기에 따로 구분지으면 컴파일러가 못볼수도 있다.
+
+이것을 편법으로 나눈 방법이 있는데 
+
+예)
+
+template<coordinates save_coord>
+void save_map(const map_2d& map, const std::filesystem::path& abs_path_filename, const int& jpg_quality = 70);
+
+template<coordinates load_coord>
+map_2d load_map(const std::filesystem::path& abs_path_filename);
+
+map_2d merge_map(std::vector<map_2d>& maps, const double& mapping_gsd);
+
+#include "2D_map.inl"
+//
+
+이런식으로 템플릿 정의가 선언이 안되어 있을때 가짜헤더파일을 넣어서 정의를 선언해 버린다. 저헤더파일은 inl (이니셜라이즈) 로 관례상 만든다.(아무거나만들어도 됨)

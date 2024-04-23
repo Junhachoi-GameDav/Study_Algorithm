@@ -1,0 +1,8 @@
+https://modoocode.com/229
+
+객체의 유일한 소유권 = unique_ptr
+
+복사가 불가능 하지만 객체의  소유권을 이동 시킬수 있다.
+
+예)
+std::unique_ptr<A> pb = std::move(pa);
