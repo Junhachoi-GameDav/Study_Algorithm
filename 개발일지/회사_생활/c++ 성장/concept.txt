@@ -1,0 +1,5 @@
+
+
+예)
+template<sending_type sending, const char* sensor_type, typename ...Args>
+concept connection_drone_concept = sending == sending_type::CONNECTION_DRONE && sensor_type == nullptr && std::is_same_v<unsigned int, std::remove_cvref_t<Args...>>;
