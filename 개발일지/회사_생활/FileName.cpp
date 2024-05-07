@@ -62,14 +62,6 @@ int main() {
 	//t2.join();
 
 	//std::cout << sum << std::endl;
-	/*int sum = 0;
-	do {
-		std::cin >> sum;
-		std::cout << "Hello Would!~ : " << sum << " " << std::endl;
-	} while (sum > 0);*/
 
-	for (int i = 0; i < 10; i++)
-	{
-		std::cout << "Hello Would!~ : " << i << " " << std::endl;
-	}
+	std::cout << "Hello Would!~" << std::endl;
 }
