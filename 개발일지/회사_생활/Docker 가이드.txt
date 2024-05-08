@@ -37,7 +37,7 @@ RUN g++ -o HelloWorld FileName.cpp
 # 컨테이너 실행 시 HelloWorld 실행 파일 실행
 CMD ["./HelloWorld"]
 
-*** 컴파일러를 계속 설치하면 이미지의 용량이 낭비가 되니 아래와 같이 수정
+*** 컴파일러를 계속 설치하면 이미지의 용량이 낭비가 되니 아래와 같이 수정 ****
 
 # 한번 빌드하고 그것을 복붙
 FROM ubuntu:latest as builder
@@ -62,7 +62,7 @@ docker build -f "test(c++).dockerfile" -t mytestapp .
 마지막의 .은 현재 디렉토리를 Docker 빌드 컨텍스트로 사용하겠다는 의미입니다.
 
 빌드하면 docker desktop에서 볼 수 있습니다.
-
+한번 빌드하면 c:\Users\user\Downloads 안에있던 FileName.cpp 와 도크파일은 지워도 됨.
 
 4. 실행
 터미널 -> docker run mytestapp.
@@ -72,14 +72,31 @@ docker desktop -> 실행 아이콘 누르면 됨
 [LOGS] 2024-04-29 09:16:32 Hello Would!~
 
 
-5. Docker 이미지를 Docker Hub에 푸시
+----------------------------------------------------------------------
+-----컨테이너간 통신
+
+도커에서 네트워크를 생성하고 공유할수있음.
+
+docker network create my_network
+docker run -d --name mytest_server_instance --network my_network -p <외부포트>:<컨테이너포트> mytest_server
+docker run -d --name mytest_client_instance --network my_network mytest_client
+
+run은 생성후 실행이라 처음에만 쓸수있음 그후엔 start나 restart로 실행
+
+run -it 를 하면 터미널에 입력 가능
+start -ai 를 하면 터미널에 입력 가능
+
+
+---------쿠버네티스 사용법( 선택 사항 )-----------
+
+1. Docker 이미지를 Docker Hub에 푸시
 터미널에
 ->docker login
 ->docker tag mytestapp username/mytestapp
 ->docker push username/mytestapp
 
 
-6. 쿠버네티스 yaml파일 생성 (아래처럼 쓰면 됨 - deployment.yaml)
+2. 쿠버네티스 yaml파일 생성 (아래처럼 쓰면 됨 - deployment.yaml)
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -100,11 +117,11 @@ spec:
         ports:
         - containerPort: 8080
 
-7. kubectl을 사용하여 Deployment를 쿠버네티스 클러스터에 적용
+3. kubectl을 사용하여 Deployment를 쿠버네티스 클러스터에 적용
 터미널 -> kubectl apply -f deployment.yaml
 
 
-8. service.yaml 파일을 생성
+4. service.yaml 파일을 생성
 apiVersion: v1
 kind: Service
 metadata:
@@ -119,7 +136,7 @@ spec:
     app: mytestapp
 
 
-9. 서비스 적용
+5. 서비스 적용
 터미널 ->
 kubectl apply -f service.yaml
 kubectl get pods
