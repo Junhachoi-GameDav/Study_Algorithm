@@ -26,7 +26,10 @@ int main() {
             std::string message;
             std::getline(std::cin, message);
             message += "\n";
-            boost::asio::connect(socket, endpoints);
+
+            if (!socket.is_open())
+                socket.connect(*endpoints.begin());
+            //boost::asio::connect(socket, endpoints);
             boost::asio::write(socket, boost::asio::buffer(container_name +" : " + message));
         }
     }

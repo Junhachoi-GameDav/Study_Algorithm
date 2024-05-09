@@ -1,6 +1,6 @@
 # 스테이지 1 : 빌드용
 FROM ubuntu:latest as builder
-RUN apt-get update && apt-get install -y build-essential libboost-all-dev
+RUN apt-get update && apt-get install -y build-essential libboost-all-dev 
 
 WORKDIR /app
 COPY Test_0_client.cpp .
