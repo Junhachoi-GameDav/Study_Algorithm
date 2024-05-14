@@ -11,9 +11,9 @@ docker run -d --network my_network -p 8080:8080 -p 10000:10000 --name clusterodm
 실행할때 포트 두개 8080은 터미널 명령어 용 10000은 웹ui 용이다.
 
 노드생성
-docker run -d --network my_network -p 3000:3000 --name nodeodm1 opendronemap/nodeodm
-docker run -d --network my_network -p 3001:3000 --name nodeodm1 opendronemap/nodeodm
-docker run -d --network my_network -p 3002:3000 --name nodeodm1 opendronemap/nodeodm
+docker run -d --network my_network -p 3000:3000 --name nodeodm1 opendronemap/nodeodm (네트워크는 선택사항)
+docker run -d -p 3001:3000 --name nodeodm1 opendronemap/nodeodm
+docker run -d --name nodeodm1 -p 3002:3000 opendronemap/nodeodm (순서도 선택사항)
 
 클오디엠 에서 add node를 누르거
 host = 175.116.181.37 (내 pc ip)
@@ -50,9 +50,21 @@ port = 3000 (차례로)
 사진의 양은 1/3을 써서 시간은 두배 줄어들었지만 나중에 합치는(노드에 zip을 넣는 방법)시간 이게 63장 돌린거보다 더 걸림 ㅋㅋㅋㅋㅋㅋㅋ...
 아니면 파이썬 스크립트 gdal등으로 합쳐야함.
 
+
+
 **********결론***********
 결국 속도를 잡으려면 3d모델링이나 정사 영상등의 옵션을 전부 빼고난 뒤에 합치기를 해야 속도를 겨우 잡을 수 있음.(3d 매쉬는 포기해야함)
 포인트 클라우드, 정사사진 및 고도 모델등등 하나만 남긴다면(근데 이것도 나중에 합칠때 잘 안 합쳐짐) 의미있는 기술
 또는
 한번에 돌리기 매우매우 큰경우 (*최소 2000장 이상 = 사진 양이많아서 퀄리티가 깨지지않을정도 최소 한 노드당 100장)일때 써야하는 기술임.
 이것도 당연히 (3d mesh 포기해야함).
+
+*여태까지 드론 한대가 찍은 영상을 나눠서 odm을 돌리니까 결과물이 안좋았던것...
+드론 한대가 한번 찍은거는 그냥 한번에 odm에 돌려야함. 그후 다음에 찍은것을 다시 odm돌리고 그것을 QGIS에서 병합하면 퀄리티에 아무 문제없음.
+즉 드론이 4대이니까 클러스터odm을 4개의 컨테이너(여러 pc)로 관리하면 속도를 충분히 줄일 수 있음. 
+
+
+*에초에 클러스터오디엠은 노드오디엠을 관리해주는 툴일뿐이지 병합하고 그런기능은 없었다.
+노드오디엠을 여러개 만들었을때 그것을 일일히 웹오디엠에서 수동으로 넣고 맵핑할 필요없이 클러스터오디엠안에 노드오디엠들을 연결시켜주고
+웹오디엠에는 클러스터오디엠 하나만 넣으면 클오디엠이 알아서 분활 처리해서 실행한다.
+결과물은 결국 나중에 다른 프로그램으로 병합하던가 해야한다. 그럼 한번에 돌리나 나눠서 돌리나 시간은 비슷할것이다. 쪼금더 빠를순있어도 결과물이 다를것이다.
