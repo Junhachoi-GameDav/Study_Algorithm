@@ -87,6 +87,17 @@ run -it 를 하면 터미널에 입력 가능
 start -ai 를 하면 터미널에 입력 가능
 
 
+--------------------------------------------------------------------------
+---------도커 볼륨(컨테이너간 공유 파일)
+
+--rm은 임시
+C:\Users\user\Downloads>docker run --rm -it -v C:/Users/user/Downloads/test_odm_call:/photos busybox sh
+/ # cd /photos
+/photos # ls
+100_0003_0001.JPG  100_0003_0002.JPG  100_0003_0003.JPG
+
+
+
 ---------쿠버네티스 사용법( 선택 사항 )-----------
 
 1. Docker 이미지를 Docker Hub에 푸시
@@ -141,3 +152,5 @@ spec:
 kubectl apply -f service.yaml
 kubectl get pods
 kubectl get service
+
+
