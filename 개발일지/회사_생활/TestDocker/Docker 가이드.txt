@@ -90,12 +90,14 @@ start -ai 를 하면 터미널에 입력 가능
 --------------------------------------------------------------------------
 ---------도커 볼륨(컨테이너간 공유 파일)
 
---rm은 임시
+--rm은 임시(한번 사용하고 지워짐)
 C:\Users\user\Downloads>docker run --rm -it -v C:/Users/user/Downloads/test_odm_call:/photos busybox sh
 / # cd /photos
 /photos # ls
 100_0003_0001.JPG  100_0003_0002.JPG  100_0003_0003.JPG
 
+docker run -it --name odm_call -v C:/Users/user/Downloads/test_odm_call:/photos -v output_v:/output odm_call_app
+호스트의 경로:컨테이너의 경로(없으면 만듬) & 볼륨의 이름: 컨테이너 경로 image의 이름
 
 
 ---------쿠버네티스 사용법( 선택 사항 )-----------
