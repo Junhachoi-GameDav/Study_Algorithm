@@ -1,11 +1,13 @@
 import io
 import json
 import os
+
 import time
 import requests
 import zipfile
 
-BASE_URL = "http://175.116.181.32:8000/api"
+#BASE_URL = "http://175.116.181.25:8000/api"
+BASE_URL = "http://175.116.181.25:8000/api"
 
 def login_and_get_token() -> str:
     res = requests.post(f"{BASE_URL}/token-auth/", data = { "username" : "admin", "password" : "admin" }).json()
@@ -23,12 +25,12 @@ def make_odm_project(headers : dict[str, str], project_name : str) -> str:
     response = requests.get(f"{BASE_URL}/projects/", headers=headers)
     projects = response.json()
 
-    # 프로젝트 목록에서 동일한 이름의 프로젝트를 찾습니다.
+    # 프로젝트 목록에서 동일한 이름의 프로젝트를 찾음
     for project in projects:
         if project["name"] == project_name:
             return project["id"]
     
-    # 동일한 이름의 프로젝트가 없으면 새로운 프로젝트를 생성합니다.
+    # 동일한 이름의 프로젝트가 없으면 새로운 프로젝트를 생성
     response = requests.post(f"{BASE_URL}/projects/", headers=headers, data={"name": project_name})
     project_id = response.json()["id"]
 
@@ -74,7 +76,7 @@ def wait_task(pid : str, tid : str, headers : dict[str, str], output_dir : str, 
     }
     
     downloaded_assets_list = []
-    
+
     def print_progress_bar(progress: float, total: int = 100, length: int = 50):
         progress_int = int(progress)
         filled_length = int(length * progress_int // total)
@@ -85,8 +87,7 @@ def wait_task(pid : str, tid : str, headers : dict[str, str], output_dir : str, 
 
     while True:
         (status, upload_progress, resize_progress, running_progress, available_assets) = get_task_status(pid, tid, headers)
-
-        #progress = get_task_progress(tid, headers)
+        
         progress_percentage = running_progress * 100
         print_progress_bar(progress_percentage)
         
@@ -96,14 +97,13 @@ def wait_task(pid : str, tid : str, headers : dict[str, str], output_dir : str, 
                 if target_assets.__contains__(asset):
                     downloaded_assets_list.append(download_asset(pid, tid, headers, output_dir, asset))
                     target_assets.discard(asset)
-             
+            
         if (status == status_codes.COMPLETED or status == status_codes.FAILED or status == status_codes.CANCELED):
             break
         
         time.sleep(1.0)
         
     return downloaded_assets_list
-        
 
 def call_odm(image_paths : list[str], output_dir : str) -> list[str]:
     def option_as_json(key : str, value : any)->dict[str, any]:
@@ -147,6 +147,9 @@ def call_odm(image_paths : list[str], output_dir : str) -> list[str]:
             with zipfile.ZipFile(f"{filename}", 'r') as zf:
                 zf.extractall(f"{dir_name}")
             downloaded[i] = dir_name
+            #zip 삭제
+            os.remove(filename)
+            requests.delete(f"{BASE_URL}/projects/{PROJECT_ID}", headers = DEFAULT_HEADERS)
 
     return downloaded
 
@@ -156,12 +159,11 @@ def get_image_paths(directory: str) -> list[str]:
 
 if __name__ == "__main__":
     # 이미지 파일이 저장된 디렉토리 경로
-    #image_directory = r"C:\Users\user\Downloads\test_odm_call"
-    #output_directory = r"C:\Users\user\Downloads\output"
+    #image_directory = r"C:\Users\user\Downloads\input"
+    #output_directory = r"C:\Users\user\Downloads\eo_output"
     image_directory = r"/photos"
     output_directory = r"/output"
 
-    
     # 디렉토리 내의 이미지 파일 경로를 읽어옴
     image_paths = get_image_paths(image_directory)
     
