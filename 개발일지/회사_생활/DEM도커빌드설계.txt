@@ -1,0 +1,22 @@
+FROM ubuntu:latest as builder
+
+apt-get update ...
+
+...
+
+COPY dem_dir ./...
+
+COPY (inserting code) .
+
+(build) g++ 
+RUN [inserting]
+
+CMD [ insert_main.cpp]
+
+
+FROM builder
+
+COPY (actual running code) .
+
+CMD[ running_.cpp ]
+

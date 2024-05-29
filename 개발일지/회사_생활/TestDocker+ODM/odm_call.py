@@ -1,15 +1,20 @@
 import io
 import json
 import os
-
 import time
 import requests
 import zipfile
 
 #BASE_URL = "http://175.116.181.25:8000/api"
-BASE_URL = "http://175.116.181.25:8000/api"
+BASE_URL = ""
+
+#도커 환경변수로 받기    
+def get_pc_ip(env_var):
+    pc_ip =  os.getenv(env_var)
+    return "http://" + pc_ip + ":8000/api"
 
 def login_and_get_token() -> str:
+
     res = requests.post(f"{BASE_URL}/token-auth/", data = { "username" : "admin", "password" : "admin" }).json()
     return res["token"]
 
@@ -161,8 +166,13 @@ if __name__ == "__main__":
     # 이미지 파일이 저장된 디렉토리 경로
     #image_directory = r"C:\Users\user\Downloads\input"
     #output_directory = r"C:\Users\user\Downloads\eo_output"
+    #config_dir = r"C:\Users\user\Downloads\test_config"
     image_directory = r"/photos"
     output_directory = r"/output"
+    #config_dir = r"/config" 
+
+    #도커 환경변수를 읽음
+    BASE_URL = get_pc_ip('PC_IP')
 
     # 디렉토리 내의 이미지 파일 경로를 읽어옴
     image_paths = get_image_paths(image_directory)
