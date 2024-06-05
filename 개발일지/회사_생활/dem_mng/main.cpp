@@ -5,6 +5,7 @@
 #include <string>
 #include <locale>
 #include <system_error>
+#include <thread>
 
 //여기에 넣어야 winsock2오류가 안난다.
 #include <boost/asio.hpp>
@@ -19,9 +20,21 @@
 
 using boost::asio::ip::tcp;
 
+void handle_client(boost::asio::ip::tcp::socket&& socket, dem_manager& dem_mng)
+{
+	double temp_x;
+	double temp_y;
+	boost::asio::read(socket, boost::asio::buffer(&temp_x, sizeof(temp_x)));
+	boost::asio::read(socket, boost::asio::buffer(&temp_y, sizeof(temp_y)));
+
+	double temp_z = dem_mng.find_ground_height(temp_x, temp_y);
+
+	std::cout << "temp_z value : " << temp_z << '\n';
+	boost::asio::write(socket, boost::asio::buffer(&temp_z, sizeof(temp_z)));
+}
+
 int main()
 {
-
 	dem_manager& dem_mng = dem_manager::instance();
 	
 	boost::asio::io_context io_context;
@@ -34,15 +47,9 @@ int main()
 		tcp::socket socket(io_context);
 		acceptor.accept(socket);
 
-		double temp_x;
-		double temp_y;
-		boost::asio::read(socket, boost::asio::buffer(&temp_x, sizeof(temp_x)));
-		boost::asio::read(socket, boost::asio::buffer(&temp_y, sizeof(temp_y)));
-
-		double temp_z = dem_mng.find_ground_height(temp_x, temp_y);
-
-		std::cout << "temp_z value : " << temp_z << '\n';
-		boost::asio::write(socket, boost::asio::buffer(&temp_z, sizeof(temp_z)));
+		std::thread([s = std::move(socket), &dem_mng]() mutable {
+			handle_client(std::move(s), dem_mng);
+			}).detach();
 	}
 	
 	return 0;

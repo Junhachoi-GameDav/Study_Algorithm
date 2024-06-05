@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.26)
 
 # Set the project name
 project(DemProject)
@@ -7,8 +7,8 @@ project(DemProject)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# Add the executable
-add_executable(dem_mng main.cpp dem.cpp dem_manager.cpp)
+# Add custom modules path
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
 
 # Find and include necessary packages
 find_package(Boost REQUIRED)
@@ -17,7 +17,7 @@ find_package(OpenCV REQUIRED)
 find_package(GDAL REQUIRED)
 find_package(TBB REQUIRED)
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(PQXX REQUIRED libpqxx)
+find_package(PQXX REQUIRED)
 
 # Include directories
 include_directories(${Boost_INCLUDE_DIRS})
@@ -27,5 +27,8 @@ include_directories(${GDAL_INCLUDE_DIRS})
 include_directories(${TBB_INCLUDE_DIRS})
 include_directories(${PQXX_INCLUDE_DIRS})
 
+# Add the executable
+add_executable(dem_mng main.cpp dem.cpp dem_manager.cpp)
+
 # Link libraries
-target_link_libraries(dem_mng ${Boost_LIBRARIES} fmt::fmt ${OpenCV_LIBS} ${GDAL_LIBRARIES} ${TBB_LIBRARIES} ${PQXX_LIBRARIES} tbb)
+target_link_libraries(dem_mng ${Boost_LIBRARIES} fmt ${OpenCV_LIBS} ${GDAL_LIBRARIES} ${TBB_LIBRARIES} ${PQXX_LIBRARIES} pqxx pq tbb)

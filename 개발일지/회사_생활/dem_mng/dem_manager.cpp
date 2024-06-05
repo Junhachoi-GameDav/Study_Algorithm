@@ -11,14 +11,14 @@
 #include <oneapi/tbb/parallel_for_each.h>
 #include <oneapi/tbb/parallel_sort.h>
 
-dem_manager::dem_manager() : con(fmt::format("dbname=test user=postgres password=0000 hostaddr=175.116.181.37 port=5432"))
+dem_manager::dem_manager() : con(fmt::format("dbname=dem_db user=postgres password=gitr&d123! hostaddr=175.116.181.25 port=5432"))
 {
 	pqxx::work w(con);
 	std::string query = fmt::format("SELECT 1 FROM {} LIMIT 1", table_name);
 	pqxx::result R = w.exec(query);
 
 	if (R.empty())
-		initialize();
+		initialize(w);
 	else
 		std::cout << "DEMs were already inserted in DB......" << '\n';
 }
@@ -39,7 +39,7 @@ void dem_manager::update_progress_percentage(std::atomic<int>& progress, int tot
 	std::cout.flush();
 }
 
-void dem_manager::initialize()
+void dem_manager::initialize(pqxx::work& wk)
 {
 	//std::filesystem::directory_iterator("D:\DEM_2021y_5m(img)") 경로 설정
 	std::vector<std::filesystem::path> dem_paths;
@@ -111,13 +111,13 @@ void dem_manager::initialize()
 		++primary_key;
 	}
 	if (!values.empty()) {
-		pqxx::work w(con);
+		//pqxx::work wk(con);
 		const std::string insert_query = fmt::format("INSERT INTO {} (idx, boundary, dem_file) VALUES ", table_name) +
 			std::accumulate(std::next(values.begin()), values.end(), values[0],
 				[](std::string a, std::string b) { return a + ", " + b; });
 
-		w.exec(insert_query);
-		w.commit();
+		wk.exec(insert_query);
+		wk.commit();
 	}
 
 	oneapi::tbb::concurrent_vector<std::map<std::string, size_t>> cv_points_diagnosis;

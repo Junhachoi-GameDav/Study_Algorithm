@@ -100,6 +100,9 @@ docker run -it --name odm_call -v C:/Users/user/Downloads/test_odm_call:/photos 
 호스트의 경로:컨테이너의 경로(없으면 만듬) & 볼륨의 이름: 컨테이너 경로 image의 이름
 
 
+docker run --rm -v dems_jpgs_volume:/mydata -v D:/DEM_2021y_5m(img):/local busybox sh -c "cp /local/* /mydata/"
+
+
 ---------쿠버네티스 사용법( 선택 사항 )-----------
 
 1. Docker 이미지를 Docker Hub에 푸시

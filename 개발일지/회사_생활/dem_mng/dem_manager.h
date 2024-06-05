@@ -81,7 +81,7 @@ public:
 
 public:
 	void update_progress_percentage(std::atomic<int>& progress, int total_tasks);
-	void initialize();
+	void initialize(pqxx::work& wk);
 	bool is_useless_dem(const demv2& dem_obj) const;
 	bool is_complete_dem(const demv2& dem_obj) const;
 	std::map<std::string, size_t> diagnose_dem(const demv2& dem_obj) const;
@@ -93,7 +93,7 @@ public:
 public:
 	mutable tbb::concurrent_map<area, demv2> preload_dem_cache;
 	double find_ground_height(const double& x, const double& y) const;
-	const std::string table_name = "testt";
+	const std::string table_name = "dem_table";
 	
 	static dem_manager& instance()
 	{
