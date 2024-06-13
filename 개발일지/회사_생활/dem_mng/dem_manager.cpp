@@ -11,7 +11,11 @@
 #include <oneapi/tbb/parallel_for_each.h>
 #include <oneapi/tbb/parallel_sort.h>
 
-dem_manager::dem_manager() : con(fmt::format("dbname=dem_db user=postgres password=gitr&d123! hostaddr=175.116.181.25 port=5432"))
+/**
+* @brife  생성자에서 postgreSQL로 바로 접속
+* @param //gitr&d123! "dbname=dem_db user=postgres password=gitr&d123! hostaddr=175.116.181.25 port=5432"
+*/
+dem_manager::dem_manager() : con(fmt::format("dbname=test user=postgres password=0000 hostaddr=127.0.0.1 port=5432"))
 {
 	pqxx::work w(con);
 	std::string query = fmt::format("SELECT 1 FROM {} LIMIT 1", table_name);
@@ -267,7 +271,45 @@ void dem_manager::insert_query(const dem_row& target) const
 	//con.close();
 }
 
-double dem_manager::find_ground_height(const double& x, const double& y) const
+void dem_manager::delete_map()
+{
+	if (!preload_dem_cache.empty())
+		preload_dem_cache.clear();
+}
+
+void dem_manager::clean_up_expired_time()
+{
+	std::lock_guard<std::mutex> lock(mutex);
+
+	if (is_running)
+	{
+		stop_requested = true;
+		return;
+	}
+
+	stop_requested = false;
+
+	std::thread([this] {
+		while (true)
+		{
+			std::this_thread::sleep_for(std::chrono::hours(5));
+
+			if (stop_requested)
+			{
+				stop_requested = false;
+				continue;
+			}
+			break;
+		}
+		delete_map();
+		std::cout << " clean_up!!!!!!!!\n";
+		is_running = false;
+		}).detach();
+
+	is_running = true;
+}
+
+double dem_manager::find_ground_height(const double& x, const double& y)
 {
 	const auto find_from_memory = [this](const double& x, const double& y)->std::vector<decltype(preload_dem_cache)::const_iterator>
 		{
@@ -299,6 +341,7 @@ double dem_manager::find_ground_height(const double& x, const double& y) const
 		for (const auto& [index, boundary, path] : selected_rows)
 			preload_dem_cache.emplace(std::make_pair(boundary, demv2(path)));
 
+		//auto last_emplaced_time = std::chrono::system_clock::now();
 		target_dems = find_from_memory(x, y);
 		if (target_dems.empty())
 			return nan("no reference dem");
@@ -310,6 +353,7 @@ double dem_manager::find_ground_height(const double& x, const double& y) const
 		reasonable_altitudes.emplace_back(dem.find_ground_height(x, y));
 	}
 
+	clean_up_expired_time();
 	std::erase_if(reasonable_altitudes, [](const double& altitude)->bool { return std::isnan(altitude) or std::isinf(altitude) or altitude < 0.0; });
 	return std::accumulate(reasonable_altitudes.begin(), reasonable_altitudes.end(), 0.0, std::plus<double>()) / reasonable_altitudes.size();
 }

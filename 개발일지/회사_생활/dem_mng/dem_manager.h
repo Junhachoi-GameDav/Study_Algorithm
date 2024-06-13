@@ -10,6 +10,7 @@
 #include <cmath>
 #include <string>
 #include <locale>
+#include <chrono>
 #include <system_error>
 //
 #include <fmt/core.h>
@@ -71,29 +72,44 @@ class dem_manager
 		std::filesystem::path dem_path;
 	};
 
+private:
 	mutable pqxx::connection con;
-
-public:
-	tbb::concurrent_vector<demv2> demsv;
-	tbb::concurrent_map<area, demv2> dems;
+	mutable tbb::concurrent_map<area, demv2> dems;
 	std::map<area, demv2> dems_std;
 	tbb::task_group tg;
 
-public:
+private:
 	void update_progress_percentage(std::atomic<int>& progress, int total_tasks);
 	void initialize(pqxx::work& wk);
 	bool is_useless_dem(const demv2& dem_obj) const;
 	bool is_complete_dem(const demv2& dem_obj) const;
 	std::map<std::string, size_t> diagnose_dem(const demv2& dem_obj) const;
 
-public:
+private:
 	std::vector<dem_row> select_query(std::string where_clause = "true") const;
 	void insert_query(const dem_row& target) const;
 
+private:
+	tbb::concurrent_map<area, demv2> preload_dem_cache;
+	std::chrono::time_point<std::chrono::system_clock> end_time;
+	/*
+	//Thread보다 task를 이용할것
+	//std::condition_variable cv; //Spurious wakeup 현상과 lost wakeup 현상이 일어날 수 있다고 한다.
+	//참고 :https://a-researcher.tistory.com/30
+	*/
+	std::mutex mutex;
+	std::atomic<bool> is_running;
+	std::atomic<bool> stop_requested;
+	const int hour = 5;
+	void delete_map();
+
+private:
+	//DB
+	const std::string table_name = "testt"; //"dem_table"
+
 public:
-	mutable tbb::concurrent_map<area, demv2> preload_dem_cache;
-	double find_ground_height(const double& x, const double& y) const;
-	const std::string table_name = "dem_table";
+	void clean_up_expired_time();
+	double find_ground_height(const double& x, const double& y);
 	
 	static dem_manager& instance()
 	{

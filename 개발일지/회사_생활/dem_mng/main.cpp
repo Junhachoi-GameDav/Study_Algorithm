@@ -22,15 +22,23 @@ using boost::asio::ip::tcp;
 
 void handle_client(boost::asio::ip::tcp::socket&& socket, dem_manager& dem_mng)
 {
-	double temp_x;
-	double temp_y;
-	boost::asio::read(socket, boost::asio::buffer(&temp_x, sizeof(temp_x)));
-	boost::asio::read(socket, boost::asio::buffer(&temp_y, sizeof(temp_y)));
+	try
+	{
+		double temp_x;
+		double temp_y;
 
-	double temp_z = dem_mng.find_ground_height(temp_x, temp_y);
+		boost::asio::read(socket, boost::asio::buffer(&temp_x, sizeof(temp_x)));
+		boost::asio::read(socket, boost::asio::buffer(&temp_y, sizeof(temp_y)));
 
-	std::cout << "temp_z value : " << temp_z << '\n';
-	boost::asio::write(socket, boost::asio::buffer(&temp_z, sizeof(temp_z)));
+		double temp_z = dem_mng.find_ground_height(temp_x, temp_y);
+		std::cout << "temp_z value : " << temp_z << '\n';
+
+		boost::asio::write(socket, boost::asio::buffer(&temp_z, sizeof(temp_z)));
+	}
+	catch (std::exception& e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+	}
 }
 
 int main()
