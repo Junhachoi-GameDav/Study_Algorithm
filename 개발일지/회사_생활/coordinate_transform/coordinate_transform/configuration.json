@@ -1,0 +1,86 @@
+{
+  "config": {
+    "sig_recv_host_address": "http://175.116.181.37:40000",
+    "dem_dir": "D:/test_save_dir",
+    "postgresql_dem_table": {
+      "dbname": "remote_table",
+      "username": "postgres",
+      "password": "0000",
+      "hostaddr": "127.0.0.1",
+      "port": 5432
+    },
+    "file_saving_dir": "D:/test_save_dir",
+    "drones": [
+      {
+        "drone_key": 0,
+        "address": "175.116.181.25",
+        "port": 21,
+        "id": "drone0",
+        "pw": "admin",
+        "iop_eo_path": "C:/Users/user/_Wild_Fire/intrinsics12mm24Mpx0712.yml",
+        "iop_ir_path": "",
+        "syscal_path": "C:/Users/user/_Wild_Fire/SysCalAssumeNoOffset.yml"
+      },
+      {
+        "drone_key": 1,
+        "address": "175.116.181.31",
+        "port": 21,
+        "id": "drone1",
+        "pw": "admin",
+        "iop_eo_path": "C:/Users/user/_Wild_Fire/intrinsics12mm24Mpx0712.yml",
+        "iop_ir_path": "",
+        "syscal_path": "C:/Users/user/_Wild_Fire/SysCalAssumeNoOffset.yml"
+      },
+      {
+        "drone_key": 2,
+        "address": "175.116.181.32",
+        "port": 21,
+        "id": "drone2",
+        "pw": "admin",
+        "iop_eo_path": "C:/Users/user/_Wild_Fire/intrinsics12mm24Mpx0712.yml",
+        "iop_ir_path": "",
+        "syscal_path": "C:/Users/user/_Wild_Fire/SysCalAssumeNoOffset.yml"
+      },
+      {
+        "drone_key": 3,
+        "address": "175.116.181.34",
+        "port": 21,
+        "id": "drone3",
+        "pw": "admin",
+        "iop_eo_path": "C:/Users/user/_Wild_Fireintrinsics12mm24Mpx0712.yml",
+        "iop_ir_path": "",
+        "syscal_path": "C:/Users/user/_Wild_Fire/SysCalAssumeNoOffset.yml"
+      }
+    ],
+    "mapping": {
+      "eo": {
+        "gsd": 0.25,
+        "output_coord": "4326",
+        "output_extension": ".png",
+        "save_interval": 0
+      },
+      "ir": {
+        "gsd": 1.0,
+        "output_coord": "4326",
+        "output_extension": ".png",
+        "save_interval": 0
+      },
+      "odm": {
+        "run_ip_eo": "175.116.181.25",
+        "run_ip_ir": "175.116.181.32",
+        "python_path": "C:/Users/git/vcpkg/installed/x64-windows/tools/python3/python.exe",
+        "debug_dll_dir": "C:/Users/git/vcpkg/installed/x64-windows/debug/bin",
+        "py_filename": "odm_call_wf.py",
+        "function_name": "call_odm",
+        "enable_eo": true,
+        "enable_ir": true,
+        "eo_input_dir": "",
+        "ir_input_dir": ""
+      },
+      "proj_data_path": "C:\\Users\\user\\vcpkg\\installed\\x64-windows\\share\\proj"
+    },
+    "web": {
+      "uri": "ws://175.116.181.37:9002"
+    }
+  }
+}
